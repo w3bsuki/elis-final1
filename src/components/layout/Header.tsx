@@ -156,52 +156,67 @@ export default function Header() {
     <header 
       ref={headerRef}
       className={cn(
-        "sticky inset-x-0 top-0 z-50 w-full transition-all duration-300 border-b",
+        "sticky inset-x-0 top-0 z-50 w-full transition-all duration-300",
         isScrolled 
-          ? "border-gray-200/80 dark:border-gray-800/80 bg-white/90 dark:bg-gray-950/90 backdrop-blur-lg shadow-md"
-          : "border-transparent bg-white dark:bg-gray-950"
+          ? "bg-white/40 dark:bg-gray-950/40 backdrop-blur-lg shadow-md"
+          : "bg-transparent"
       )}
     >
-      <div className="container mx-auto flex justify-center">
-        <div className={cn(
-          "flex w-full items-center justify-between max-w-7xl transition-all duration-200",
-          isScrolled ? "h-16" : "h-20"
-        )}>
-          {/* Left section: Logo & Secondary Controls */}
-          <div className="flex items-center gap-4">
-            <Logo isScrolled={isScrolled} />
-            <div className="hidden lg:flex items-center gap-1 border-l border-gray-200 dark:border-gray-700 pl-4 text-gray-700 dark:text-gray-300">
-              <ThemeToggle />
-              <LanguageSwitcher />
+      <div className="container mx-auto px-4 flex justify-center">
+        {/* Nested container design */}
+        <div className="relative w-full max-w-7xl mx-auto mb-3">
+          {/* Nested container with glass effect */}
+          <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 shadow-lg p-0.5 overflow-hidden">
+            {/* Container inner gradient */}
+            <div className="bg-gradient-to-br from-gray-100/60 via-white/60 to-gray-100/60 dark:from-gray-900/60 dark:via-gray-950/60 dark:to-gray-900/60 rounded-lg relative overflow-hidden">
+              {/* Top decorative bar */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/40 via-primary/10 to-amber-500/40"></div>
+              
+              {/* Inner shadow effect */}
+              <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg shadow-inner pointer-events-none"></div>
+              
+              <div className={cn(
+                "flex w-full items-center justify-between px-4 md:px-6 transition-all duration-200 relative z-10",
+                isScrolled ? "h-14" : "h-16"
+              )}>
+                {/* Left section: Logo & Secondary Controls */}
+                <div className="flex items-center gap-4">
+                  <Logo isScrolled={isScrolled} />
+                  <div className="hidden lg:flex items-center gap-1 border-l border-gray-200 dark:border-gray-700 pl-4 text-gray-700 dark:text-gray-300">
+                    <ThemeToggle />
+                    <LanguageSwitcher />
+                  </div>
+                </div>
+                
+                {/* Middle section: Desktop Navigation (Hidden on small screens) */}
+                <div className="hidden lg:flex flex-1 justify-center">
+                  <DesktopNavigation 
+                    books={books} 
+                    services={services} 
+                    onBookClick={handleBookClick}
+                    onServiceClick={handleServiceClick}
+                  />
+                </div>
+                
+                {/* Right section: Primary Controls & Mobile Trigger */}
+                <div className="flex items-center gap-2">
+                  <div className="hidden sm:block text-gray-700 dark:text-gray-300">
+                    <SocialLinks />
+                  </div>
+                  <ShopButton />
+                  {/* Mobile Navigation Trigger (visible on small screens) */}
+                  <MobileNavigation 
+                    isMenuOpen={isMenuOpen}
+                    setIsMenuOpen={setIsMenuOpen}
+                    headerHeight={headerHeight}
+                    books={books}
+                    services={services}
+                    onBookClick={handleBookClick}
+                    onServiceClick={handleServiceClick}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-          
-          {/* Middle section: Desktop Navigation (Hidden on small screens) */}
-          <div className="hidden lg:flex flex-1 justify-center">
-            <DesktopNavigation 
-              books={books} 
-              services={services} 
-              onBookClick={handleBookClick}
-              onServiceClick={handleServiceClick}
-            />
-          </div>
-          
-          {/* Right section: Primary Controls & Mobile Trigger */}
-          <div className="flex items-center gap-2">
-            <div className="hidden sm:block text-gray-700 dark:text-gray-300">
-              <SocialLinks />
-            </div>
-            <ShopButton />
-            {/* Mobile Navigation Trigger (visible on small screens) */}
-            <MobileNavigation 
-              isMenuOpen={isMenuOpen}
-              setIsMenuOpen={setIsMenuOpen}
-              headerHeight={headerHeight}
-              books={books}
-              services={services}
-              onBookClick={handleBookClick}
-              onServiceClick={handleServiceClick}
-            />
           </div>
         </div>
       </div>
