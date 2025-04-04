@@ -1,18 +1,64 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { Calendar, Clock, Package, User, ChevronRight, Eye, Star, Shield, Sparkles, Gift } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/LanguageContext";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Service } from "@/types";
+import { FlipCard } from "@/components/ui/flip-card";
 
-// Import services directly to avoid potential issues with dynamic imports
+// UI Components
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+// Icons
+import { 
+  Award,
+  BookOpen, 
+  Briefcase,
+  Calendar, 
+  ChevronRight,
+  Clock,
+  Eye,
+  Gift,
+  MessageCircle,
+  Package,
+  Pen, 
+  Presentation, 
+  School,
+  Shield,
+  Sparkles, 
+  Star,
+  User,
+  Users,
+  ArrowRight,
+  CalendarDays
+} from "lucide-react";
+
+// Import services
 import { services as allServices, filterServicesByCategory } from "@/data/services";
+
+// Service interface 
+interface Service {
+  id: string;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  imageUrl: string;
+  features: string[];
+  cta: string;
+  popular?: boolean;
+  // Additional properties needed for ServiceCard
+  category?: string;
+  duration?: string;
+  price?: number;
+  featured?: boolean;
+  includes?: string[];
+  image?: string;
+}
 
 // Helper functions for package tiers
 const getPackageTier = (title: string): { mainTitle: string, tier: string | null } => {
@@ -63,523 +109,283 @@ const getTierBadgeColor = (tier: string | null): string => {
   }
 };
 
-export default function Services() {
-  const [activeTab, setActiveTab] = useState<string>("all");
-  const [filteredServices, setFilteredServices] = useState<Service[]>([]);
+export const Services = () => {
   const { language } = useLanguage();
   
-  // Use useEffect to handle the filtering after component mount
-  useEffect(() => {
-    // Filter services based on active tab
-    const services = activeTab === "all" 
-      ? allServices 
-      : filterServicesByCategory(allServices, activeTab);
-    
-    setFilteredServices(services || []);
-  }, [activeTab]);
+  const translate = (bgText: string, enText: string) => language === 'en' ? enText : bgText;
 
-  // Get featured services for the hero section
-  const featuredServices = allServices.filter(service => service.featured).slice(0, 1);
-  
+  // Services data
+  const services: Service[] = [
+    {
+      id: "workshops",
+      title: translate("Творчески Работилници", "Creative Workshops"),
+      description: translate(
+        "Интерактивни сесии, фокусирани върху личностно развитие, писане и развиване на творчески умения в малки групи.",
+        "Interactive sessions focused on personal development, writing, and creative skills in small groups."
+      ),
+      icon: <School className="h-6 w-6 text-amber-500" />,
+      imageUrl: "https://images.unsplash.com/photo-1552581234-26160f608093?q=80&w=600&auto=format&fit=crop",
+      features: [
+        translate("Персонализирано съдържание", "Customized content"),
+        translate("Практически упражнения", "Practical exercises"),
+        translate("Материали включени", "Materials included"),
+        translate("Сертификат за участие", "Participation certificate")
+      ],
+      cta: translate("Запази място", "Book a Spot"),
+      popular: true
+    },
+    {
+      id: "speaking",
+      title: translate("Лекции и Презентации", "Speaking Engagements"),
+      description: translate(
+        "Вдъхновяващи речи и презентации за корпоративни събития, образователни институции и конференции.",
+        "Inspiring talks and presentations for corporate events, educational institutions, and conferences."
+      ),
+      icon: <Presentation className="h-6 w-6 text-blue-500" />,
+      imageUrl: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=600&auto=format&fit=crop",
+      features: [
+        translate("Теми по избор", "Custom topics"),
+        translate("Мултимедийни презентации", "Multimedia presentations"),
+        translate("Q&A сесии", "Q&A sessions"),
+        translate("Гъвкаво времетраене", "Flexible duration")
+      ],
+      cta: translate("Запитване", "Inquire")
+    },
+    {
+      id: "consultations",
+      title: translate("Персонални Консултации", "Personal Consultations"),
+      description: translate(
+        "Индивидуални сесии за личностно развитие, кариерно ориентиране или работа върху конкретни творчески проекти.",
+        "One-on-one sessions for personal development, career guidance, or work on specific creative projects."
+      ),
+      icon: <MessageCircle className="h-6 w-6 text-green-500" />,
+      imageUrl: "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=600&auto=format&fit=crop",
+      features: [
+        translate("Видео или лични срещи", "Video or in-person meetings"),
+        translate("Индивидуален подход", "Personalized approach"),
+        translate("Последващи материали", "Follow-up materials"),
+        translate("Гъвкаво планиране", "Flexible scheduling")
+      ],
+      cta: translate("Резервирай час", "Book a Session")
+    },
+    {
+      id: "writing",
+      title: translate("Писателски Услуги", "Writing Services"),
+      description: translate(
+        "Професионални услуги за писане, редактиране и консултиране за публикации, книги и други писмени материали.",
+        "Professional writing, editing, and consulting services for publications, books, and other written materials."
+      ),
+      icon: <Pen className="h-6 w-6 text-purple-500" />,
+      imageUrl: "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=600&auto=format&fit=crop",
+      features: [
+        translate("Създаване на съдържание", "Content creation"),
+        translate("Редакция и корекция", "Editing and proofreading"),
+        translate("Консултация за публикуване", "Publication consultation"),
+        translate("Писане по поръчка", "Ghost writing")
+      ],
+      cta: translate("Запитване", "Inquire")
+    }
+  ];
+
   return (
-    <section id="services" className="py-24 bg-gradient-to-b from-green-50 to-white dark:from-green-900/20 dark:to-gray-800 relative overflow-hidden">
-      {/* Background gradient elements - enhanced for more subtle effect */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-green-200/20 dark:bg-green-900/20 rounded-full blur-3xl"></div>
-        <div className="absolute top-[20%] -right-[5%] w-[30%] h-[30%] bg-green-200/20 dark:bg-green-900/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-[10%] left-[30%] w-[40%] h-[40%] bg-green-100/10 dark:bg-green-900/10 rounded-full blur-3xl"></div>
+    <section className="bg-background relative pt-16 pb-24" id="services">
+      {/* Enhanced background decorations */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 right-0 w-1/4 h-1/4 bg-gradient-to-br from-purple-500/5 to-primary/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-amber-500/5 to-purple-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute right-10 top-40 size-60 border border-dashed border-purple-500/10 rounded-full opacity-60 animate-spin-slow"></div>
+        <div className="absolute left-10 bottom-40 size-60 border border-dashed border-primary/10 rounded-full opacity-60 animate-spin-slow"></div>
+        <div className="absolute left-1/3 top-1/4 opacity-10 dark:opacity-5">
+          <Briefcase className="h-20 w-20 text-purple-400" />
+        </div>
+        <div className="absolute right-1/3 bottom-1/4 opacity-10 dark:opacity-5">
+          <Presentation className="h-20 w-20 text-primary" />
+        </div>
       </div>
       
-      <div className="container mx-auto px-4 relative z-10">
-        {/* Modern heading with accent */}
-        <div className="text-center mb-16 max-w-3xl mx-auto">
-          <Badge variant="outline" className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 border-green-200 dark:border-green-800 mb-4">
-            <Calendar className="h-3.5 w-3.5 mr-1" />
-            {language === 'en' ? 'Exclusive Services' : 'Ексклузивни Услуги'}
-          </Badge>
-          <h2 className="text-4xl md:text-5xl font-bold font-playfair mb-4 text-gray-900 dark:text-white">
-            <span className="relative inline-block">
-              {language === 'en' ? 'All' : 'Всички'}
-              <span className="absolute -bottom-2 left-0 w-full h-4 bg-green-300 dark:bg-green-600/60 -z-10 transform -rotate-1 rounded-sm"></span>
-            </span>{" "}
-            {language === 'en' ? 'Services' : 'Услуги'}
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            {language === 'en' 
-              ? 'Discover our personalized services designed to help you achieve your health and wellness goals.'
-              : 'Открийте нашите персонализирани услуги, създадени да ви помогнат да постигнете вашите цели за здраве и благополучие.'}
-          </p>
-        </div>
-
-        {/* Featured Service Hero Section */}
-        {featuredServices.length > 0 && (
-          <div className="mb-12 max-w-6xl mx-auto">
-            <div className="relative overflow-hidden rounded-2xl border-2 border-black dark:border-gray-700 shadow-[8px_8px_0px_0px_rgba(22,163,74,0.5)] dark:shadow-[8px_8px_0px_0px_rgba(22,163,74,0.3)] bg-white dark:bg-gray-800/50">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-                {/* Image Section */}
-                <div className="relative h-64 md:h-auto">
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
-                    <div className="relative z-10 p-8 text-center">
-                      <div className="w-20 h-20 mx-auto bg-white/20 rounded-full flex items-center justify-center mb-4">
-                        {featuredServices[0]?.category === 'individual' 
-                          ? <User className="h-10 w-10 text-white" /> 
-                          : <Package className="h-10 w-10 text-white" />}
-                      </div>
-                      
-                      {/* Process the title for the image section */}
-                      {(() => {
-                        if (!featuredServices[0]) return null;
-                        const { mainTitle, tier } = getPackageTier(featuredServices[0].title);
-                        return (
-                          <>
-                            <h3 className="text-xl font-bold text-white mb-2">{mainTitle}</h3>
-                            {tier && featuredServices[0].category === 'package' && (
-                              <Badge className="bg-white/30 text-white border-0 mb-2">
-                                {tier}
-                              </Badge>
-                            )}
-                          </>
-                        );
-                      })()}
-                      
-                      <Badge className="bg-yellow-400 text-black border-0">
-                        <Star className="h-3 w-3 mr-1" />
-                        {language === 'en' ? 'Featured Service' : 'Препоръчана Услуга'}
-                      </Badge>
-                    </div>
-                  </div>
+      <div className="container mx-auto px-4">
+        {/* Modern nested container */}
+        <div className="max-w-7xl mx-auto relative">
+          {/* Top decorative badge */}
+          <motion.div
+            className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-full border border-gray-200 dark:border-gray-800 shadow-lg z-10 px-5 py-2"
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex items-center gap-2">
+              <div className="size-1.5 rounded-full bg-purple-500"></div>
+              <div className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                {translate("Професионални услуги", "Professional services")}
+              </div>
+              <div className="size-1.5 rounded-full bg-purple-500"></div>
+            </div>
+          </motion.div>
+          
+          {/* Main content container with nested card design */}
+          <motion.div
+            className="bg-white/40 dark:bg-gray-900/40 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 shadow-2xl p-0.5 overflow-hidden"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            {/* Decorative top border - gradient line */}
+            <div className="absolute top-0 left-10 right-10 h-0.5 bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
+            
+            {/* Main content inner container with gradient outline */}
+            <div className="bg-gradient-to-br from-gray-100/50 via-white/50 to-gray-100/50 dark:from-gray-900/50 dark:via-gray-950/50 dark:to-gray-900/50 rounded-lg p-5 sm:p-6 md:p-8 relative overflow-hidden">
+              {/* Glass panel effect with inner shadow */}
+              <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
+              
+              {/* Decorative Elements */}
+              <div className="absolute top-20 left-20 size-40 bg-purple-500/5 rounded-full blur-3xl"></div>
+              <div className="absolute bottom-20 right-20 size-40 bg-primary/5 rounded-full blur-3xl"></div>
+              <div className="absolute top-40 right-40 size-60 bg-amber-500/5 rounded-full blur-3xl"></div>
+              
+              <div className="relative z-10">
+                {/* Section Header */}
+                <div className="max-w-3xl mx-auto text-center mb-12 px-4 md:px-6">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    <Badge 
+                      variant="outline" 
+                      className="mb-4 px-3 py-1 bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-700/50 inline-flex items-center gap-1.5"
+                    >
+                      <Briefcase className="h-4 w-4" />
+                      <span>{translate("Експертни Решения", "Expert Solutions")}</span>
+                    </Badge>
+                    
+                    <motion.h2 
+                      className="text-3xl md:text-4xl font-bold font-playfair mb-5 inline-block bg-gradient-to-r from-purple-800 via-purple-600 to-primary bg-clip-text text-transparent dark:from-purple-400 dark:via-purple-300 dark:to-primary"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 0.1 }}
+                    >
+                      {translate("Как Мога Да Помогна", "How I Can Help")}
+                    </motion.h2>
+                    
+                    <motion.div 
+                      className="w-16 h-1 bg-gradient-to-r from-purple-500 to-primary rounded-full mx-auto mb-6"
+                      initial={{ width: 0, opacity: 0 }}
+                      whileInView={{ width: 64, opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 0.3 }}
+                    ></motion.div>
+                    
+                    <motion.p 
+                      className="text-lg text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 0.2 }}
+                    >
+                      {translate(
+                        "Предлагам разнообразни услуги, фокусирани върху личностно развитие, творческо писане и професионални умения за трансформация и израстване.",
+                        "I offer a variety of services focused on personal development, creative writing, and professional skills for transformation and growth."
+                      )}
+                    </motion.p>
+                    
+                    <motion.p 
+                      className="text-sm text-muted-foreground"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 0.3 }}
+                    >
+                      <span className="inline-flex items-center gap-1 text-purple-600 dark:text-purple-400">
+                        <Eye className="h-4 w-4" />
+                        {translate("Разгледайте всеки раздел за повече информация", "Hover or click on each card to see more details")}
+                      </span>
+                    </motion.p>
+                  </motion.div>
                 </div>
                 
-                {/* Content Section */}
-                <div className="p-6 flex flex-col">
-                  <div className="mb-3 flex items-center">
-                    <Badge className="mr-2 bg-green-100 dark:bg-green-900/70 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800">
-                      {featuredServices[0]?.category === 'individual' 
-                        ? (language === 'en' ? 'Individual' : 'Индивидуална') 
-                        : (language === 'en' ? '' : '')}
-                    </Badge>
-                    <div className="flex items-center text-gray-500 dark:text-gray-400 text-sm">
-                      <Clock className="h-4 w-4 mr-1" />
-                      <span>{featuredServices[0]?.duration}</span>
-                    </div>
-                  </div>
-                  
-                  {/* Improved title styling for featured service */}
-                  {(() => {
-                    if (!featuredServices[0]) return null;
-                    const { mainTitle, tier } = getPackageTier(featuredServices[0].title);
-                    return (
-                      <div className="mb-3">
-                        {tier && featuredServices[0].category === 'package' && (
-                          <Badge 
-                            variant="outline" 
-                            className={`mb-2 px-2.5 py-0.5 text-sm font-medium ${getTierBadgeColor(tier)}`}
-                          >
-                            {tier}
-                          </Badge>
-                        )}
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                          {mainTitle}
-                        </h3>
-                      </div>
-                    );
-                  })()}
-                  
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
-                    {featuredServices[0]?.description}
-                  </p>
-                  
-                  {featuredServices[0]?.category === 'package' && featuredServices[0]?.includes && (
-                    <div className="mb-4 bg-gradient-to-r from-green-50 to-green-100/50 dark:from-green-900/20 dark:to-green-900/10 p-3 rounded-lg border border-green-100 dark:border-green-800/30">
-                      <h4 className="font-medium text-sm text-green-800 dark:text-green-300 mb-2">
-                        {language === 'en' ? 'Includes:' : 'Включва:'}
-                      </h4>
-                      <ul className="space-y-1.5 text-xs">
-                        {featuredServices[0].includes.slice(0, 3).map((item, index) => (
-                          <li key={index} className="flex items-start">
-                            <span className="text-green-500 mr-2 flex-shrink-0">✓</span>
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                        {featuredServices[0].includes.length > 3 && (
-                          <li className="text-green-600 dark:text-green-400 italic text-xs pt-1 pl-4">
-                            +{featuredServices[0].includes.length - 3} {language === 'en' ? 'more' : 'още'}
-                          </li>
-                        )}
-                      </ul>
-                    </div>
-                  )}
-                  
-                  <div className="mt-auto flex items-center justify-between">
-                    <span className="text-xl font-bold text-green-600 dark:text-green-400">
-                      {featuredServices[0]?.price.toFixed(0)}{language === 'en' ? ' BGN' : 'лв'}
-                    </span>
-                    <div className="flex gap-3">
-                      <Button 
-                        variant="outline"
-                        className="border-green-600 text-green-600 hover:bg-green-50 dark:border-green-500 dark:text-green-500 dark:hover:bg-green-950/30 border-2 border-black dark:border-gray-700 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.2)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] transition-all duration-300"
-                        asChild
-                      >
-                        <Link href={`/services/${featuredServices[0]?.id}`}>
-                          <Eye className="h-4 w-4 mr-1" />
-                          {language === 'en' ? 'Details' : 'Детайли'}
-                        </Link>
-                      </Button>
+                {/* Services Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 px-4 md:px-6 lg:px-8">
+                  {services.map((service, index) => (
+                    <motion.div
+                      key={service.id}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="h-[450px]"
+                      whileHover={{ 
+                        y: -5,
+                        transition: { duration: 0.2 }
+                      }}
+                    >
+                      {/* Subtle background glow effect */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-primary/5 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       
-                      <Button 
-                        className="bg-green-600 hover:bg-green-700 text-white border-2 border-black dark:border-gray-700 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.2)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] transition-all duration-300"
-                        asChild
-                      >
-                        <Link href={`/services/${featuredServices[0]?.id}/book`}>
-                          <Calendar className="h-4 w-4 mr-1" />
-                          {language === 'en' ? 'Book Now' : 'Запази'}
-                        </Link>
-                      </Button>
+                      <FlipCard
+                        frontImage={service.imageUrl}
+                        frontTitle={service.title}
+                        frontSubtitle={service.description.split('.')[0] + '.'}
+                        frontIcon={service.icon}
+                        backTitle={service.title}
+                        backDescription={service.description}
+                        backFeatures={service.features}
+                        backCta={service.cta}
+                        onCtaClick={() => window.location.href = `/services/${service.id}`}
+                        popular={service.popular}
+                        className="h-full relative z-10"
+                      />
+                    </motion.div>
+                  ))}
+                </div>
+                
+                {/* View All Services CTA */}
+                <motion.div 
+                  className="flex justify-center mt-16"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                >
+                  <div className="relative group">
+                    {/* Button glow effect */}
+                    <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-primary rounded-full opacity-30 group-hover:opacity-50 blur-md transition-all duration-300 group-hover:blur-lg"></div>
+                    
+                    <Button
+                      variant="outline"
+                      size="default"
+                      rounded="full"
+                      className="relative shadow-md border-2 border-purple-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-800"
+                      onClick={() => window.location.href = '/services'}
+                    >
+                      <span className="flex items-center">
+                        <span className="mr-2">{translate("Разгледай всички услуги", "View All Services")}</span>
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                      </span>
+                    </Button>
+                  </div>
+                </motion.div>
+                
+                {/* Bottom decorative element */}
+                <div className="mt-16 flex justify-center">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-px bg-purple-200 dark:bg-purple-800/30"></div>
+                    <div className="text-purple-500 opacity-60">
+                      <Sparkle className="h-4 w-4" />
                     </div>
+                    <div className="w-12 h-px bg-purple-200 dark:bg-purple-800/30"></div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Service Benefits - more modern style */}
-        <div className="mb-16 max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white dark:bg-gray-800/50 p-6 rounded-xl border-2 border-black dark:border-gray-700 shadow-[5px_5px_0px_0px_rgba(22,163,74,0.3)] dark:shadow-[5px_5px_0px_0px_rgba(22,163,74,0.2)] text-center transform transition-transform duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 mx-auto bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900/30 dark:to-green-800/30 rounded-full flex items-center justify-center mb-4">
-                <Shield className="h-8 w-8 text-green-600 dark:text-green-400" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                {language === 'en' ? 'Expert Guidance' : 'Експертно Ръководство'}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                {language === 'en' 
-                  ? 'Personalized advice from certified professionals with years of experience.'
-                  : 'Персонализирани съвети от сертифицирани професионалисти с дългогодишен опит.'}
-              </p>
-            </div>
-            
-            <div className="bg-white dark:bg-gray-800/50 p-6 rounded-xl border-2 border-black dark:border-gray-700 shadow-[5px_5px_0px_0px_rgba(22,163,74,0.3)] dark:shadow-[5px_5px_0px_0px_rgba(22,163,74,0.2)] text-center transform transition-transform duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 mx-auto bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900/30 dark:to-green-800/30 rounded-full flex items-center justify-center mb-4">
-                <Sparkles className="h-8 w-8 text-green-600 dark:text-green-400" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                {language === 'en' ? 'Tailored Approach' : 'Индивидуален Подход'}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                {language === 'en' 
-                  ? 'Services customized to your unique needs, goals, and lifestyle.'
-                  : 'Услуги, персонализирани според вашите уникални нужди, цели и начин на живот.'}
-              </p>
-            </div>
-            
-            <div className="bg-white dark:bg-gray-800/50 p-6 rounded-xl border-2 border-black dark:border-gray-700 shadow-[5px_5px_0px_0px_rgba(22,163,74,0.3)] dark:shadow-[5px_5px_0px_0px_rgba(22,163,74,0.2)] text-center transform transition-transform duration-300 hover:-translate-y-1">
-              <div className="w-16 h-16 mx-auto bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900/30 dark:to-green-800/30 rounded-full flex items-center justify-center mb-4">
-                <Gift className="h-8 w-8 text-green-600 dark:text-green-400" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                {language === 'en' ? 'Exclusive Resources' : 'Ексклузивни Ресурси'}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                {language === 'en' 
-                  ? 'Access to premium materials, tools, and support not available elsewhere.'
-                  : 'Достъп до премиум материали, инструменти и подкрепа, които не са достъпни другаде.'}
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        {/* Tabs for filtering - more visually appealing */}
-        <div className="mb-12">
-          <Tabs defaultValue="all" className="w-full" onValueChange={setActiveTab}>
-            <div className="flex justify-center mb-8">
-              <TabsList className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-1.5 rounded-full border-2 border-black dark:border-gray-700 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.2)]">
-                <TabsTrigger 
-                  value="all" 
-                  className="rounded-full px-6 py-2.5 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:data-[state=active]:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] data-[state=active]:border-2 data-[state=active]:border-black dark:data-[state=active]:border-gray-700 transition-all duration-200 font-medium"
-                >
-                  {language === 'en' ? 'All Services' : 'Всички Услуги'}
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="individual" 
-                  className="rounded-full px-6 py-2.5 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:data-[state=active]:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] data-[state=active]:border-2 data-[state=active]:border-black dark:data-[state=active]:border-gray-700 transition-all duration-200 font-medium"
-                >
-                  <User className="h-4 w-4 mr-2" />
-                  {language === 'en' ? 'Individual' : 'Индивидуални'}
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="package" 
-                  className="rounded-full px-6 py-2.5 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:data-[state=active]:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] data-[state=active]:border-2 data-[state=active]:border-black dark:data-[state=active]:border-gray-700 transition-all duration-200 font-medium"
-                >
-                  <Package className="h-4 w-4 mr-2" />
-                  {language === 'en' ? 'Packages' : 'Пакети'}
-                </TabsTrigger>
-              </TabsList>
-            </div>
-            
-            {/* Services grid - improved layout */}
-            <TabsContent value={activeTab} className="mt-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-                {Array.isArray(filteredServices) && filteredServices.length > 0 ? (
-                  filteredServices.map((service, index) => (
-                    <ServiceCard key={service.id} service={service} index={index} />
-                  ))
-                ) : (
-                  <div className="col-span-3 text-center py-12 px-4 bg-gray-50 dark:bg-gray-800/30 rounded-xl border border-gray-200 dark:border-gray-700">
-                    <Package className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500 mb-4" />
-                    <p className="text-gray-600 dark:text-gray-400 font-medium">
-                      {language === 'en' ? 'No services found in this category.' : 'Не са намерени услуги в тази категория.'}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
-        
-        {/* Call to action - enhanced style */}
-        <div className="text-center mt-16">
-          <Button 
-            size="lg"
-            className="group bg-green-600 hover:bg-green-700 text-white border-2 border-black dark:border-gray-700 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.2)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)] transition-all duration-300 px-8 py-6 h-auto rounded-xl"
-            asChild
-          >
-            <Link href="/services" className="flex items-center text-lg">
-              {language === 'en' ? 'View All Services' : 'Вижте Всички Услуги'}
-              <ChevronRight className="h-5 w-5 ml-2 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </Button>
+          </motion.div>
         </div>
       </div>
     </section>
   );
-}
+};
 
-// Service Card Component
-function ServiceCard({ service, index }: { service: Service; index: number }) {
-  const { language } = useLanguage();
-  
-  // Function to determine which image to use based on service type
-  const getServiceImage = (service: Service) => {
-    // Default placeholder images for different categories
-    const placeholders = {
-      'consultation': '/images/placeholder-service.jpg',
-      'meal-plan': '/images/placeholder-service.jpg',
-      'basic-package': '/images/placeholder-service.jpg',
-      'coaching': '/images/placeholder-service.jpg',
-      'therapy': '/images/placeholder-service.jpg',
-      'workshop': '/images/placeholder-service.jpg',
-      'default': '/images/placeholder-service.jpg'
-    };
-    
-    // Try to use service-specific image if available
-    if (service.image) {
-      return service.image;
-    }
-    
-    // Check for category-based naming patterns
-    if (service.title.toLowerCase().includes('consultation')) {
-      return placeholders['consultation'];
-    } else if (service.title.toLowerCase().includes('meal') || 
-               service.title.toLowerCase().includes('nutrition') ||
-               service.title.toLowerCase().includes('diet')) {
-      return placeholders['meal-plan'];
-    } else if (service.title.toLowerCase().includes('basic') || 
-               service.title.toLowerCase().includes('package')) {
-      return placeholders['basic-package'];
-    } else if (service.title.toLowerCase().includes('coaching')) {
-      return placeholders['coaching'];
-    } else if (service.title.toLowerCase().includes('therapy')) {
-      return placeholders['therapy'];
-    } else if (service.title.toLowerCase().includes('workshop')) {
-      return placeholders['workshop'];
-    }
-    
-    // If no specific match, return general placeholder based on category
-    return placeholders['default'];
-  };
-  
-  // Get image if available
-  const serviceImage = getServiceImage(service);
-  
-  // Get badge color based on service category
-  const getCategoryColor = (category: string) => {
-    switch(category) {
-      case 'individual':
-        return "bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 text-blue-800 dark:text-blue-300";
-      case 'package':
-        return "bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 text-green-800 dark:text-green-300";
-      default:
-        return "bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 text-green-800 dark:text-green-300";
-    }
-  };
-  
-  // Process the title
-  const { mainTitle, tier } = service.category === 'package' ? getPackageTier(service.title) : { mainTitle: service.title, tier: null };
-  
-  return (
-    <div 
-      className="flex flex-col h-full group relative overflow-hidden rounded-xl transition-all duration-300 bg-white dark:bg-gray-800/50 shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1)] hover:shadow-[0px_4px_16px_rgba(22,163,74,0.15),_0px_8px_24px_rgba(22,163,74,0.15)] dark:shadow-[0px_4px_16px_rgba(0,0,0,0.2)] border-l-4 border-green-500 dark:border-green-600"
-    >
-      {/* Featured badge if applicable */}
-      {service.featured && (
-        <div className="absolute top-4 right-4 z-30">
-          <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-3 py-1.5 rounded-full shadow-lg font-medium text-xs flex items-center gap-1.5">
-            <Star className="h-3 w-3" />
-            {language === 'en' ? 'Featured' : 'Препоръчана'}
-          </div>
-        </div>
-      )}
-      
-      {/* Category badge - top left */}
-      <div className="absolute top-4 left-4 z-30">
-        <div className={`${getCategoryColor(service.category)} px-3 py-1.5 rounded-full shadow-lg font-medium text-xs flex items-center gap-1.5`}>
-          {service.category === 'individual' 
-            ? <User className="h-3 w-3 mr-1" />
-            : <Package className="h-3 w-3 mr-1" />
-          }
-          {service.category === 'individual' 
-            ? (language === 'en' ? 'Individual' : 'Индивидуална')
-            : (language === 'en' ? '' : '')
-          }
-        </div>
-      </div>
-      
-      {/* Service image area - reduced height to standardize all cards */}
-      <div className="relative p-6 pt-14 pb-2 h-[180px] flex items-center justify-center bg-gradient-to-br from-gray-50/50 to-gray-100/50 dark:from-gray-800/30 dark:to-gray-900/30">
-        <div className="absolute inset-0 opacity-50 pointer-events-none"></div>
-        
-        {/* Image or icon container with fixed dimensions */}
-        <div className="w-[140px] h-[110px] relative rounded-lg overflow-hidden shadow-[5px_5px_0px_0px_rgba(0,0,0,0.8)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.2)]">
-          {serviceImage ? (
-            // If we have an image, display it
-            <div className="w-full h-full bg-gradient-to-br from-green-400 to-green-600 relative overflow-hidden">
-              <img 
-                src={serviceImage} 
-                alt={mainTitle} 
-                className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-300"
-              />
-            </div>
-          ) : (
-            // Fallback to colored background with icon
-            <div className="w-full h-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
-              {service.category === 'individual' 
-                ? <User className="h-12 w-12 text-white/90" /> 
-                : <Package className="h-12 w-12 text-white/90" />
-              }
-            </div>
-          )}
-        </div>
-        
-        {/* Quick action button */}
-        <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-          <Button 
-            size="icon" 
-            variant="secondary" 
-            className="h-8 w-8 rounded-full bg-white/95 dark:bg-gray-800/95 shadow-[0px_8px_16px_rgba(0,0,0,0.1)] hover:bg-white dark:hover:bg-gray-800 backdrop-blur-sm text-gray-700 dark:text-gray-300"
-            asChild
-          >
-            <Link href={`/services/${service.id}`} title={language === 'en' ? 'View details' : 'Виж детайли'}>
-              <Eye className="h-3.5 w-3.5" />
-            </Link>
-          </Button>
-        </div>
-      </div>
-      
-      {/* Service details - standardized layout for all card types */}
-      <div className="flex flex-col flex-grow p-4 backdrop-blur-sm rounded-b-xl bg-gradient-to-b from-white to-gray-50 dark:from-gray-800/80 dark:to-gray-900/80">
-        {/* Title section with consistent height */}
-        <div className="mb-2 min-h-[50px]">
-          {/* Package tier badge */}
-          {tier && service.category === 'package' && (
-            <Badge 
-              variant="outline" 
-              className={`mb-1 px-2 py-0.5 text-xs font-medium ${getTierBadgeColor(tier)}`}
-            >
-              {tier}
-            </Badge>
-          )}
-          
-          {/* Title for all services */}
-          <h3 className="font-bold text-gray-900 dark:text-white text-base mt-1 line-clamp-2">
-            {mainTitle}
-          </h3>
-        </div>
-        
-        {/* Info section - price and duration */}
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <Clock className="h-3.5 w-3.5 text-gray-500" />
-            <span className="text-xs text-gray-600 dark:text-gray-300">{service.duration}</span>
-          </div>
-          <span className="font-bold text-base text-green-600 dark:text-green-400">{service.price.toFixed(0)}{language === 'en' ? ' BGN' : 'лв'}</span>
-        </div>
-        
-        {/* Description with fixed height */}
-        <p className="text-xs text-gray-600 dark:text-gray-300 mb-2 line-clamp-2 h-[32px]">
-          {service.description}
-        </p>
-        
-        {/* Includes list - more compact for packages */}
-        {service.category === 'package' && service.includes && (
-          <div className="mb-3 bg-gradient-to-r from-green-50 to-green-100/50 dark:from-green-900/20 dark:to-green-900/10 p-2 rounded-lg border border-green-100 dark:border-green-800/30">
-            <p className="text-xs font-medium text-green-800 dark:text-green-300 mb-1">
-              {language === 'en' ? 'Includes:' : 'Включва:'}
-            </p>
-            <ul className="text-[11px] text-gray-700 dark:text-gray-300 space-y-0.5">
-              {service.includes.slice(0, 2).map((item, index) => (
-                <li key={index} className="flex items-start">
-                  <span className="text-green-500 mr-1 flex-shrink-0">✓</span>
-                  <span className="line-clamp-1">{item}</span>
-                </li>
-              ))}
-              {service.includes.length > 2 && (
-                <li className="text-green-600 dark:text-green-400 italic text-[11px] pt-0.5 pl-4">
-                  +{service.includes.length - 2} {language === 'en' ? 'more items' : 'още услуги'}
-                </li>
-              )}
-            </ul>
-          </div>
-        )}
-        
-        {/* Ensure consistent spacing at the bottom with a spacer if not a package */}
-        {service.category !== 'package' && (
-          <div className="mb-3 h-[65px]"></div>
-        )}
-        
-        {/* Action buttons at the bottom */}
-        <div className="flex gap-2 mt-auto">
-          <Button 
-            variant="outline"
-            size="sm"
-            className={cn(
-              "flex-1 h-8 text-xs border border-black dark:border-gray-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.2)] transition-all duration-300 rounded-md",
-              "border-green-600 text-green-600 hover:bg-green-50 dark:border-green-500 dark:text-green-500 dark:hover:bg-green-950/30"
-            )}
-            asChild
-          >
-            <Link href={`/services/${service.id}`}>
-              <Eye className="h-3 w-3 mr-1" />
-              {language === 'en' ? 'Details' : 'Детайли'}
-            </Link>
-          </Button>
-          
-          <Button 
-            size="sm"
-            className={cn(
-              "flex-1 h-8 text-xs border border-black dark:border-gray-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.2)] transition-all duration-300 rounded-md text-white",
-              "bg-green-600 hover:bg-green-700"
-            )}
-            asChild
-          >
-            <Link href={`/services/${service.id}/book`} className="flex items-center justify-center">
-              <Calendar className="h-3 w-3 mr-1" />
-              {language === 'en' ? 'Book Now' : 'Запази'}
-            </Link>
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-} 
+export default Services; 
