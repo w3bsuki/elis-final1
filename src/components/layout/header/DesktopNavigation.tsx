@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,8 +13,25 @@ import { useLanguage } from "@/lib/LanguageContext";
 import { NavLink } from "./NavLink";
 import { NavigationProps } from "./types";
 
+// Custom hook that safely uses language context
+function useSafeLanguage() {
+  const [language, setLanguage] = useState('bg'); // Default to Bulgarian
+  
+  useEffect(() => {
+    try {
+      const context = useLanguage();
+      setLanguage(context.language);
+    } catch (e) {
+      console.warn("Language context not available in DesktopNavigation", e);
+      // Keep using default language
+    }
+  }, []);
+  
+  return { language };
+}
+
 export function DesktopNavigation({ books, services, onBookClick, onServiceClick }: NavigationProps) {
-  const { language } = useLanguage();
+  const { language } = useSafeLanguage();
   const pathname = usePathname();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   

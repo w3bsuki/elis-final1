@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChevronDown, SlidersHorizontal, Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,6 +22,28 @@ const ensureString = (value: string | Record<string, unknown>): string => {
   return String(value) || '';
 };
 
+// Custom hook that safely uses language context
+function useSafeLanguage() {
+  const [language, setLanguage] = useState('bg'); // Default to Bulgarian
+  const [translations, setTranslations] = useState<any>({
+    bg: {}, // Default empty translations
+    en: {}
+  });
+  
+  useEffect(() => {
+    try {
+      const context = useLanguage();
+      setLanguage(context.language);
+      setTranslations(context.translations);
+    } catch (e) {
+      console.warn("Language context not available in ShopFilters", e);
+      // Keep using default values
+    }
+  }, []);
+  
+  return { language, translations };
+}
+
 interface ShopFiltersProps {
   onSearch: (term: string) => void;
   onSortChange: (sort: string) => void;
@@ -41,7 +63,7 @@ export function ShopFilters({
   searchTerm = '',
   showServiceFilters = false,
 }: ShopFiltersProps) {
-  const { language, translations } = useLanguage();
+  const { language, translations } = useSafeLanguage();
   
   // Create a local translation function if t is not provided
   const getTranslation = (key: string): string => {

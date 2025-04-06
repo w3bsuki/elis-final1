@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -12,6 +12,28 @@ const ensureString = (value: string | Record<string, unknown>): string => {
   }
   return String(value) || '';
 };
+
+// Custom hook that safely uses language context
+function useSafeLanguage() {
+  const [language, setLanguage] = useState('bg'); // Default to Bulgarian
+  const [translations, setTranslations] = useState<any>({
+    bg: {}, // Default empty translations
+    en: {}
+  });
+  
+  useEffect(() => {
+    try {
+      const context = useLanguage();
+      setLanguage(context.language);
+      setTranslations(context.translations);
+    } catch (e) {
+      console.warn("Language context not available in CategorySidebar", e);
+      // Keep using default values
+    }
+  }, []);
+  
+  return { language, translations };
+}
 
 interface CategorySidebarProps {
   activeCategory: string;
@@ -31,7 +53,7 @@ export function CategorySidebar({
   onCategoryChange,
   className,
 }: CategorySidebarProps) {
-  const { language, translations } = useLanguage();
+  const { language, translations } = useSafeLanguage();
   
   // Create a local translation function if t is not provided
   const getTranslation = (key: string): string => {

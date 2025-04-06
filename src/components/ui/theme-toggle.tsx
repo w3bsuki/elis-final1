@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useState, useEffect } from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
@@ -13,9 +14,26 @@ import {
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/LanguageContext";
 
+// Custom hook that safely uses language context
+function useSafeLanguage() {
+  const [language, setLanguage] = useState('bg'); // Default to Bulgarian
+  
+  useEffect(() => {
+    try {
+      const context = useLanguage();
+      setLanguage(context.language);
+    } catch (e) {
+      console.warn("Language context not available in ThemeToggle", e);
+      // Keep using default language
+    }
+  }, []);
+  
+  return { language };
+}
+
 export function ThemeToggle() {
   const { setTheme, theme, resolvedTheme } = useTheme();
-  const { language } = useLanguage();
+  const { language } = useSafeLanguage();
   
   return (
     <DropdownMenu>

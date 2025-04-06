@@ -9,13 +9,14 @@ import { geistSans, geistMono, playfair } from '@/lib/fonts';
 import { useRouter } from 'next/router';
 import '@/styles/globals.css';
 import { useEffect, useState } from 'react';
-import { ThemeProvider, useTheme } from 'next-themes';
+import { ThemeProvider } from 'next-themes';
 import { LanguageProvider } from "@/lib/LanguageContext";
 import { Inter } from 'next/font/google';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { Suspense, lazy } from 'react';
 import { registerServiceWorker } from '@/lib/registerServiceWorker';
+import { generatePersonJsonLd } from '@/app/metadata';
 
 // Load dynamic components with proper code splitting
 const ErrorFallback = lazy(() => import('@/components/ui/ErrorFallback'));
@@ -34,6 +35,9 @@ export default function App({ Component, pageProps }: AppProps) {
   const title = "Elis Pavlova - Personal Development & Creative Writing";
   const description = "Join Elis Pavlova's transformative journey through creative writing, personal development workshops, and professional consultations. Discover your creative potential today.";
   const [mounted, setMounted] = useState(false);
+
+  // Generate structured data
+  const personJsonLd = generatePersonJsonLd();
 
   // Hydration fix
   useEffect(() => {
@@ -125,6 +129,12 @@ export default function App({ Component, pageProps }: AppProps) {
               <meta name="format-detection" content="telephone=no" />
               <meta name="apple-mobile-web-app-capable" content="yes" />
               <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+              
+              {/* JSON-LD Structured Data */}
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+              />
             </Head>
             <div className={cn(
               geistSans.variable, 

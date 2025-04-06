@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -28,6 +28,28 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { SocialLinks } from "./SocialLinks"; // Assuming SocialLinks is in the same dir
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
+// Custom hook that safely uses language context
+function useSafeLanguage() {
+  const [language, setLanguage] = useState('bg'); // Default to Bulgarian
+  const [setLanguageFunction, setSetLanguageFunction] = useState<(lang: string) => void>(() => {
+    // Default implementation that just updates local state
+    return (lang: string) => setLanguage(lang);
+  });
+  
+  useEffect(() => {
+    try {
+      const context = useLanguage();
+      setLanguage(context.language);
+      setSetLanguageFunction(() => context.setLanguage);
+    } catch (e) {
+      console.warn("Language context not available in MobileNavigation", e);
+      // Keep using default values
+    }
+  }, []);
+  
+  return { language, setLanguage: setLanguageFunction };
+}
+
 interface MobileNavigationProps extends NavigationProps {
   isMenuOpen: boolean | string;
   setIsMenuOpen: (value: boolean | string) => void;
@@ -43,7 +65,7 @@ export function MobileNavigation({
   onBookClick,
   onServiceClick
 }: MobileNavigationProps) {
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage } = useSafeLanguage();
   const pathname = usePathname();
   const translate = (bgText: string, enText: string) => language === 'en' ? enText : bgText;
 

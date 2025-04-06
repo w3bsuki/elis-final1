@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ShoppingBag, ShoppingCart } from "lucide-react";
@@ -8,8 +9,25 @@ import { useLanguage } from "@/lib/LanguageContext";
 import { useCart } from "@/lib/CartContext";
 import { cn } from "@/lib/utils";
 
+// Custom hook that safely uses language context
+function useSafeLanguage() {
+  const [language, setLanguage] = useState('bg'); // Default to Bulgarian
+  
+  useEffect(() => {
+    try {
+      const context = useLanguage();
+      setLanguage(context.language);
+    } catch (e) {
+      console.warn("Language context not available in ShopButton", e);
+      // Keep using default language
+    }
+  }, []);
+  
+  return { language };
+}
+
 export function ShopButton() {
-  const { language } = useLanguage();
+  const { language } = useSafeLanguage();
   const { totalItems, setIsCartOpen } = useCart();
   const pathname = usePathname();
   const router = useRouter();

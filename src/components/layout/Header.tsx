@@ -80,8 +80,26 @@ const services: ServiceType[] = [
   },
 ];
 
+// Custom hook that safely uses language context
+function useSafeLanguage() {
+  const [language, setLanguage] = useState('bg'); // Default to Bulgarian
+  
+  useEffect(() => {
+    try {
+      const context = useLanguage();
+      setLanguage(context.language);
+    } catch (e) {
+      console.warn("Language context not available in Header", e);
+      // Keep using default language
+    }
+  }, []);
+  
+  return { language };
+}
+
 export default function Header() {
-  const { language } = useLanguage();
+  // Replace direct useLanguage with safe version
+  const { language } = useSafeLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean | string>(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);

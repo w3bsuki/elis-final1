@@ -1,7 +1,6 @@
 "use client";
 
 import { ThemeProvider } from "next-themes";
-import { LanguageProvider } from "@/lib/LanguageContext";
 import { CartProvider } from "@/lib/CartContext";
 import { useEffect, useState } from "react";
 import { DatabaseErrorManager } from '@/components/DatabaseErrorManager';
@@ -31,12 +30,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
       enableSystem={true}
       disableTransitionOnChange
     >
-      <LanguageProvider>
-        <CartProvider>
-          {children}
-          <DatabaseErrorManager />
-        </CartProvider>
-      </LanguageProvider>
+      <CartProvider>
+        {children}
+        <DatabaseErrorManager />
+      </CartProvider>
     </ThemeProvider>
   );
 } 

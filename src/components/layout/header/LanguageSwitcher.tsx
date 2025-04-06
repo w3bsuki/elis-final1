@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,8 +12,30 @@ import {
 import { useLanguage } from "@/lib/LanguageContext";
 import { cn } from "@/lib/utils";
 
+// Custom hook that safely uses language context
+function useSafeLanguage() {
+  const [language, setLanguage] = useState('bg'); // Default to Bulgarian
+  const [setLanguageFunction, setSetLanguageFunction] = useState<(lang: string) => void>(() => {
+    // Default implementation that just updates local state
+    return (lang: string) => setLanguage(lang);
+  });
+  
+  useEffect(() => {
+    try {
+      const context = useLanguage();
+      setLanguage(context.language);
+      setSetLanguageFunction(() => context.setLanguage);
+    } catch (e) {
+      console.warn("Language context not available in LanguageSwitcher", e);
+      // Keep using default values
+    }
+  }, []);
+  
+  return { language, setLanguage: setLanguageFunction };
+}
+
 export function LanguageSwitcher() {
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage } = useSafeLanguage();
   
   return (
     <DropdownMenu>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/lib/LanguageContext";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,23 @@ import { useToast } from "@/components/ui/use-toast";
 const newsletterSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
 });
+
+// Custom hook that safely uses language context
+function useSafeLanguage() {
+  const [language, setLanguage] = useState('bg'); // Default to Bulgarian
+  
+  useEffect(() => {
+    try {
+      const context = useLanguage();
+      setLanguage(context.language);
+    } catch (e) {
+      console.warn("Language context not available in NewsletterSignup", e);
+      // Keep using default language
+    }
+  }, []);
+  
+  return { language };
+}
 
 export type NewsletterSignupProps = {
   variant?: "default" | "accent" | "premium" | "minimal" | "card";
@@ -40,7 +57,7 @@ export function NewsletterSignup({
   inputClassName,
   buttonClassName,
 }: NewsletterSignupProps) {
-  const { language } = useLanguage();
+  const { language } = useSafeLanguage();
   const { toast } = useToast();
   const translate = (bg: string, en: string) => (language === "bg" ? bg : en);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useLanguage } from "@/lib/LanguageContext";
@@ -26,8 +26,25 @@ import {
 import { cn } from "@/lib/utils";
 import { NewsletterSignup } from "@/components/ui/NewsletterSignup";
 
+// Custom hook that safely uses language context
+function useSafeLanguage() {
+  const [language, setLanguage] = useState('bg'); // Default to Bulgarian
+  
+  useEffect(() => {
+    try {
+      const context = useLanguage();
+      setLanguage(context.language);
+    } catch (e) {
+      console.warn("Language context not available in Footer", e);
+      // Keep using default language
+    }
+  }, []);
+  
+  return { language };
+}
+
 export function Footer() {
-  const { language } = useLanguage();
+  const { language } = useSafeLanguage();
   const translate = (bg: string, en: string) => language === 'bg' ? bg : en;
   
   // Current year for copyright

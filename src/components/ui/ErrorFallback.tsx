@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
+import { useState, useEffect } from "react";
 
 interface ErrorFallbackProps {
   error: Error;
@@ -8,8 +9,24 @@ interface ErrorFallbackProps {
 }
 
 export default function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
-  const { language } = useLanguage();
-  const translate = (bg: string, en: string) => language === 'bg' ? bg : en;
+  // Use a try/catch to handle potential context errors
+  const [lang, setLang] = useState<string>('en');
+  
+  // Safe translation function that works even without context
+  const translate = (bg: string, en: string) => {
+    return lang === 'bg' ? bg : en;
+  };
+  
+  // Try to get language from context if available
+  useEffect(() => {
+    try {
+      const { language } = useLanguage();
+      setLang(language);
+    } catch (e) {
+      // If useLanguage fails, default to English
+      console.warn("Language context not available in ErrorFallback");
+    }
+  }, []);
 
   return (
     <div className="flex min-h-[50vh] flex-col items-center justify-center text-center px-4">
@@ -54,7 +71,7 @@ export default function ErrorFallback({ error, resetErrorBoundary }: ErrorFallba
         </Button>
       </div>
       
-      <div className="mt-8 text-sm text-gray-500 dark:text-gray-500">
+      <div className="mt-8 text-sm text-gray-500 dark:text-gray-400">
         {translate(
           "Ако проблемът продължава, моля свържете се с нас на",
           "If the problem persists, please contact us at"
