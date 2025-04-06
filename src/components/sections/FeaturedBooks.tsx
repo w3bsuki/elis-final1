@@ -122,7 +122,7 @@ export function FeaturedBooks() {
           >
             <Badge 
               variant="outline" 
-              className="mb-3 px-3 py-1 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-700/50 inline-flex items-center gap-1.5"
+              className="mb-3 px-3 py-1 bg-primary/5 dark:bg-primary/10 text-primary dark:text-primary border-primary/20 dark:border-primary/30 inline-flex items-center gap-1.5 shadow-sm"
             >
               <BookOpen className="h-4 w-4" />
               <span>{translate("Писателско Творчество", "Literary Works")}</span>
@@ -148,12 +148,12 @@ export function FeaturedBooks() {
               onValueChange={(value) => setSelectedCategory(value as BookCategory)}
             >
               <div className="flex flex-col items-center mb-4">
-                <TabsList className="bg-gray-100 dark:bg-gray-800 w-auto min-w-[70%] h-12 px-1 mb-3">
+                <TabsList className="bg-primary/5 dark:bg-primary/10 w-auto min-w-[70%] h-12 px-1 mb-3">
                   {categories.map((category) => (
                     <TabsTrigger 
                       key={category.id} 
                       value={category.id}
-                      className="data-[state=active]:bg-green-600 data-[state=active]:text-white text-base px-5 py-2.5"
+                      className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-base px-5 py-2.5"
                     >
                       {category.label}
                     </TabsTrigger>
@@ -189,7 +189,7 @@ export function FeaturedBooks() {
                       <Input
                         type="text"
                         placeholder={translate("Търсете по заглавие или ключови думи...", "Search by title or keywords...")}
-                        className="pl-10 py-2 border-green-200 dark:border-green-800 focus:ring-2 focus:ring-green-500 dark:focus:ring-green-700"
+                        className="pl-10 py-2 border-primary/20 dark:border-primary/30 focus:ring-2 focus:ring-primary dark:focus:ring-primary/70"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                       />
@@ -328,153 +328,128 @@ function BookGrid({
   categories: { id: BookCategory; label: string }[];
   translate: (bg: string, en: string) => string;
 }) {
+  // Animation for the grid container
+  const containerVariants = {
+    hidden: { opacity: 1 }, // Start visible to avoid flash
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1, // Stagger animation of children
+      },
+    },
+  };
+
+  // Animation for each book card
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  };
+
+  // Get category label
+  const getCategoryLabel = (categoryId: string) => {
+    return categories.find(cat => cat.id === categoryId)?.label || categoryId;
+  };
+
   return (
-    <>
-      {books.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 gap-5">
-          {books.map((book, index) => (
-            <motion.div
-              key={book.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.05 }}
-              className="w-full"
-            >
-              <div className="group h-full flex flex-col bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700">
-                {/* Book Cover with Overlay */}
-                <div className="relative aspect-[1/1] overflow-hidden">
-                  <Image
-                    src={book.coverImage}
-                    alt={book.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  />
-                  
-                  {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  
-                  {/* Quick action buttons */}
-                  <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <div className="flex gap-2 justify-between">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="bg-white/10 hover:bg-white/20 border-white/20 text-white rounded-md text-sm px-2.5 py-1.5 h-auto"
-                        onClick={() => handleOpenExcerpt(book)}
-                      >
-                        <Clock className="mr-1.5 h-3.5 w-3.5" />
-                        {translate("Преглед", "Preview")}
-                      </Button>
-                      
-                      <Button
-                        className="bg-green-600 hover:bg-green-700 text-white rounded-md text-sm px-2.5 py-1.5 h-auto"
-                        size="sm"
-                        asChild
-                      >
-                        <a href={`/shop/${book.id}`} className="flex items-center">
-                          {translate("Детайли", "Details")}
-                          <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-                        </a>
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  {/* Badges */}
-                  <div className="absolute top-3 left-3 flex flex-col gap-2">
-                    {book.featured && (
-                      <Badge className="bg-amber-500 text-white border-0 flex items-center gap-1 px-2 py-0.5 text-sm">
-                        <Award className="h-3.5 w-3.5" />
-                        {translate("Препоръчана", "Featured")}
-                      </Badge>
-                    )}
-                    
-                    {isNewRelease(book.publishDate) && (
-                      <Badge className="bg-blue-500 text-white border-0 flex items-center gap-1 px-2 py-0.5 text-sm">
-                        <TrendingUp className="h-3.5 w-3.5" />
-                        {translate("Нова", "New")}
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-                
-                {/* Book Info */}
-                <div className="flex-grow flex flex-col justify-between p-4">
-                  <div>
-                    <h3 className="font-bold text-lg mb-2 font-playfair line-clamp-1">{book.title}</h3>
-                    
-                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-3">
-                      <span>{new Date(book.publishDate).getFullYear()}</span>
-                      <span>•</span>
-                      <span>{book.pages} {translate("стр.", "pgs")}</span>
-                    </div>
-                    
-                    <div className="flex flex-wrap gap-1.5 mb-3">
-                      {bookCategories[book.id as keyof typeof bookCategories]?.map(category => (
-                        <span 
-                          key={category} 
-                          className="text-xs px-2 py-0.5 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 rounded-full flex items-center"
-                        >
-                          <Tag className="h-3 w-3 mr-1" />
-                          {categories.find(c => c.id === category)?.label || category}
-                        </span>
-                      ))}
-                    </div>
-                    
-                    <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3 mb-3">
-                      {book.description}
-                    </p>
-                  </div>
-                  
-                  <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
-                    <span className="font-semibold text-lg text-green-600 dark:text-green-400">
-                      {book.price.toFixed(2)} лв.
-                    </span>
-                    
-                    <div className="flex items-center">
-                      <div className="flex">
-                        {[...Array(5)].map((_, i) => (
-                          <Star 
-                            key={i} 
-                            className={cn(
-                              "h-4 w-4", 
-                              i < Math.floor(Math.random() * 2) + 4 
-                                ? "text-amber-500 fill-amber-500" 
-                                : "text-gray-300 dark:text-gray-600"
-                            )} 
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      ) : (
-        <div className="py-8 text-center">
-          <Sparkles className="mx-auto h-10 w-10 text-gray-400 mb-3" />
-          <h3 className="text-lg font-semibold mb-2">
-            {translate("Няма намерени книги", "No books found")}
-          </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-            {translate(
-              "Опитайте с различни филтри или ключови думи",
-              "Try different filters or search terms"
+    <motion.div 
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 mt-6 px-2 md:px-4"
+    >
+      {books.map((book, index) => (
+        <motion.div 
+          key={`${book.id}-${index}`} 
+          variants={itemVariants}
+          className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-primary/10 dark:border-primary/20 flex flex-col"
+        >
+          {/* Book cover image */}
+          <div className="relative w-full aspect-[3/4] group">
+            <Image
+              src={book.coverImage}
+              alt={book.title}
+              fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            {/* Overlay for actions */}
+            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <Button 
+                variant="secondary" 
+                size="sm"
+                onClick={() => handleOpenExcerpt(book)}
+                className="bg-white/90 text-gray-900 hover:bg-white dark:bg-gray-900/90 dark:text-white dark:hover:bg-gray-900"
+              >
+                <BookText className="mr-2 h-4 w-4" />
+                {translate("Виж Детайли", "See Book Details")}
+              </Button>
+            </div>
+            {/* New Release / Bestseller Badge */}
+            {(isNewRelease(book.publishDate) || book.tags?.includes("bestseller")) && (
+              <Badge 
+                variant="default" 
+                className={cn(
+                  "absolute top-3 right-3 px-2 py-1 text-xs font-semibold shadow",
+                  isNewRelease(book.publishDate) ? 
+                    "bg-primary/90 text-primary-foreground border border-primary/20" : 
+                    "bg-amber-500 text-white border border-amber-600"
+                )}
+              >
+                {isNewRelease(book.publishDate) ? translate("Нова", "New") : translate("Бестселър", "Bestseller")}
+              </Badge>
             )}
+          </div>
+
+          {/* Book details */}
+          <div className="p-4 flex flex-col flex-grow">
+            <h3 className="text-lg font-semibold font-playfair mb-1 text-gray-900 dark:text-white line-clamp-2">
+              {book.title}
+            </h3>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+              {translate("Публикувана:", "Published:")} {new Date(book.publishDate).toLocaleDateString(language === 'bg' ? 'bg-BG' : 'en-US')}
+            </p>
+            
+            {/* Categories/Tags */}
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {(bookCategories[book.id as keyof typeof bookCategories] || []).map(catId => (
+                <Badge key={catId} variant="outline" className="px-2 py-0.5 text-xs border-primary/20 text-primary bg-primary/5 dark:bg-primary/10 dark:text-primary">
+                  {getCategoryLabel(catId)}
+                </Badge>
+              ))}
+            </div>
+
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 flex-grow">
+              {book.description}
+            </p>
+
+            {/* Price and Rating */}
+            <div className="flex justify-between items-center mt-auto pt-3 border-t border-primary/10 dark:border-primary/20">
+              <p className="text-lg font-bold text-primary dark:text-primary">
+                {book.price.toFixed(2)} {translate("лв.", "BGN")}
+              </p>
+              <div className="flex items-center gap-1">
+                <Star className="h-4 w-4 text-yellow-500" fill="#eab308" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {book.rating.toFixed(1)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      ))}
+      
+      {/* Placeholder for empty state */}
+      {books.length === 0 && (
+        <div className="col-span-full text-center py-12 text-gray-500 dark:text-gray-400">
+          <Search className="mx-auto h-12 w-12 mb-4 text-primary/50" />
+          <p className="text-lg font-medium">
+            {translate("Няма намерени книги", "No books found")}
           </p>
-          <Button 
-            variant="outline" 
-            onClick={() => {
-              window.location.reload();
-            }}
-          >
-            {translate("Покажи всички книги", "Show all books")}
-          </Button>
+          <p className="text-sm">
+            {translate("Опитайте да промените филтрите или търсенето.", "Try adjusting your filters or search.")}
+          </p>
         </div>
       )}
-    </>
+    </motion.div>
   );
 } 

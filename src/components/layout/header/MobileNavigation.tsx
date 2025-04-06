@@ -15,7 +15,8 @@ import {
   Sparkles, 
   Mail,
   Home,
-  ShoppingBag
+  ShoppingBag,
+  ArrowRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +26,7 @@ import { NavigationProps } from "./types";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { SocialLinks } from "./SocialLinks"; // Assuming SocialLinks is in the same dir
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface MobileNavigationProps extends NavigationProps {
   isMenuOpen: boolean | string;
@@ -66,8 +68,8 @@ export function MobileNavigation({
 
   const menuVariants = {
     hidden: { opacity: 0, x: "100%" },
-    visible: { opacity: 1, x: 0, transition: { type: "tween", duration: 0.3, ease: "easeInOut" } },
-    exit: { opacity: 0, x: "100%", transition: { type: "tween", duration: 0.3, ease: "easeInOut" } }
+    visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 30 } },
+    exit: { opacity: 0, x: "100%", transition: { type: "spring", stiffness: 300, damping: 30 } }
   };
   
   const listVariants = {
@@ -77,7 +79,7 @@ export function MobileNavigation({
 
   const itemVariants = {
     hidden: { opacity: 0, x: 20 },
-    visible: { opacity: 1, x: 0 }
+    visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" } }
   };
 
   const renderMenuItem = (item: any) => (
@@ -86,23 +88,26 @@ export function MobileNavigation({
         <Link 
           href={item.href} 
           className={cn(
-            "flex w-full items-center gap-3 border-b border-gray-200 dark:border-gray-700 px-6 py-4 text-left transition-colors",
-            pathname === item.href ? "bg-gray-100 dark:bg-gray-800 text-green-600 dark:text-green-400 font-semibold" : "text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
+            "flex w-full items-center gap-3 border-b border-gray-200 dark:border-gray-700 px-6 py-4 text-left transition-all duration-200",
+            pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
+              ? "bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-foreground font-medium" 
+              : "text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-primary dark:hover:text-primary-foreground"
           )}
         >
           <item.icon className="h-5 w-5 flex-shrink-0" />
           <span className="flex-1 text-base">{item.label}</span>
         </Link>
       ) : (
-        <button
+        <motion.button
+          whileTap={{ scale: 0.98 }}
           type="button"
-          className="flex w-full items-center gap-3 border-b border-gray-200 dark:border-gray-700 px-6 py-4 text-left transition-colors text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
+          className="flex w-full items-center gap-3 border-b border-gray-200 dark:border-gray-700 px-6 py-4 text-left transition-all duration-200 text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-primary dark:hover:text-primary-foreground"
           onClick={() => setIsMenuOpen(item.id)}
         >
           <item.icon className="h-5 w-5 flex-shrink-0" />
           <span className="flex-1 text-base">{item.label}</span>
           <ChevronRight className="h-4 w-4 text-gray-400" />
-        </button>
+        </motion.button>
       )}
     </motion.div>
   );
@@ -114,10 +119,16 @@ export function MobileNavigation({
           variant="ghost"
           size="icon"
           aria-label="Toggle menu"
-          className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+          className="rounded-lg text-gray-700 dark:text-gray-300 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-primary-foreground"
           onClick={() => setIsMenuOpen(isMenuOpen ? false : true)}
         >
-          {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          <motion.div
+            initial={false}
+            animate={{ rotate: isMenuOpen ? 90 : 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </motion.div>
         </Button>
       </div>
 
@@ -125,7 +136,7 @@ export function MobileNavigation({
         {isMenuOpen && (
           <motion.div
             style={mobileMenuStyle}
-            className="fixed inset-x-0 bottom-0 z-40 flex flex-col bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 lg:hidden overflow-y-auto"
+            className="fixed inset-x-0 bottom-0 z-40 flex flex-col bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 lg:hidden overflow-y-auto rounded-t-xl"
             variants={menuVariants}
             initial="hidden"
             animate="visible"
@@ -138,19 +149,25 @@ export function MobileNavigation({
                 
                 {/* Language & Theme Toggles */}
                 <motion.div variants={itemVariants} className="border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center">
-                  <button
-                    type="button"
-                    className="flex items-center gap-2 text-gray-800 dark:text-gray-200 hover:text-green-600 dark:hover:text-green-400 transition-colors"
+                  <Button 
+                    variant="ghost" 
                     onClick={toggleLanguage}
+                    className="flex items-center gap-2 text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-primary-foreground hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors pointer-events-auto"
                   >
                     <Globe className="h-5 w-5" />
-                    <span className="text-base">{language === "en" ? "Български" : "English"}</span>
-                  </button>
+                    <span className="text-base">
+                      {language === "en" ? "Български" : "English"}
+                    </span>
+                  </Button>
                   <ThemeToggle />
                 </motion.div>
                 
                 {/* Social Links */}
-                <motion.div variants={itemVariants} className="p-6 flex justify-center">
+                <motion.div 
+                  variants={itemVariants} 
+                  className="p-6 flex justify-center"
+                  whileHover={{ scale: 1.02 }}
+                >
                   <SocialLinks />
                 </motion.div>
               </motion.div>
@@ -160,7 +177,11 @@ export function MobileNavigation({
             {isMenuOpen === "books" && (
               <motion.div variants={listVariants} initial="hidden" animate="visible">
                 <div className="flex items-center justify-between px-6 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 sticky top-0">
-                  <Button variant="ghost" onClick={() => setIsMenuOpen(true)} className="p-0 h-auto text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-transparent">
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => setIsMenuOpen(true)} 
+                    className="p-0 h-auto text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-foreground hover:bg-transparent"
+                  >
                     <ChevronLeft className="mr-1 h-4 w-4" />
                     {translate("Назад", "Back")}
                   </Button>
@@ -173,9 +194,9 @@ export function MobileNavigation({
                     <Link
                       href={book.href}
                       onClick={() => onBookClick(book)}
-                      className="group flex w-full items-center gap-4 border-b border-gray-200 dark:border-gray-700 px-6 py-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      className="group flex w-full items-center gap-4 border-b border-gray-200 dark:border-gray-700 px-6 py-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200"
                     >
-                      <div className="relative w-12 h-16 rounded-md overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-800">
+                      <div className="relative w-12 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-800">
                         <Image
                           src={book.image}
                           alt={book.title}
@@ -185,21 +206,29 @@ export function MobileNavigation({
                         />
                       </div>
                       <div className="flex-grow">
-                        <h4 className="text-base font-medium text-gray-800 dark:text-gray-200 mb-0.5 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
+                        <h4 className="text-base font-medium text-gray-800 dark:text-gray-200 mb-0.5 group-hover:text-primary dark:group-hover:text-primary-foreground transition-colors">
                           {book.title}
                         </h4>
                         <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">
                           {book.description}
                         </p>
                       </div>
-                      <Badge variant="outline" className="text-xs px-1.5 py-0.5 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 bg-green-50 dark:bg-green-900/20 self-start">
+                      <Badge 
+                        variant="outline" 
+                        className="text-xs px-1.5 py-0.5 border-primary/20 dark:border-primary/30 text-primary dark:text-primary-foreground bg-primary/5 dark:bg-primary/10 self-start"
+                      >
                         {book.price.toFixed(2)} лв
                       </Badge>
                     </Link>
                   </motion.div>
                 ))}
                 <motion.div variants={itemVariants} className="p-4 bg-gray-50 dark:bg-gray-800/50">
-                  <Button variant="ghost" size="sm" className="w-full justify-center text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/30" asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="w-full justify-center text-primary hover:text-primary dark:text-primary-foreground dark:hover:text-primary-foreground hover:bg-primary/10 dark:hover:bg-primary/20"
+                    asChild
+                  >
                     <Link href="/shop">
                       {translate('Разгледай всички книги', 'Browse all books')}
                       <ArrowRight className="ml-1 h-4 w-4" />
@@ -213,7 +242,11 @@ export function MobileNavigation({
             {isMenuOpen === "services" && (
               <motion.div variants={listVariants} initial="hidden" animate="visible">
                 <div className="flex items-center justify-between px-6 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 sticky top-0">
-                  <Button variant="ghost" onClick={() => setIsMenuOpen(true)} className="p-0 h-auto text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-transparent">
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => setIsMenuOpen(true)} 
+                    className="p-0 h-auto text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-foreground hover:bg-transparent"
+                  >
                     <ChevronLeft className="mr-1 h-4 w-4" />
                     {translate("Назад", "Back")}
                   </Button>
@@ -223,11 +256,12 @@ export function MobileNavigation({
                 </div>
                 {services.map((service) => (
                   <motion.div key={service.id} variants={itemVariants}>
-                    <button
+                    <motion.button
+                      whileTap={{ scale: 0.98 }}
                       onClick={(e) => onServiceClick(service, e)}
-                      className="group flex w-full items-center gap-4 border-b border-gray-200 dark:border-gray-700 px-6 py-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      className="group flex w-full items-center gap-4 border-b border-gray-200 dark:border-gray-700 px-6 py-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200"
                     >
-                      <div className="relative w-12 h-12 rounded-md overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-800">
+                      <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-800">
                         <Image
                           src={service.image}
                           alt={service.title}
@@ -237,21 +271,29 @@ export function MobileNavigation({
                         />
                       </div>
                       <div className="flex-grow">
-                        <h4 className="text-base font-medium text-gray-800 dark:text-gray-200 mb-0.5 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
+                        <h4 className="text-base font-medium text-gray-800 dark:text-gray-200 mb-0.5 group-hover:text-primary dark:group-hover:text-primary-foreground transition-colors">
                           {service.title}
                         </h4>
                         <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">
                           {service.description}
                         </p>
                       </div>
-                      <Badge variant="secondary" className="text-xs px-1.5 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 self-start">
+                      <Badge 
+                        variant="secondary" 
+                        className="text-xs px-1.5 py-0.5 bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-foreground self-start"
+                      >
                         {service.duration}
                       </Badge>
-                    </button>
+                    </motion.button>
                   </motion.div>
                 ))}
                 <motion.div variants={itemVariants} className="p-4 bg-gray-50 dark:bg-gray-800/50">
-                  <Button variant="ghost" size="sm" className="w-full justify-center text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/30" asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="w-full justify-center text-primary hover:text-primary dark:text-primary-foreground dark:hover:text-primary-foreground hover:bg-primary/10 dark:hover:bg-primary/20"
+                    asChild
+                  >
                     <Link href="/services">
                       {translate('Виж всички услуги', 'View all services')}
                       <ArrowRight className="ml-1 h-4 w-4" />
@@ -260,7 +302,6 @@ export function MobileNavigation({
                 </motion.div>
               </motion.div>
             )}
-            
           </motion.div>
         )}
       </AnimatePresence>

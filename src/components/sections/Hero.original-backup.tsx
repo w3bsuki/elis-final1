@@ -48,20 +48,6 @@ import { services as allServices } from "@/data/services";
 import { Testimonials } from "./Testimonials";
 import { Contact } from "./Contact";
 
-// Animation variants for consistent use
-const fadeIn = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (custom: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { 
-      duration: 0.5, 
-      delay: custom * 0.1,
-      ease: [0.25, 0.1, 0.25, 1.0]
-    }
-  })
-};
-
 export default function Hero() {
   const { language } = useLanguage();
   const translate = (bg: string, en: string) => language === 'bg' ? bg : en;
@@ -121,25 +107,9 @@ export default function Hero() {
         .group:hover .group-hover-rotate-y-30 {
           transform: rotateY(-30deg);
         }
-        .book-hover-effect {
-          transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .book-hover-effect:hover {
-          transform: rotateY(-25deg) translateZ(20px);
-        }
-        .perspective-container {
-          perspective: 1000px;
-        }
       `}</style>
       
-      <section 
-        id="hero" 
-        className="w-full min-h-screen bg-white dark:bg-gray-950 overflow-hidden relative hero-below-header z-0"
-        style={{ 
-          marginTop: '80px', // Match header height
-          scrollMarginTop: '80px' // For anchor navigation
-        }}
-      >
+      <section className="relative min-h-[85vh] flex flex-col justify-start overflow-hidden bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-900 dark:to-gray-950 pt-2 pb-8">
         {/* Background decorations */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full blur-3xl"></div>
@@ -156,80 +126,74 @@ export default function Hero() {
           </div>
         </div>
         
-        <div className="container mx-auto px-4">
-          {/* Main content container with optimized glassmorphism effect */}
-          <div className="max-w-6xl mx-auto">
+        <div className="container mx-auto px-4 z-10">
+          {/* Modern nested container */}
+          <div className="max-w-7xl mx-auto relative">
+            {/* Main content container with nested card design */}
             <motion.div
-              className="bg-white/40 dark:bg-gray-900/40 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 shadow-xl overflow-hidden relative z-0"
+              className="bg-white/40 dark:bg-gray-900/40 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 shadow-2xl p-0.5 overflow-hidden"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <div className="bg-gradient-to-br from-gray-100/50 via-white/50 to-gray-100/50 dark:from-gray-900/50 dark:via-gray-950/50 dark:to-gray-900/50 rounded-lg p-4 sm:p-6 md:p-8 relative">
-                {/* Simplified inner glass panel */}
-                <div className="absolute inset-0 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner"></div>
+              {/* Main content inner container with gradient outline */}
+              <div className="bg-gradient-to-br from-gray-100/50 via-white/50 to-gray-100/50 dark:from-gray-900/50 dark:via-gray-950/50 dark:to-gray-900/50 rounded-lg p-5 sm:p-6 md:p-8 relative overflow-hidden">
+                {/* Glass panel effect with inner shadow */}
+                <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
                 
-                <div className="relative z-0">
-                  <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
-                    {/* Left side - Author Presentation - Optimized */}
+                <div className="relative z-10">
+                  <div className="flex flex-col lg:flex-row gap-8 lg:gap-4 xl:gap-10 items-center">
+                    {/* Left side - Author Presentation */}
                     <motion.div 
                       className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left"
-                      variants={fadeIn}
-                      initial="hidden"
-                      animate="visible"
-                      custom={0}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.6 }}
                     >
                       {/* Author badge */}
                       <motion.div
-                        variants={fadeIn}
-                        initial="hidden"
-                        animate="visible"
-                        custom={2}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
                         className="mb-5"
                       >
-                        <Badge 
-                          variant="outline" 
-                          className="px-4 py-1.5 text-sm font-medium rounded-full border-primary/30 bg-primary/5 text-primary shadow-sm"
-                        >
-                          <Star className="w-4 h-4 mr-1.5 text-amber-500 fill-amber-500" />
+                        <Badge variant="outline" className="px-4 py-1.5 text-xs font-medium rounded-full border-primary/30 bg-background/50 backdrop-blur-sm shadow-sm">
+                          <Star className="w-3.5 h-3.5 mr-1.5 text-amber-500 fill-amber-500" />
                           {translate("Отличен автор", "Award-winning author")}
                         </Badge>
                       </motion.div>
                       
-                      {/* Author name and title with improved typography */}
+                      {/* Author name and title */}
                       <motion.div
-                        variants={fadeIn}
-                        initial="hidden"
-                        animate="visible"
-                        custom={3}
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.3 }}
                       >
-                        <div className="flex flex-col items-center lg:items-start">
-                          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-3 font-serif bg-gradient-to-r from-gray-900 via-gray-700 to-gray-950 dark:from-gray-100 dark:via-gray-300 dark:to-gray-200 bg-clip-text text-transparent leading-tight">
+                        <div className="flex lg:items-start items-center flex-col">
+                          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-3 font-serif bg-gradient-to-r from-gray-900 via-gray-700 to-gray-950 dark:from-gray-100 dark:via-gray-300 dark:to-gray-200 bg-clip-text text-transparent">
                             {translate("Елис Павлова", "Elis Pavlova")}
                           </h1>
                           <div className="w-20 h-1.5 bg-primary rounded-full mb-3"></div>
-                          <h2 className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 font-medium tracking-wide">
+                          <h2 className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 font-medium">
                             {translate("Автор • Психолог • Коуч", "Author • Psychologist • Coach")}
                           </h2>
                         </div>
                       </motion.div>
                       
-                      {/* Author features with optimized animations */}
+                      {/* Author features */}
                       <motion.div 
-                        className="flex flex-col space-y-3 mt-6 max-w-md"
-                        variants={fadeIn}
-                        initial="hidden"
-                        animate="visible"
-                        custom={5}
+                        className="flex flex-col space-y-2 mt-6 max-w-md"
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.5 }}
                       >
                         {authorFeatures.map((feature, index) => (
                           <motion.div 
                             key={index}
                             className="flex items-center gap-3"
-                            variants={fadeIn}
-                            initial="hidden"
-                            animate="visible"
-                            custom={6 + index}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.4, delay: 0.6 + (index * 0.1) }}
                           >
                             <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary">
                               <feature.icon className="w-4 h-4" />
@@ -239,13 +203,12 @@ export default function Hero() {
                         ))}
                       </motion.div>
                       
-                      {/* Author bio preview with optimized typography */}
+                      {/* Author bio preview */}
                       <motion.p 
-                        className="mt-5 text-gray-600 dark:text-gray-400 max-w-xl text-base leading-relaxed"
-                        variants={fadeIn}
-                        initial="hidden"
-                        animate="visible"
-                        custom={8}
+                        className="mt-5 text-gray-600 dark:text-gray-400 max-w-xl text-sm sm:text-base"
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.8 }}
                       >
                         {translate(
                           "Вдъхновяващи книги и експертни насоки за личностно израстване, емоционално благополучие и трансформация на съзнанието.",
@@ -253,24 +216,25 @@ export default function Hero() {
                         )}
                       </motion.p>
                       
-                      {/* CTA buttons with improved styling */}
+                      {/* CTA buttons */}
                       <motion.div 
                         className="flex flex-wrap gap-4 mt-6"
-                        variants={fadeIn}
-                        initial="hidden"
-                        animate="visible"
-                        custom={9}
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.9 }}
                       >
                         <Dialog>
                           <DialogTrigger asChild>
                             <Button
-                              variant="default"
+                              variant="premium"
                               size="lg"
-                              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-8 py-6 h-auto text-base font-semibold shadow-lg transition-all duration-300 ease-out transform hover:scale-[1.02] hover:shadow-primary/30 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background group"
+                              rounded="full"
+                              className="shadow-lg group relative"
                             >
-                              <span className="flex items-center gap-2">
-                                {translate("Научи повече за мен", "Learn More About Me")} 
-                                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                              <div className="absolute -inset-0.5 bg-gradient-to-r from-amber-500 to-pink-500 rounded-full blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                              <span className="relative flex items-center gap-2">
+                                <div className="size-2 rounded-full bg-white"></div>
+                                {translate("За мен", "About Me")}
                               </span>
                             </Button>
                           </DialogTrigger>
@@ -340,7 +304,7 @@ export default function Hero() {
                           variant="outline"
                           size="lg"
                           rounded="full"
-                          className="border-2 shadow-md border-border hover:bg-secondary/50 transition-colors"
+                          className="border-2 shadow-md"
                           onClick={() => window.location.href = '/books'}
                         >
                           <BookOpen className="w-5 h-5 mr-2" />
@@ -349,76 +313,106 @@ export default function Hero() {
                       </motion.div>
                     </motion.div>
                     
-                    {/* Right side - Featured Book Showcase - Optimized */}
+                    {/* Right side - Featured Book Showcase */}
                     <motion.div 
-                      className="w-full lg:w-1/2 perspective-container"
-                      variants={fadeIn}
-                      initial="hidden"
-                      animate="visible"
-                      custom={4}
+                      className="w-full lg:w-1/2"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.8, delay: 0.2 }}
                     >
                       <div className="relative">
-                        {/* Optimized background decoration */}
+                        {/* Background decoration */}
                         <div className="absolute -inset-3 rounded-3xl bg-gradient-to-br from-primary/5 to-amber-500/5 blur-lg"></div>
                         
-                        {/* Book card container with improved 3D effect */}
+                        {/* Book card container */}
                         <motion.div
-                          className="relative bg-white dark:bg-gray-800/80 backdrop-blur-md rounded-3xl border border-gray-200 dark:border-gray-700 p-5 sm:p-6 shadow-xl overflow-hidden book-hover-effect"
-                          initial={{ y: 30, opacity: 0 }}
+                          className="relative bg-white dark:bg-gray-800/80 backdrop-blur-md rounded-3xl border border-gray-200 dark:border-gray-700 p-5 sm:p-6 shadow-xl overflow-hidden"
+                          initial={{ y: 50, opacity: 0 }}
                           animate={{ y: 0, opacity: 1 }}
-                          transition={{ duration: 0.6, delay: 0.3 }}
+                          transition={{ duration: 0.6, delay: 0.5 }}
                         >
-                          {/* Optimized decorative elements */}
+                          {/* Decorative elements */}
                           <div className="absolute top-0 right-0 -mt-4 -mr-4 size-20 bg-primary/10 rounded-full blur-xl"></div>
                           <div className="absolute bottom-0 left-0 -mb-4 -ml-4 size-20 bg-amber-500/10 rounded-full blur-xl"></div>
                           
                           {/* New release badge */}
-                          <div className="absolute -right-12 top-6 bg-amber-500 text-white py-1 px-10 shadow-md transform rotate-45 text-sm font-semibold">
+                          <div className="absolute -right-12 top-6 bg-amber-500 text-white py-1 px-12 shadow-md transform rotate-45 text-sm font-semibold">
                             {translate("Ново", "New")}
                           </div>
                           
-                          {/* Book content with optimized layout */}
-                          <div className="flex flex-col md:flex-row md:items-start gap-6">
-                            {/* Book cover with aspect ratio */}
-                            <div className="md:w-1/3 flex-shrink-0">
-                              <AspectRatio ratio={2/3} className="bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg transform rotate-y-[-5deg] hover:rotate-y-[-15deg] transition-transform duration-500">
-                                <Image
-                                  src={featuredBook.coverImage}
-                                  alt={featuredBook.title}
-                                  fill
-                                  className="object-cover rounded-lg"
+                          <div className="relative z-10">
+                            <div className="flex flex-col md:flex-row gap-6">
+                              {/* FlipCard component size adjusted */}
+                              <div className="relative mx-auto md:mx-0 h-[320px] w-[200px]">
+                                <FlipCard 
+                                  frontImage={featuredBook.coverImage}
+                                  frontTitle={featuredBook.title}
+                                  frontSubtitle={translate("Премиум издание", "Premium Edition")}
+                                  frontIcon={<BookOpen className="w-5 h-5" />}
+                                  backTitle={featuredBook.title}
+                                  backDescription={featuredBook.description}
+                                  backFeatures={[
+                                    translate("Издадена", "Published") + ": " + featuredBook.publishDate,
+                                    translate("Страници", "Pages") + ": " + featuredBook.pages,
+                                    translate("Цена", "Price") + ": " + featuredBook.price + " лв."
+                                  ]}
+                                  backCta={translate("Купи сега", "Buy Now")}
+                                  onCtaClick={() => window.location.href = `/book/${featuredBook.id}`}
+                                  triggerMode="hover"
+                                  popular={featuredBook.featured}
+                                  className="h-full"
                                 />
-                              </AspectRatio>
-                            </div>
-                            
-                            {/* Book details with improved typography */}
-                            <div className="md:w-2/3 flex flex-col">
-                              <Badge variant="outline" className="w-fit mb-2 text-xs font-medium border-primary/40 bg-primary/5 text-primary">
-                                {translate("Най-нова книга", "Latest Book")}
-                              </Badge>
+                              </div>
                               
-                              <h3 className="text-xl sm:text-2xl font-bold font-serif text-gray-900 dark:text-gray-100 mb-2">{featuredBook.title}</h3>
-                              
-                              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-3">
-                                {featuredBook.description}
-                              </p>
-                              
-                              <div className="mt-auto flex flex-wrap gap-3">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="rounded-full border-primary/60 text-primary hover:bg-primary/10 hover:text-primary hover:border-primary"
-                                >
-                                  {translate("Научи повече", "Learn More")}
-                                </Button>
+                              {/* Book details - slightly more compact */}
+                              <div className="flex-1 flex flex-col">
+                                <Badge variant="premium" className="w-fit mb-3 py-1 px-3">
+                                  <Sparkles className="w-4 h-4 mr-1.5" />
+                                  {translate("Най-нова книга", "Latest Release")}
+                                </Badge>
                                 
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  className="rounded-full"
-                                >
-                                  {translate("Купи сега", "Buy Now")}
-                                </Button>
+                                <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
+                                  {featuredBook.title}
+                                </h3>
+                                
+                                <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 text-sm sm:text-base">
+                                  {featuredBook.description}
+                                </p>
+                                
+                                {/* Book features */}
+                                <div className="space-y-1.5 mb-4 text-sm">
+                                  {[
+                                    { text: translate("Издадена", "Published") + ": " + featuredBook.publishDate },
+                                    { text: translate("Страници", "Pages") + ": " + featuredBook.pages },
+                                    { text: translate("Цена", "Price") + ": " + featuredBook.price + " лв." }
+                                  ].map((item, idx) => (
+                                    <div key={idx} className="flex items-center text-gray-600 dark:text-gray-400">
+                                      <CornerDownRight className="w-4 h-4 mr-2 text-primary" />
+                                      <span>{item.text}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                                
+                                {/* Action buttons */}
+                                <div className="flex flex-wrap gap-2 mt-auto">
+                                  <Button
+                                    variant="premium"
+                                    size="lg"
+                                    className="flex-1"
+                                    onClick={() => window.location.href = `/book/${featuredBook.id}`}
+                                  >
+                                    {translate("Купи сега", "Buy Now")}
+                                  </Button>
+                                  
+                                  <Button
+                                    variant="outline"
+                                    size="lg"
+                                    className="flex-1"
+                                    onClick={() => window.location.href = `/preview/${featuredBook.id}`}
+                                  >
+                                    {translate("Преглед", "Preview")}
+                                  </Button>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -447,7 +441,7 @@ export default function Hero() {
                         <div className="absolute top-0 right-0 -mt-10 -mr-10 size-40 bg-amber-500/10 rounded-full blur-2xl"></div>
                         <div className="absolute bottom-0 left-0 -mb-10 -ml-10 size-40 bg-primary/10 rounded-full blur-2xl"></div>
                         
-                        <div className="relative z-0">
+                        <div className="relative z-10">
                           <NewsletterSignup 
                             variant="premium"
                             showFreeOffer={true}
@@ -478,7 +472,7 @@ export default function Hero() {
                         <div className="absolute top-10 left-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl"></div>
                         <div className="absolute bottom-10 right-10 w-40 h-40 bg-amber-500/5 rounded-full blur-3xl"></div>
                         
-                        <div className="relative z-0">
+                        <div className="relative z-10">
                           {/* Section header */}
                           <div className="text-center mb-8">
                             <Badge variant="outline" className="mb-3 px-4 py-1.5 text-sm rounded-full border-primary/40 bg-primary/5">
@@ -586,7 +580,7 @@ export default function Hero() {
                         <div className="absolute top-20 left-20 size-60 bg-purple-500/5 rounded-full blur-3xl"></div>
                         <div className="absolute bottom-20 right-20 size-60 bg-primary/5 rounded-full blur-3xl"></div>
                         
-                        <div className="relative z-0">
+                        <div className="relative z-10">
                           <div className="text-center mb-14">
                             <Badge variant="outline" className="mb-3 px-4 py-1.5 text-sm rounded-full border-purple-400/40 bg-purple-500/5">
                               <Briefcase className="w-4 h-4 mr-2 text-purple-500" />
@@ -653,7 +647,7 @@ export default function Hero() {
                                       backCta={translate("Научи повече", "Learn More")}
                                       onCtaClick={() => window.location.href = `/services/${service.id}`}
                                       popular={(service as any).popular}
-                                      className="h-full relative z-0"
+                                      className="h-full relative z-10"
                                       triggerMode="hover"
                                     />
                                   </div>
@@ -691,39 +685,37 @@ export default function Hero() {
                     <Testimonials />
                   </div>
                   
-                  {/* Integrated Contact section */}
+                  {/* Contact Section - Directly inside main Hero container */}
                   <div className="relative mt-10 mb-6">
-                    {/* Visual connector between containers */}
+                    {/* Visual connector between sections */}
                     <div className="absolute left-1/2 -top-6 transform -translate-x-1/2 w-0.5 h-6 bg-gradient-to-b from-blue-500/30 to-green-500/30"></div>
                     
-                    <motion.div
-                      className="bg-white/40 dark:bg-gray-900/40 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 shadow-lg overflow-hidden"
-                      variants={fadeIn}
-                      initial="hidden"
-                      animate="visible"
-                      custom={10}
-                    >
-                      <div className="bg-gradient-to-br from-gray-100/50 via-white/50 to-gray-100/50 dark:from-gray-900/50 dark:via-gray-950/50 dark:to-gray-900/50 rounded-lg p-4 sm:p-6 md:p-8 relative">
-                        {/* Glass panel effect */}
-                        <div className="absolute inset-0 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner"></div>
+                    {/* Contact inner container with nested card design */}
+                    <div className="bg-white/40 dark:bg-gray-900/40 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 shadow-lg p-0.5 overflow-hidden">
+                      {/* Container inner gradient */}
+                      <div className="bg-gradient-to-br from-gray-100/50 via-white/50 to-gray-100/50 dark:from-gray-900/50 dark:via-gray-950/50 dark:to-gray-900/50 rounded-lg p-5 sm:p-6 md:p-8 relative overflow-hidden">
+                        {/* Glass panel effect with inner shadow */}
+                        <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
                         
-                        {/* Contact component */}
-                        <div className="relative z-0">
-                          <Contact />
-                        </div>
+                        {/* Decorative elements */}
+                        <div className="absolute top-10 left-10 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl"></div>
+                        <div className="absolute bottom-10 right-10 w-40 h-40 bg-green-500/5 rounded-full blur-3xl"></div>
+                        
+                        {/* Contact component integrated into Hero */}
+                        <Contact />
                       </div>
-                    </motion.div>
+                    </div>
                   </div>
                 </div>
               </div>
             </motion.div>
 
-            {/* Simplified navigation indicators */}
-            <motion.div
+            {/* Bottom navigation indicators */}
+            <motion.div 
               className="flex justify-center mt-6 gap-2 mb-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
+              transition={{ duration: 0.5, delay: 1.2 }}
             >
               {[0, 1, 2].map((_, idx) => (
                 <div 
@@ -734,7 +726,6 @@ export default function Hero() {
                       ? "bg-primary scale-125" 
                       : "bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 cursor-pointer"
                   )}
-                  aria-label={`Navigate to slide ${idx + 1}`}
                 ></div>
               ))}
             </motion.div>
@@ -742,7 +733,7 @@ export default function Hero() {
           
           {/* Background wave decoration */}
           <div className="absolute bottom-0 left-0 right-0 h-16 bg-white dark:bg-gray-950 overflow-hidden pointer-events-none">
-            <svg className="absolute bottom-0 w-full h-48" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <svg className="absolute bottom-0 w-full h-48" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path className="fill-white dark:fill-gray-950" d="M0,96L60,85.3C120,75,240,53,360,53.3C480,53,600,75,720,80C840,85,960,75,1080,64C1200,53,1320,43,1380,37.3L1440,32L1440,120L1380,120C1320,120,1200,120,1080,120C960,120,840,120,720,120C600,120,480,120,360,120C240,120,120,120,60,120L0,120Z"></path>
             </svg>
           </div>

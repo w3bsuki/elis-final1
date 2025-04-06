@@ -2,23 +2,24 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useLanguage } from "@/lib/LanguageContext";
-import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 import { ServicePreviewDialog } from "@/components/ui/service-preview-dialog";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { cn } from "@/lib/utils";
+import { useLanguage } from "@/lib/LanguageContext";
+import Link from "next/link";
+import Image from "next/image";
 
-// Import our components
+// Header components
 import { Logo } from "./header/Logo";
-import { LanguageSwitcher } from "./header/LanguageSwitcher";
 import { DesktopNavigation } from "./header/DesktopNavigation";
 import { MobileNavigation } from "./header/MobileNavigation";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { LanguageSwitcher } from "./header/LanguageSwitcher";
 import { SocialLinks } from "./header/SocialLinks";
 import { ShopButton } from "./header/ShopButton";
-
-// Import types from local types file
 import { BookType, ServiceType } from "./header/types";
 
-// Books data
+// Sample data - would typically come from API or CMS
 const books: BookType[] = [
   {
     id: "1",
@@ -49,7 +50,6 @@ const books: BookType[] = [
   },
 ];
 
-// Services data
 const services: ServiceType[] = [
   {
     id: "coaching",
@@ -93,7 +93,7 @@ export default function Header() {
   const [selectedService, setSelectedService] = useState<ServiceType | null>(null);
   const [isServicePreviewOpen, setIsServicePreviewOpen] = useState(false);
   
-  // Handle scroll effect with throttling for performance
+  // Handle scroll effect with debouncing for performance
   useEffect(() => {
     let ticking = false;
     
@@ -112,9 +112,9 @@ export default function Header() {
     
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []); // Empty dependency array is correct here
+  }, []);
   
-  // Update header height for mobile menu positioning - only when component mounts
+  // Update header height for mobile menu positioning
   useEffect(() => {
     if (!headerRef.current) return;
     
@@ -127,21 +127,20 @@ export default function Header() {
     // Initial measurement
     updateHeight();
     
-    const resizeObserver = new ResizeObserver(() => {
-      updateHeight();
-    });
+    const resizeObserver = new ResizeObserver(updateHeight);
     
     resizeObserver.observe(headerRef.current);
     return () => resizeObserver.disconnect();
-  }, []); // Empty dependency array is correct here
+  }, []);
   
   // Close mobile menu when route changes
   useEffect(() => {
     setIsMenuOpen(false);
-  }, [pathname]); // Only when pathname changes
+  }, [pathname]);
   
   // Handle book click to navigate to book page
-  const handleBookClick = useCallback((book: BookType) => {
+  const handleBookClick = useCallback((book: BookType, e: React.MouseEvent) => {
+    e.preventDefault();
     router.push(book.href);
   }, [router]);
   
@@ -152,59 +151,82 @@ export default function Header() {
     setIsServicePreviewOpen(true);
   }, []);
   
+  // Framer-motion animation variants
+  const headerVariants = {
+    visible: { opacity: 1, y: 0 },
+    hidden: { opacity: 0, y: -5 }
+  };
+  
   return (
-    <header 
-      ref={headerRef}
-      className={cn(
-        "sticky inset-x-0 top-0 z-50 w-full transition-all duration-300",
-        isScrolled 
-          ? "bg-white/40 dark:bg-gray-950/40 backdrop-blur-lg shadow-md"
-          : "bg-transparent"
-      )}
+    <motion.div 
+      id="header-wrapper" 
+      className="w-full fixed top-0 left-0 right-0 header-fixed-wrapper z-[100]"
+      initial="hidden"
+      animate="visible"
+      variants={headerVariants}
+      transition={{ duration: 0.3 }}
+      style={{ overflow: 'visible' }}
     >
-      <div className="container mx-auto px-4 flex justify-center">
-        {/* Nested container design */}
-        <div className="relative w-full max-w-7xl mx-auto mb-3">
-          {/* Nested container with glass effect */}
-          <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 shadow-lg p-0.5 overflow-hidden">
-            {/* Container inner gradient */}
-            <div className="bg-gradient-to-br from-gray-100/60 via-white/60 to-gray-100/60 dark:from-gray-900/60 dark:via-gray-950/60 dark:to-gray-900/60 rounded-lg relative overflow-hidden">
-              {/* Top decorative bar */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/40 via-primary/10 to-amber-500/40"></div>
-              
-              {/* Inner shadow effect */}
-              <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg shadow-inner pointer-events-none"></div>
-              
+      <header 
+        ref={headerRef}
+        className={cn(
+          "w-full transition-all duration-300",
+          isScrolled 
+            ? "bg-white/40 dark:bg-gray-950/40 backdrop-blur-lg shadow-md"
+            : "bg-transparent"
+        )}
+        style={{ overflow: 'visible' }}
+      >
+        <div className="container mx-auto px-4 flex justify-center" style={{ overflow: 'visible' }}>
+          <div className="relative w-full max-w-7xl mx-auto mb-3" style={{ overflow: 'visible' }}>
+            <HeaderContainer style={{ overflow: 'visible' }}>
               <div className={cn(
-                "flex w-full items-center justify-between px-4 md:px-6 transition-all duration-200 relative z-10",
+                "flex w-full items-center justify-between px-4 md:px-6 transition-all duration-200 relative",
                 isScrolled ? "h-14" : "h-16"
-              )}>
-                {/* Left section: Logo & Secondary Controls */}
-                <div className="flex items-center gap-4">
+              )}
+              style={{ overflow: 'visible' }}
+              >
+                {/* Left: Logo & Controls */}
+                <motion.div 
+                  className="flex items-center gap-4"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                >
                   <Logo isScrolled={isScrolled} />
-                  <div className="hidden lg:flex items-center gap-1 border-l border-gray-200 dark:border-gray-700 pl-4 text-gray-700 dark:text-gray-300">
+                  <div className="hidden lg:flex items-center gap-2 pl-4 text-gray-700 dark:text-gray-300">
                     <ThemeToggle />
                     <LanguageSwitcher />
                   </div>
-                </div>
-                
-                {/* Middle section: Desktop Navigation (Hidden on small screens) */}
-                <div className="hidden lg:flex flex-1 justify-center">
+                </motion.div>
+
+                {/* Middle: Desktop Navigation */}
+                <motion.div 
+                  className="hidden lg:flex flex-1 justify-center"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.2 }}
+                  style={{ overflow: 'visible' }}
+                >
                   <DesktopNavigation 
                     books={books} 
                     services={services} 
                     onBookClick={handleBookClick}
                     onServiceClick={handleServiceClick}
                   />
-                </div>
-                
-                {/* Right section: Primary Controls & Mobile Trigger */}
-                <div className="flex items-center gap-2">
+                </motion.div>
+
+                {/* Right: Controls & Mobile Menu */}
+                <motion.div 
+                  className="flex items-center gap-2"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                >
                   <div className="hidden sm:block text-gray-700 dark:text-gray-300">
                     <SocialLinks />
                   </div>
                   <ShopButton />
-                  {/* Mobile Navigation Trigger (visible on small screens) */}
                   <MobileNavigation 
                     isMenuOpen={isMenuOpen}
                     setIsMenuOpen={setIsMenuOpen}
@@ -214,21 +236,46 @@ export default function Header() {
                     onBookClick={handleBookClick}
                     onServiceClick={handleServiceClick}
                   />
-                </div>
+                </motion.div>
               </div>
-            </div>
+            </HeaderContainer>
           </div>
         </div>
-      </div>
+      </header>
       
       {/* Service Preview Dialog */}
-      {selectedService && (
-        <ServicePreviewDialog 
-          service={selectedService}
-          open={isServicePreviewOpen}
-          onOpenChange={setIsServicePreviewOpen}
-        />
-      )}
-    </header>
+      <AnimatePresence>
+        {selectedService && (
+          <ServicePreviewDialog 
+            service={selectedService}
+            open={isServicePreviewOpen}
+            onOpenChange={setIsServicePreviewOpen}
+          />
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
+// Header Container Component for better organization
+function HeaderContainer({ children, style }: { children: React.ReactNode, style?: React.CSSProperties }) {
+  return (
+    <motion.div 
+      className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 shadow-lg p-0.5 overflow-hidden"
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4 }}
+      style={style}
+    >
+      <div className="bg-gradient-to-br from-gray-100/60 via-white/60 to-gray-100/60 dark:from-gray-900/60 dark:via-gray-950/60 dark:to-gray-900/60 rounded-lg relative overflow-hidden" style={{ overflow: 'visible' }}>
+        {/* Top decorative bar */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/40 via-primary/10 to-amber-500/40"></div>
+        
+        {/* Inner shadow effect */}
+        <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg shadow-inner pointer-events-none"></div>
+        
+        {children}
+      </div>
+    </motion.div>
   );
 } 

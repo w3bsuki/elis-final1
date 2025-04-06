@@ -45,7 +45,7 @@ const ServiceCard = ({ service, delay = 0 }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay }}
-      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md border border-gray-200 dark:border-gray-700 w-64 h-[360px] mb-8"
+      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md border border-primary/10 dark:border-primary/20 w-64 h-[360px] mb-8"
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
     >
       <div className="flex flex-col h-full">
@@ -62,7 +62,7 @@ const ServiceCard = ({ service, delay = 0 }) => {
           </div>
           
           {/* Category Badge */}
-          <div className="absolute top-3 left-3 bg-green-600 text-white text-xs font-medium px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
+          <div className="absolute top-3 left-3 bg-primary text-primary-foreground text-xs font-medium px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
             {service.category === 'individual' ? (
               <>
                 <User className="h-3 w-3" />
@@ -119,13 +119,13 @@ const ServiceCard = ({ service, delay = 0 }) => {
           </p>
           
           <div className="flex justify-between items-center mt-auto">
-            <div className="font-bold text-base text-green-600 dark:text-green-400">
+            <div className="font-bold text-base text-primary dark:text-primary">
               {service.price.toFixed(2)} лв.
             </div>
             
             <Button
               size="sm"
-              className="bg-green-600 hover:bg-green-700 text-white rounded-md shadow-md hover:shadow-lg transition-all duration-200 text-xs h-8"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md shadow-md hover:shadow-lg transition-all duration-200 text-xs h-8"
               asChild
             >
               <Link href={`/services/${service.id}`} className="flex items-center gap-1">
@@ -174,10 +174,10 @@ export function FeaturedServices() {
           >
             <Badge
               variant="outline"
-              className="w-fit gap-1 bg-card px-3 text-sm font-normal tracking-tight shadow-sm"
+              className="w-fit gap-1 bg-primary/5 text-primary border-primary/20 dark:border-primary/30 px-3 text-sm font-normal tracking-tight shadow-sm"
             >
-              <Trophy className="size-4 text-green-600" />
-              <span className="text-green-600 dark:text-green-400">{translate("Премиум Услуги", "Premium Services")}</span>
+              <Trophy className="size-4 text-primary" />
+              <span className="text-primary dark:text-primary">{translate("Премиум Услуги", "Premium Services")}</span>
             </Badge>
           </motion.div>
           
@@ -210,8 +210,8 @@ export function FeaturedServices() {
         {/* Add diagonal pattern background for the services section */}
         <div className="absolute inset-0 z-0">
           <DiagonalPattern 
-            className="border-green-300/60 dark:border-green-600/40 rounded-lg" 
-            patternColor="22c55e" 
+            className="border-primary/30 dark:border-primary/40 rounded-lg" 
+            patternColor="var(--primary-hex-code)"
             patternOpacity={0.07}
           />
         </div>
@@ -239,14 +239,14 @@ export function FeaturedServices() {
             transition={{ duration: 0.5 }}
           >
             <Button
-              className="relative overflow-hidden bg-green-600 text-white h-auto px-6 py-2.5 border-2 border-green-500 dark:border-green-500 font-medium rounded-xl shadow-md transition-all duration-300 group hover:border-white hover:bg-green-700 dark:hover:bg-green-800"
+              className="relative overflow-hidden bg-primary text-primary-foreground h-auto px-6 py-2.5 border-2 border-primary/80 dark:border-primary/70 font-medium rounded-xl shadow-md transition-all duration-300 group hover:border-primary hover:bg-primary/90 dark:hover:bg-primary/80"
               asChild
             >
               <Link href="/services" className="flex items-center gap-2 z-10">
-                <span className="absolute inset-0 bg-gradient-to-r from-green-700 to-green-800 dark:from-green-800 dark:to-green-900 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
-                <User className="h-4 w-4 text-white relative z-10 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6" />
+                <span className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary dark:from-primary/80 dark:to-primary/90 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+                <User className="h-4 w-4 text-primary-foreground relative z-10 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6" />
                 <span className="relative z-10">{translate("Всички услуги", "All services")}</span>
-                <ArrowRight className="h-4 w-4 text-white relative z-10 transition-all duration-300 group-hover:translate-x-1 group-hover:text-green-100" />
+                <ArrowRight className="h-4 w-4 text-primary-foreground relative z-10 transition-all duration-300 group-hover:translate-x-1 group-hover:text-green-100" />
               </Link>
             </Button>
           </motion.div>

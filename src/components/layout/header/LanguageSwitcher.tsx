@@ -19,22 +19,19 @@ export function LanguageSwitcher() {
       <DropdownMenuTrigger asChild>
         <Button 
           variant="ghost" 
-          size="icon" 
-          className={cn(
-            "h-9 w-9 rounded-md transition-colors",
-            "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-          )}
-          aria-label="Change language"
+          size="sm" 
+          className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg h-10 px-3"
         >
-          <Globe className="h-4 w-4" />
+          <Globe className="h-5 w-5" />
+          <span className="sr-only">Change language</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[8rem]">
+      <DropdownMenuContent align="end" className="z-[150]">
         <DropdownMenuItem 
           onClick={() => setLanguage('en')} 
           className={cn(
             "cursor-pointer flex items-center",
-            language === "en" ? "bg-accent font-medium" : "hover:bg-accent/50"
+            language === "en" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""
           )}
         >
           <span className="mr-2 text-base">🇬🇧</span> English
@@ -43,7 +40,7 @@ export function LanguageSwitcher() {
           onClick={() => setLanguage('bg')} 
           className={cn(
             "cursor-pointer flex items-center",
-            language === "bg" ? "bg-accent font-medium" : "hover:bg-accent/50"
+            language === "bg" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""
           )}
         >
           <span className="mr-2 text-base">🇧🇬</span> Български

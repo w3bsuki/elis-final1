@@ -2,7 +2,6 @@ import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Toaster } from '@/components/ui/toaster';
-import { Sparkles } from 'lucide-react';
 import type { NextPage } from "next";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
@@ -39,17 +38,6 @@ const Home: NextPage = () => {
       </Head>
       
       <main className="flex min-h-screen flex-col bg-background relative">
-        {/* Components Showcase Link */}
-        <div className="fixed top-4 right-4 z-50">
-          <Link 
-            href="/components" 
-            className="bg-background/80 backdrop-blur-sm border border-primary/20 rounded-full px-4 py-2 text-sm font-medium text-primary flex items-center gap-2 shadow-lg hover:bg-primary/10 transition-colors card-shadow-hover"
-          >
-            <Sparkles className="h-4 w-4" />
-            <span>UI Components</span>
-          </Link>
-        </div>
-        
         {/* Hero Section with nested containers (includes Books, Services, Testimonials and Contact) */}
         <Hero />
       </main>

@@ -2,77 +2,77 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 0 0% 100%; /* white */
+    --foreground: 222 47% 11%; /* slate-900 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%; /* white */
+    --card-foreground: 222 47% 11%; /* slate-900 */
  
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%; /* white */
+    --popover-foreground: 222 47% 11%; /* slate-900 */
  
-    --primary: 142.1 76.2% 36.3%;
-    --primary-foreground: 355.7 100% 97.3%;
+    --primary: 158 64% 42%; /* emerald-600 */
+    --primary-foreground: 0 0% 100%; /* white - Good contrast on emerald-600 */
  
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
+    --secondary: 220 13% 91%; /* slate-100 */
+    --secondary-foreground: 222 47% 11%; /* slate-900 */
  
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
+    --muted: 220 13% 91%; /* slate-100 */
+    --muted-foreground: 222 12% 47%; /* slate-700 */
  
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
+    --accent: 220 13% 91%; /* slate-100 */
+    --accent-foreground: 222 47% 11%; /* slate-900 */
  
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%; /* red-600 */
+    --destructive-foreground: 0 0% 100%; /* white */
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 142.1 76.2% 36.3%;
+    --border: 220 13% 91%; /* slate-100 */
+    --input: 220 13% 91%; /* slate-100 */
+    --ring: 158 64% 42%; /* emerald-600 */
 
-    /* New colors from design system */
+    /* Keep Amber & Navy for potential accents/specific uses */
     --amber: 38 92% 50%;
-    --amber-rgb: 245, 158, 11; /* RGB value of #F59E0B */
+    --amber-rgb: 245, 158, 11;
     --navy: 215 50% 23%;
-    --navy-rgb: 30, 58, 138; /* RGB value of #1E3A8A */
+    --navy-rgb: 30, 58, 138;
  
     --radius: 0.5rem;
   }
  
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 224 71% 4%; /* slate-950 */
+    --foreground: 220 13% 91%; /* slate-100 */
  
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 224 71% 4%; /* slate-950 */
+    --card-foreground: 220 13% 91%; /* slate-100 */
  
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 224 71% 4%; /* slate-950 */
+    --popover-foreground: 220 13% 91%; /* slate-100 */
  
-    --primary: 142.1 70.6% 45.3%;
-    --primary-foreground: 144.9 80.4% 10%;
+    --primary: 158 58% 53%; /* emerald-500 */
+    --primary-foreground: 161 84% 11%; /* emerald-950 - Good contrast on emerald-500 */
  
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 221 30% 21%; /* slate-800 */
+    --secondary-foreground: 220 13% 91%; /* slate-100 */
  
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 221 30% 21%; /* slate-800 */
+    --muted-foreground: 218 11% 65%; /* slate-400 */
  
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 221 30% 21%; /* slate-800 */
+    --accent-foreground: 220 13% 91%; /* slate-100 */
  
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%; /* red-500 */
+    --destructive-foreground: 224 71% 4%; /* slate-950 */
  
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 142.4 71.8% 29.2%;
+    --border: 221 30% 21%; /* slate-800 */
+    --input: 221 30% 21%; /* slate-800 */
+    --ring: 158 58% 53%; /* emerald-500 */
 
-    /* New colors from design system - dark mode */
-    --amber: 38 92% 50%;
-    --amber-rgb: 245, 158, 11; /* RGB value of #F59E0B */
-    --navy: 215 50% 23%;
-    --navy-rgb: 30, 58, 138; /* RGB value of #1E3A8A */
+    /* Keep Amber & Navy - adjust dark mode if needed, e.g., lighter amber */
+    --amber: 38 92% 55%; /* amber-400 - Example: slightly lighter */
+    --amber-rgb: 251, 191, 36;
+    --navy: 215 50% 23%; /* No change needed? */
+    --navy-rgb: 30, 58, 138;
   }
 }
  
@@ -83,25 +83,32 @@
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
+    font-family: var(--font-geist-sans);
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-playfair);
+    font-weight: 700; /* Example: Bold headings */
+    color: hsl(var(--foreground)); /* Ensure heading color inherits properly */
+    /* Let Tailwind typography plugin/classes handle specific sizes/margins */
+  }
   h1 {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
+    /* font-size: 1.875rem; */
+    /* line-height: 2.25rem; */
+    /* font-weight: 700; */
+    /* margin-bottom: 1rem; */
   }
   h2 {
-    font-size: 1.5rem;
-    line-height: 2rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
+    /* font-size: 1.5rem; */
+    /* line-height: 2rem; */
+    /* font-weight: 600; */
+    /* margin-bottom: 0.75rem; */
   }
   h3 {
-    font-size: 1.25rem;
-    line-height: 1.75rem;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
+    /* font-size: 1.25rem; */
+    /* line-height: 1.75rem; */
+    /* font-weight: 500; */
+    /* margin-bottom: 0.5rem; */
   }
   a {
     color: hsl(var(--primary));
@@ -415,4 +422,84 @@
   .custom-bg-primary {
     background-color: hsl(var(--primary));
   }
+}
+
+/* Essential header and dropdown positioning */
+#header-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+}
+
+/* Hero section positioning */
+.hero-section {
+  position: relative;
+  margin-top: 80px; /* Match the header height */
+  z-index: 1; /* Lower z-index than header */
+}
+
+/* Absolutely critical fix for dropdowns */
+.dropdown-container {
+  position: relative !important;
+  z-index: 9900 !important;
+}
+
+.dropdown-content {
+  position: absolute !important;
+  display: none !important;
+  top: 100% !important;
+  margin-top: 0.5rem !important;
+  z-index: 9999 !important;
+  min-width: 200px !important;
+  background-color: white !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.dark .dropdown-content {
+  background-color: hsl(224 71% 4%) !important; /* slate-950 */
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.books-dropdown {
+  width: 600px !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+}
+
+.services-dropdown {
+  width: 450px !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+}
+
+.dropdown-container:hover .dropdown-content {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Prevent layout shift on theme toggle */
+html {
+  overflow-y: scroll !important;
+}
+
+body {
+  min-height: 100vh !important;
+}
+
+#header-wrapper {
+  min-height: 80px !important;
+}
+
+/* Position content below the header */
+.hero-below-header {
+  position: relative !important;
+  z-index: 1 !important; /* Lower than header */
 }

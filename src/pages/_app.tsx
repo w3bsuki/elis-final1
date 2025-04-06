@@ -68,6 +68,28 @@ export default function App({ Component, pageProps }: AppProps) {
               <meta name="viewport" content="width=device-width, initial-scale=1" />
               <meta name="theme-color" content="#10B981" />
               
+              {/* Override z-index for navigation dropdowns */}
+              <style dangerouslySetInnerHTML={{ 
+                __html: `
+                  /* Dropdown z-index fix */
+                  .dropdown-content {
+                    z-index: 9999 !important;
+                  }
+                  .dropdown-container {
+                    position: relative !important;
+                  }
+                  .dropdown-container:hover {
+                    z-index: 9999 !important;
+                  }
+                  .hero-section {
+                    z-index: 0 !important;
+                  }
+                  #header-wrapper {
+                    z-index: 9999 !important;
+                  }
+                `
+              }} />
+              
               {/* Primary Meta Tags */}
               <title>{title}</title>
               <meta name="title" content={title} />
