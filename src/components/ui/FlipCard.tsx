@@ -17,6 +17,7 @@ interface FlipCardProps {
   onCtaClick?: () => void;
   popular?: boolean;
   className?: string;
+  triggerMode?: "click" | "hover";
 }
 
 export function FlipCard({
@@ -31,21 +32,32 @@ export function FlipCard({
   onCtaClick,
   popular,
   className,
+  triggerMode = "click",
 }: FlipCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const toggleFlip = () => {
-    setIsFlipped(!isFlipped);
+    if (triggerMode === "click") {
+      setIsFlipped(!isFlipped);
+    }
   };
 
   return (
-    <div className={cn("flip-card-container h-full rounded-xl", className)}>
+    <div 
+      className={cn(
+        "flip-card-container h-full rounded-xl", 
+        triggerMode === "hover" && "flip-on-hover",
+        className
+      )}
+      onMouseEnter={() => triggerMode === "hover" && setIsFlipped(true)}
+      onMouseLeave={() => triggerMode === "hover" && setIsFlipped(false)}
+    >
       <div
         className={cn("flip-card h-full rounded-xl", isFlipped && "is-flipped")}
       >
         {/* Front of card */}
         <motion.div 
-          className="flip-card-front flex flex-col overflow-hidden rounded-xl relative border border-gray-200 dark:border-gray-800 shadow-lg"
+          className="flip-card-front flex flex-col overflow-hidden rounded-xl relative border border-gray-200/50 dark:border-gray-800/50 shadow-sm"
           whileHover={{ 
             boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.1)",
             transition: { duration: 0.2 }
@@ -111,7 +123,7 @@ export function FlipCard({
           )}
 
           {/* Card content */}
-          <div className="flex-1 flex flex-col p-5 bg-white dark:bg-gray-950">
+          <div className="flex-1 flex flex-col p-5 bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm">
             <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-gray-100">
               {frontTitle}
             </h3>
@@ -121,21 +133,28 @@ export function FlipCard({
               </p>
             )}
             <div className="mt-auto">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={toggleFlip}
-                className="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium flex items-center gap-1"
-              >
-                Learn More <ChevronsRight className="h-4 w-4" />
-              </motion.button>
+              {triggerMode === "click" && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={toggleFlip}
+                  className="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium flex items-center gap-1"
+                >
+                  Learn More <ChevronsRight className="h-4 w-4" />
+                </motion.button>
+              )}
+              {triggerMode === "hover" && (
+                <div className="text-sm text-purple-600 dark:text-purple-400 font-medium flex items-center gap-1 opacity-80">
+                  Hover for details <ChevronsRight className="h-4 w-4" />
+                </div>
+              )}
             </div>
           </div>
         </motion.div>
 
         {/* Back of card */}
         <motion.div 
-          className="flip-card-back flex flex-col rounded-xl border border-gray-200 dark:border-gray-800 shadow-lg bg-white dark:bg-gray-950 overflow-auto"
+          className="flip-card-back flex flex-col rounded-xl border border-gray-200/50 dark:border-gray-800/50 shadow-sm bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm overflow-auto"
           whileHover={{ 
             boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.1)",
             transition: { duration: 0.2 }
@@ -184,14 +203,16 @@ export function FlipCard({
                   {backCta}
                 </Button>
               )}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={toggleFlip}
-                className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium flex items-center justify-center w-full gap-1"
-              >
-                Go Back <ChevronsRight className="h-4 w-4 rotate-180" />
-              </motion.button>
+              {triggerMode === "click" && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={toggleFlip}
+                  className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium flex items-center justify-center w-full gap-1"
+                >
+                  Go Back <ChevronsRight className="h-4 w-4 rotate-180" />
+                </motion.button>
+              )}
             </div>
           </div>
         </motion.div>

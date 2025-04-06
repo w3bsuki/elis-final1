@@ -6,14 +6,15 @@ import type {
   ToastProps,
 } from "@/components/ui/toast"
 
-const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
+const TOAST_LIMIT = 3
+const TOAST_REMOVE_DELAY = 5000
 
 type ToasterToast = ToastProps & {
   id: string
   title?: React.ReactNode
   description?: React.ReactNode
   action?: ToastActionElement
+  showIcon?: boolean
 }
 
 let count = 0
@@ -131,7 +132,7 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, "id">
 
-function toast({ ...props }: Toast) {
+function toast(props: Toast) {
   const id = genId()
 
   const update = (props: ToasterToast) =>
@@ -159,6 +160,22 @@ function toast({ ...props }: Toast) {
     update,
   }
 }
+
+// Helper functions for different toast variants
+toast.success = (props: Omit<ToasterToast, "id" | "variant">) => 
+  toast({ ...props, variant: "success", showIcon: true });
+
+toast.error = (props: Omit<ToasterToast, "id" | "variant">) => 
+  toast({ ...props, variant: "destructive", showIcon: true });
+
+toast.warning = (props: Omit<ToasterToast, "id" | "variant">) => 
+  toast({ ...props, variant: "warning", showIcon: true });
+
+toast.info = (props: Omit<ToasterToast, "id" | "variant">) => 
+  toast({ ...props, variant: "info", showIcon: true });
+
+toast.premium = (props: Omit<ToasterToast, "id" | "variant">) => 
+  toast({ ...props, variant: "premium", showIcon: true });
 
 function useToast() {
   const [state, setState] = React.useState<State>(memoryState)

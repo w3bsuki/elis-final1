@@ -140,6 +140,40 @@ const AboutPage: NextPage = () => {
               />
             </div>
             
+            {/* Author Bio Section */}
+            <div className="md:col-span-8 py-8 px-4 md:px-6 relative z-10">
+              <div className="bg-white/90 dark:bg-gray-800/90 p-6 rounded-lg shadow-md border border-green-200 dark:border-green-800 backdrop-blur-sm">
+                <div className="prose prose-green dark:prose-invert max-w-none">
+                  <div className="mb-8">
+                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                      <User className="h-5 w-5 text-green-600" />
+                      {translate("За мен", "About Me")}
+                    </h2>
+                    <div className="space-y-6 text-gray-700 dark:text-gray-300">
+                      <p>
+                        {translate(
+                          "Аз съм Елис - дипломиран психолог и автор на книги, статии, приказки за деца и възрастни. С множество сертификати от различни сфери, аз съм специалист с богат професионален опит. През годините съм преборила успешно множество предизвикателства – от зависимости и семейни драми до провал в бизнеса и паник атаки. Тези трудности ме направиха по-силна и по-осъзната, и сега съм готова да помогна на всеки, който търси подкрепа и насоки в областта на осъзнатото хранене, за да промени живота си към по-добро.",
+                          "I am Elis - a certified psychologist and author of books, articles, and stories for both children and adults. With multiple certifications in various fields, I am a specialist with rich professional experience. Over the years, I have successfully overcome many challenges - from dependencies and family dramas to business failure and panic attacks. These difficulties made me stronger and more mindful, and now I am ready to help anyone seeking support and guidance in the field of mindful eating to change their life for the better."
+                        )}
+                      </p>
+                      <p>
+                        {translate(
+                          "Моето призвание е да творя и да споделям знанията си чрез писане. Книгите и статиите ми са плодовете на моя труд и страст. Вярвам, че съм тук на земята, за да раздавам тези плодове и да помагам на хората да открият своята истина и път към щастието. Независимо от успехите или неуспехите в личния и професионалния ми живот, знам, че най-важното е да продължавам да творя и да вдъхновявам другите.",
+                          "My calling is to create and share my knowledge through writing. My books and articles are the fruits of my labor and passion. I believe I am here on earth to share these fruits and help people discover their truth and path to happiness. Regardless of successes or failures in my personal and professional life, I know that the most important thing is to continue creating and inspiring others."
+                        )}
+                      </p>
+                      <p>
+                        {translate(
+                          "Освен че съм майка на три прекрасни момчета, аз съм също така магистър по иновации в началното образование и притежавам множество сертификати в различни области. Това ми позволява да бъда гъвкава и адаптивна, както в личен, така и в професионален план.",
+                          "Besides being a mother of three wonderful boys, I am also a Master's degree holder in Primary Education Innovation and possess numerous certificates in various fields. This allows me to be flexible and adaptive, both personally and professionally."
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
             {/* Left column - Books info */}
             <div className="md:col-span-4 flex flex-col justify-center relative z-10 py-8">
               <div className="bg-white/90 dark:bg-gray-800/90 p-5 rounded-lg shadow-md border border-green-200 dark:border-green-800 backdrop-blur-sm">

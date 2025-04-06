@@ -2,38 +2,61 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: [
-      'nlabjdsqkfbzkblwcdma.supabase.co',
-      'placehold.co',
-      'source.unsplash.com',
-      'plus.unsplash.com',
-      'images.unsplash.com',
-      'media.giphy.com',
-      'media4.giphy.com',
-      'media1.giphy.com',
-      'media2.giphy.com',
-      'media3.giphy.com',
-      'media0.giphy.com',
-      'media5.giphy.com',
-      'cdn.dribbble.com',
-      'picsum.photos',
-      'books.google.com'
+    remotePatterns: [
+      { protocol: 'https', hostname: 'nlabjdsqkfbzkblwcdma.supabase.co' },
+      { protocol: 'https', hostname: 'placehold.co' },
+      { protocol: 'https', hostname: 'source.unsplash.com' },
+      { protocol: 'https', hostname: 'plus.unsplash.com' },
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'https', hostname: 'media.giphy.com' },
+      { protocol: 'https', hostname: 'media4.giphy.com' },
+      { protocol: 'https', hostname: 'media1.giphy.com' },
+      { protocol: 'https', hostname: 'media2.giphy.com' },
+      { protocol: 'https', hostname: 'media3.giphy.com' },
+      { protocol: 'https', hostname: 'media0.giphy.com' },
+      { protocol: 'https', hostname: 'media5.giphy.com' },
+      { protocol: 'https', hostname: 'cdn.dribbble.com' },
+      { protocol: 'https', hostname: 'picsum.photos' },
+      { protocol: 'https', hostname: 'books.google.com' }
     ],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60,
   },
   typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
-    // !! WARN !!
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: true
   },
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: true
   },
-  distDir: '.next',
-  trailingSlash: true
+  // Enable incremental static regeneration
+  experimental: {
+    // Enable the new optimistic transitions feature
+    optimisticClientCache: true,
+  },
+  // Optimize output
+  output: 'standalone',
+  // Enable compression
+  compress: true,
+  // Configure compiler options for improved performance
+  compiler: {
+    // Remove console.* in production
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
+  // Add page loading performance indicators
+  devIndicators: {
+    position: 'bottom-right',
+  },
+  // Add support for internationalization (i18n)
+  i18n: {
+    locales: ['bg', 'en'],
+    defaultLocale: 'bg',
+    localeDetection: false,
+  },
+  poweredByHeader: false,
 };
 
 export default nextConfig; 

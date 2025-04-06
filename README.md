@@ -1,78 +1,66 @@
-# ELISBooks Website
+# Elis Author Portfolio Website
 
-## Database Setup
+A modern, visually appealing website for author Elis, featuring book showcases, services, testimonials, and more.
 
-The application uses Supabase as a backend database. To set up the database:
+## UI Component System Upgrade
 
-1. Create a Supabase account at [supabase.com](https://supabase.com)
-2. Create a new project
-3. Go to the SQL Editor in your Supabase dashboard
-4. Run the SQL commands provided in the `supabase-schema.sql` file to create the necessary tables
-5. After creating the tables, copy your Supabase URL and anon key from the API settings
-6. Create a `.env.local` file in the root of the project using the `.env.local.example` as a template
-7. Add your Supabase URL and anon key to the `.env.local` file:
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=your-supabase-project-url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
-   ```
+The website includes a comprehensive and consistent UI component system with enhanced styling, animations, and interactivity:
 
-## Email Configuration
+### Key Features
 
-The application uses Nodemailer to send emails. To configure email sending:
+- **Enhanced Button System**: Versatile button component with multiple variants (default, premium, dotted, accent, success, info, warning), sizes, animations, and rounded options.
 
-1. Update the email settings in your `.env.local` file
-2. For development, emails are simulated (not actually sent)
-3. In production, provide proper SMTP credentials for sending real emails
+- **Premium Toast Notifications**: Context-aware toast notification system with variants, animations, and automatic icons.
 
-## Getting Started
+- **Beautiful Badges**: Consistent badge styles that match the button system for visual coherence.
 
-First, run the development server:
+- **Design System**: Unified color system, typography, and animation styles for a cohesive look and feel.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+- **Interactive Elements**: Hover effects, animations, and microinteractions that enhance the user experience.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Component Showcase
+
+Visit the [Components Showcase](/components) to see all available UI components and their variants.
 
 ## Features
 
-- Responsive, dual-language (English/Bulgarian) website for a bookstore
-- Full e-commerce functionality for selling books and services
-- Integration with Supabase for database storage
-- Email notifications for order confirmations and contact form submissions
-- Checkout process with shipping/billing information
-- Service bookings
-- Contact form
+- Responsive design for all devices
+- Dark mode support
+- Book showcase with 3D effects
+- Services and testimonials sections
+- Contact form with validation
+- Newsletter signup
+- Multilingual support (EN/BG)
 
-## Build for Production
+## Technologies
+
+- Next.js
+- React
+- Tailwind CSS
+- Framer Motion
+- Radix UI
+- TypeScript
+
+## Getting Started
 
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production
 npm run build
-# or
-yarn build
-# or
-pnpm build
+
+# Start production server
+npm start
 ```
 
-## Deploy on Vercel
+## Implementation Progress
 
-The easiest way to deploy this application is to use the [Vercel Platform](https://vercel.com).
+See [Refactor Plan](./refactor-plan.md) for the current implementation status and upcoming improvements.
 
-When deploying to Vercel, make sure to set the necessary environment variables in the Vercel dashboard.
+## License
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is private and not licensed for public use.

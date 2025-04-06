@@ -1,11 +1,29 @@
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { Toaster } from '@/components/ui/toaster';
+import { Sparkles } from 'lucide-react';
+import type { NextPage } from "next";
+import { Button } from "@/components/ui/button";
+import { ChevronRight } from "lucide-react";
+import Image from "next/image";
 import Hero from "@/components/sections/Hero";
-import { FeaturedBooks } from "@/components/sections/FeaturedBooks";
-import { BookTimeline } from "@/components/sections/BookTimeline";
-import { Testimonials } from "@/components/sections/Testimonials";
-import { Contact } from "@/components/sections/Contact";
+import { useLanguage } from "@/lib/LanguageContext";
+import { Suspense } from "react";
 
-export default function Home() {
+// Dynamically import components with suspense and loading states
+const Testimonials = dynamic(
+  () => import("@/components/sections/Testimonials").then(mod => ({ default: mod.Testimonials })),
+  {
+    loading: () => <div className="h-96 flex items-center justify-center"><div className="animate-pulse w-8 h-8 rounded-full bg-primary/20"></div></div>,
+    ssr: false,
+  }
+);
+
+const Home: NextPage = () => {
+  const { language } = useLanguage();
+  const translate = (bg: string, en: string) => language === 'bg' ? bg : en;
+
   return (
     <>
       <Head>
@@ -20,22 +38,26 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       
-      <main className="flex min-h-screen flex-col bg-gradient-to-b from-white via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-950">
-        {/* Hero Section */}
+      <main className="flex min-h-screen flex-col bg-background relative">
+        {/* Components Showcase Link */}
+        <div className="fixed top-4 right-4 z-50">
+          <Link 
+            href="/components" 
+            className="bg-background/80 backdrop-blur-sm border border-primary/20 rounded-full px-4 py-2 text-sm font-medium text-primary flex items-center gap-2 shadow-lg hover:bg-primary/10 transition-colors card-shadow-hover"
+          >
+            <Sparkles className="h-4 w-4" />
+            <span>UI Components</span>
+          </Link>
+        </div>
+        
+        {/* Hero Section with nested containers (includes Books, Services, Testimonials and Contact) */}
         <Hero />
-        
-        {/* Featured Books Section */}
-        <FeaturedBooks />
-        
-        {/* Book Timeline Section */}
-        <BookTimeline />
-        
-        {/* Testimonials Section */}
-        <Testimonials />
-        
-        {/* Contact Section */}
-        <Contact />
       </main>
+      
+      {/* Toast notifications */}
+      <Toaster />
     </>
   );
-} 
+};
+
+export default Home; 

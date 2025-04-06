@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Badge } from "@/components/ui/badge";
 
 type NavItem = {
   label: string;
@@ -27,6 +28,7 @@ type NavItem = {
   href: string;
   icon: React.ElementType;
   active?: boolean;
+  isNew?: boolean;
 };
 
 export function Navbar() {
@@ -65,7 +67,8 @@ export function Navbar() {
       labelEn: "Blog", 
       href: "/blog", 
       icon: MessageSquare,
-      active: pathname.startsWith("/blog")
+      active: pathname.startsWith("/blog"),
+      isNew: true
     },
     { 
       label: "Услуги", 
@@ -97,11 +100,11 @@ export function Navbar() {
         : "translate-y-2 opacity-90 hover:opacity-100"
     )}>
       {/* Desktop Navigation */}
-      <div className="hidden md:flex items-center justify-between px-6 py-3 bg-white dark:bg-gray-900 border border-green-100 dark:border-green-800 rounded-xl shadow-lg">
+      <div className="hidden md:flex items-center justify-between px-6 py-3 bg-background/90 backdrop-blur-md border border-primary/10 rounded-xl shadow-lg">
         <div className="flex items-center space-x-1">
-          <Link href="/" className="px-3 py-2 rounded-lg text-green-700 dark:text-green-400 font-medium flex items-center">
+          <Link href="/" className="px-3 py-2 rounded-lg text-primary font-medium flex items-center hover:bg-primary/10 transition-colors">
             <BookMarked className="mr-2 h-5 w-5" />
-            <span className="font-playfair">{translate("Елис", "Elis")}</span>
+            <span className="font-playfair text-shimmer">{translate("Елис", "Elis")}</span>
           </Link>
         </div>
         
@@ -111,52 +114,81 @@ export function Navbar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "px-3 py-2 rounded-lg font-medium transition-colors flex items-center",
+                "px-3 py-2 rounded-lg font-medium transition-colors flex items-center relative",
                 item.active 
-                  ? "bg-green-50 text-green-700 dark:bg-green-900/40 dark:text-green-400" 
-                  : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                  ? "bg-primary/10 text-primary" 
+                  : "text-foreground hover:bg-muted"
               )}
             >
               <item.icon className="mr-1.5 h-4 w-4" />
               <span>{language === 'bg' ? item.label : item.labelEn}</span>
+              {item.isNew && (
+                <Badge variant="premium" className="absolute -top-1 -right-1 px-1.5 py-0.5">
+                  {translate("ново", "new")}
+                </Badge>
+              )}
             </Link>
           ))}
         </nav>
         
         <div className="flex items-center space-x-2">
           <ThemeToggle />
-          <Link href="/checkout" className="p-2 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
-            <ShoppingBag className="h-5 w-5" />
-          </Link>
+          <Button 
+            variant="accent" 
+            size="sm" 
+            rounded="full"
+            asChild
+          >
+            <Link href="/checkout" className="flex items-center gap-1.5">
+              <ShoppingBag className="h-4 w-4" />
+              <span className="sr-only md:not-sr-only">
+                {translate("Кошница", "Cart")}
+              </span>
+            </Link>
+          </Button>
         </div>
       </div>
       
       {/* Mobile Navigation */}
-      <div className="md:hidden flex items-center justify-between px-4 py-2 bg-white dark:bg-gray-900 border border-green-100 dark:border-green-800 rounded-xl shadow-lg">
-        <Link href="/" className="p-2 rounded-lg text-green-700 dark:text-green-400 font-medium flex items-center">
+      <div className="md:hidden flex items-center justify-between px-4 py-2 bg-background/90 backdrop-blur-md border border-primary/10 rounded-xl shadow-lg">
+        <Link href="/" className="p-2 rounded-lg text-primary font-medium flex items-center hover:bg-primary/10 transition-colors">
           <BookMarked className="h-5 w-5" />
-          <span className="font-playfair ml-1">{translate("Елис", "Elis")}</span>
+          <span className="font-playfair ml-1 text-shimmer">{translate("Елис", "Elis")}</span>
         </Link>
         
-        <div className="flex space-x-1">
+        <div className="flex space-x-1.5">
           {navItems.slice(0, 3).map((item) => (
-            <Link
+            <Button
               key={item.href}
-              href={item.href}
-              className={cn(
-                "p-2 rounded-lg transition-colors",
-                item.active 
-                  ? "bg-green-50 text-green-700 dark:bg-green-900/40 dark:text-green-400" 
-                  : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-              )}
+              variant={item.active ? "default" : "ghost"}
+              size="icon"
+              className="h-9 w-9 rounded-lg relative"
+              asChild
             >
-              <item.icon className="h-5 w-5" />
-            </Link>
+              <Link href={item.href}>
+                <item.icon className="h-4 w-4" />
+                <span className="sr-only">{language === 'bg' ? item.label : item.labelEn}</span>
+                {item.isNew && (
+                  <Badge variant="premium" className="absolute -top-1 -right-1 px-1 py-0">
+                    <span className="sr-only">{translate("ново", "new")}</span>
+                    <div className="h-1.5 w-1.5 rounded-full bg-white"></div>
+                  </Badge>
+                )}
+              </Link>
+            </Button>
           ))}
           
-          <Link href="/checkout" className="p-2 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
-            <ShoppingBag className="h-5 w-5" />
-          </Link>
+          <Button 
+            variant="accent" 
+            size="icon" 
+            className="h-9 w-9 rounded-lg"
+            asChild
+          >
+            <Link href="/checkout">
+              <ShoppingBag className="h-4 w-4" />
+              <span className="sr-only">{translate("Кошница", "Cart")}</span>
+            </Link>
+          </Button>
           
           <Sheet>
             <SheetTrigger asChild>
@@ -166,34 +198,41 @@ export function Navbar() {
               </Button>
             </SheetTrigger>
             <SheetContent side="bottom" className="rounded-t-xl h-auto pt-6">
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-4 paper-texture p-4 rounded-lg">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "flex flex-col items-center justify-center px-2 py-3 rounded-lg transition-colors text-center",
+                      "flex flex-col items-center justify-center px-2 py-4 rounded-lg transition-colors text-center relative",
                       item.active 
-                        ? "bg-green-50 text-green-700 dark:bg-green-900/40 dark:text-green-400" 
-                        : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                        ? "bg-primary/10 text-primary" 
+                        : "text-foreground hover:bg-muted"
                     )}
                   >
-                    <item.icon className="h-5 w-5 mb-1" />
-                    <span className="text-xs">{language === 'bg' ? item.label : item.labelEn}</span>
+                    <item.icon className="h-6 w-6 mb-2" />
+                    <span className="text-xs font-medium">{language === 'bg' ? item.label : item.labelEn}</span>
+                    {item.isNew && (
+                      <Badge variant="premium" className="absolute -top-1 -right-1 px-1.5 py-0.5">
+                        {translate("ново", "new")}
+                      </Badge>
+                    )}
                   </Link>
                 ))}
                 
                 <Link 
                   href="/checkout" 
-                  className="flex flex-col items-center justify-center px-2 py-3 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                  className="flex flex-col items-center justify-center px-2 py-4 rounded-lg text-foreground hover:bg-muted transition-colors"
                 >
-                  <ShoppingBag className="h-5 w-5 mb-1" />
-                  <span className="text-xs">{translate("Кошница", "Cart")}</span>
+                  <ShoppingBag className="h-6 w-6 mb-2 text-primary" />
+                  <span className="text-xs font-medium">{translate("Кошница", "Cart")}</span>
                 </Link>
                 
-                <div className="flex flex-col items-center justify-center px-2 py-3 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
-                  <ThemeToggle />
-                  <span className="text-xs mt-1">{translate("Тема", "Theme")}</span>
+                <div className="flex flex-col items-center justify-center px-2 py-4 rounded-lg text-foreground hover:bg-muted transition-colors">
+                  <div className="mb-2">
+                    <ThemeToggle />
+                  </div>
+                  <span className="text-xs font-medium">{translate("Тема", "Theme")}</span>
                 </div>
               </div>
             </SheetContent>

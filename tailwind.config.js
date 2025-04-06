@@ -2,10 +2,10 @@
 module.exports = {
   darkMode: "class",
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     container: {
@@ -65,55 +65,68 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
-        "bounce-slow": {
-          "0%, 100%": { transform: "translateY(-10%) rotate(-30deg)" },
-          "50%": { transform: "translateY(0) rotate(-30deg)" },
+        ripple: {
+          '0%': { transform: 'scale(0)', opacity: '0.6' },
+          '100%': { transform: 'scale(4)', opacity: '0' },
         },
-        "blob": {
-          "0%": { transform: "translate(0px, 0px) scale(1)" },
-          "33%": { transform: "translate(30px, -50px) scale(1.1)" },
-          "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
-          "100%": { transform: "translate(0px, 0px) scale(1)" },
+        glow: {
+          '0%': { boxShadow: '0 0 0 0 rgba(var(--primary-rgb), 0.4)' },
+          '70%': { boxShadow: '0 0 0 10px rgba(var(--primary-rgb), 0)' },
+          '100%': { boxShadow: '0 0 0 0 rgba(var(--primary-rgb), 0)' },
         },
-        "float": {
-          "0%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-10px)" },
-          "100%": { transform: "translateY(0px)" },
+        shine: {
+          '0%': { backgroundPosition: '200% center' },
+          '100%': { backgroundPosition: '-200% center' },
+        },
+        'text-shimmer': {
+          '0%': { backgroundPosition: '100%' },
+          '100%': { backgroundPosition: '0%' },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "bounce-slow": "bounce-slow 2s ease-in-out infinite",
-        "blob": "blob 7s infinite",
-        "float": "float 3s ease-in-out infinite",
+        "ripple": "ripple 0.7s linear forwards",
+        "glow": "glow 2s infinite",
+        "shine": "shine 3s ease infinite",
+        "text-shimmer": "text-shimmer 2.5s ease-out infinite alternate",
       },
+      typography: (theme) => ({
+        DEFAULT: {
+          css: {
+            a: {
+              color: 'hsl(var(--primary))',
+              '&:hover': {
+                color: 'hsl(var(--primary) / 0.8)',
+              },
+            },
+            h1: {
+              fontWeight: '700',
+            },
+            h2: {
+              fontWeight: '600',
+            },
+            h3: {
+              fontWeight: '600',
+            },
+            blockquote: {
+              borderLeftColor: 'hsl(var(--primary) / 0.5)',
+              backgroundColor: 'hsl(var(--muted) / 0.1)',
+              fontStyle: 'normal',
+            },
+            'blockquote p:first-of-type::before': {
+              content: 'none',
+            },
+            'blockquote p:last-of-type::after': {
+              content: 'none',
+            },
+          },
+        },
+      }),
     },
   },
   plugins: [
     require("tailwindcss-animate"),
-    function({ addUtilities }) {
-      const newUtilities = {
-        '.animation-delay-1000': {
-          'animation-delay': '1s',
-        },
-        '.animation-delay-2000': {
-          'animation-delay': '2s',
-        },
-        '.animation-delay-3000': {
-          'animation-delay': '3s',
-        },
-        '.animation-delay-4000': {
-          'animation-delay': '4s',
-        },
-        '.animation-delay-5000': {
-          'animation-delay': '5s',
-        },
-        '.animation-delay-6000': {
-          'animation-delay': '6s',
-        },
-      }
-      addUtilities(newUtilities)
-    },
+    require('@tailwindcss/typography'),
   ],
 } 

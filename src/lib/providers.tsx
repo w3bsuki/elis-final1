@@ -3,9 +3,7 @@
 import { ThemeProvider } from "next-themes";
 import { LanguageProvider } from "@/lib/LanguageContext";
 import { CartProvider } from "@/lib/CartContext";
-import { Toaster } from "@/components/ui/toaster";
 import { useEffect, useState } from "react";
-import { SafeComponent } from "@/components/ui/error-fallback";
 import { DatabaseErrorManager } from '@/components/DatabaseErrorManager';
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -29,15 +27,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="light"
-      enableSystem={false}
-      forcedTheme="light"
+      defaultTheme="system"
+      enableSystem={true}
       disableTransitionOnChange
     >
       <LanguageProvider>
         <CartProvider>
           {children}
-          <Toaster />
           <DatabaseErrorManager />
         </CartProvider>
       </LanguageProvider>
