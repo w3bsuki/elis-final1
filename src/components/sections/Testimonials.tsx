@@ -20,6 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 // Character limit for truncating comments
 const CHAR_LIMIT = 180;
@@ -151,8 +152,6 @@ export const Testimonials = () => {
   // Parallax effect values
   const y1 = useTransform(scrollYProgress, [0, 1], [0, -100]);
   const y2 = useTransform(scrollYProgress, [0, 1], [0, -50]);
-  const opacity = useTransform(scrollYProgress, [0.3, 0.6], [0, 1]);
-  const scale = useTransform(scrollYProgress, [0.3, 0.6], [0.8, 1]);
   
   const plugin = useRef(
     AutoScroll({
@@ -183,133 +182,85 @@ export const Testimonials = () => {
   }, []);
 
   return (
-    <section className="relative py-24 bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900 overflow-hidden" ref={containerRef} id="testimonials">
-      {/* Background decorations */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <motion.div
-          className="absolute top-20 left-0 w-64 h-64 rounded-full bg-primary/5 blur-3xl"
-          style={{ y: y1 }}
-        />
-        <motion.div
-          className="absolute bottom-20 right-0 w-80 h-80 rounded-full bg-blue-500/5 blur-3xl"
-          style={{ y: y2 }}
-        />
-        <motion.div
-          className="absolute top-1/3 right-1/4 w-40 h-40 rounded-full bg-amber-500/5 blur-2xl"
-          style={{ y: useTransform(scrollYProgress, [0, 1], [0, -80]) }}
-        />
+    <div className="relative">
+      {/* Section header with badge headline style */}
+      <div className="text-center mb-10">
+        <div className="inline-flex items-center gap-3 mb-4 px-6 py-3 
+          bg-gradient-to-br from-white/80 to-blue-50/60 dark:from-gray-800/80 dark:to-blue-900/30
+          border border-blue-200/50 dark:border-blue-800/30
+          rounded-full 
+          shadow-[-5px_-5px_10px_rgba(255,255,255,0.8),_5px_5px_10px_rgba(0,0,0,0.1)] 
+          dark:shadow-[-2px_-2px_5px_rgba(40,40,40,0.25),_2px_2px_5px_rgba(0,0,0,0.3)]
+          backdrop-blur-sm
+        ">
+          <Quote className="w-6 h-6 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+          <h2 className="text-xl md:text-2xl font-bold font-serif text-black dark:text-white antialiased">
+            {translate("Какво казват читателите", "What Readers Say")}
+          </h2>
+        </div>
         
-        {/* Large quote mark for decoration */}
-        <div className="absolute left-1/2 top-40 transform -translate-x-1/2 opacity-5">
-          <Quote className="h-40 w-40 text-primary" />
+        <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-400 rounded-full mx-auto mb-4"></div>
+        
+        <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto text-sm sm:text-base antialiased">
+          {translate(
+            "Присъединете се към глобална мрежа от читатели, които вече са открили своя път към по-добър живот.",
+            "Join a global network of readers who have already discovered their path to a better life."
+          )}
+        </p>
+        
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-900/30 text-sm font-semibold text-blue-600 dark:text-blue-400 mt-4 border border-blue-200/50 dark:border-blue-800/30 shadow-sm">
+          <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
+          {translate("Оценен с 5 звезди от 1000+ читатели", "Rated 5 stars by 1000+ readers")}
         </div>
       </div>
       
-      <div className="container mx-auto px-4 relative z-10">
-        {/* Modern nested container */}
-        <div className="max-w-7xl mx-auto relative">
-          {/* Top decorative badge */}
-          <div className="absolute -top-6 left-0 right-0 flex justify-center z-10">
-            <motion.div
-              className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-full border border-gray-200 dark:border-gray-800 shadow-lg px-5 py-2"
-              initial={{ opacity: 0, y: -20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="flex items-center justify-center gap-2">
-                <div className="size-1.5 rounded-full bg-blue-500"></div>
-                <div className="text-sm font-medium text-gray-800 dark:text-gray-200">
-                  {translate("Гласът на читателите", "Readers' voices")}
-                </div>
-                <div className="size-1.5 rounded-full bg-blue-500"></div>
-              </div>
-            </motion.div>
-          </div>
-          
-          {/* Main content container with nested card design */}
-          <motion.div
-            className="bg-white/40 dark:bg-gray-900/40 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 shadow-2xl p-0.5 overflow-hidden"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            {/* Decorative top border - gradient line */}
-            <div className="absolute top-0 left-10 right-10 h-0.5 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
-            
-            {/* Container inner gradient */}
-            <div className="bg-gradient-to-br from-gray-100/50 via-white/50 to-gray-100/50 dark:from-gray-900/50 dark:via-gray-950/50 dark:to-gray-900/50 rounded-lg p-5 sm:p-6 md:p-8 lg:p-10 relative overflow-hidden">
-              {/* Glass panel effect with inner shadow */}
-              <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
-              
-              {/* Decorative elements */}
-              <div className="absolute top-10 left-10 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl"></div>
-              <div className="absolute bottom-10 right-10 w-40 h-40 bg-amber-500/5 rounded-full blur-3xl"></div>
-              
-              <div className="relative z-10">
-                {/* Section header */}
-                <div className="text-center mb-12">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 text-sm font-semibold text-blue-600 dark:text-blue-400 mb-4">
-                    <Zap className="h-4 w-auto fill-blue-500" />
-                    {translate("Оценен с 5 звезди от 1000+ читатели", "Rated 5 stars by 1000+ readers")}
-                  </div>
-                  
-                  <h2 className="text-3xl md:text-4xl font-bold mb-3 font-serif">
-                    {translate("Какво казват нашите читатели", "What our readers say")}
-                  </h2>
-                  
-                  <div className="w-16 h-1 bg-blue-500/40 rounded-full mx-auto mb-3"></div>
-                  
-                  <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-sm sm:text-base">
-                    {translate(
-                      "Присъединете се към глобална мрежа от читатели, които вече са открили своя път към по-добър живот",
-                      "Join a global network of readers who have already discovered their path to a better life"
-                    )}
-                  </p>
-                </div>
-                
-                {/* Testimonials Carousel */}
-                <div className="mb-8 mt-12">
-                  <Carousel
-                    opts={{
-                      loop: true,
-                    }}
-                    plugins={[plugin.current]}
-                    onMouseLeave={() => plugin.current.play()}
-                    className="lg:-mx-4 relative before:absolute before:top-0 before:bottom-0 before:left-0 before:z-10 before:w-24 sm:before:w-36 before:bg-gradient-to-r before:from-white/90 dark:before:from-gray-900/90 before:to-transparent after:absolute after:top-0 after:right-0 after:bottom-0 after:z-10 after:w-24 sm:after:w-36 after:bg-gradient-to-l after:from-white/90 dark:after:from-gray-900/90 after:to-transparent"
-                  >
-                    <CarouselContent>
-                      {testimonials.map((testimonial, index) => (
-                        <CarouselItem key={index} className="basis-auto pl-4 md:basis-1/2 lg:basis-1/3">
-                          <TestimonialCard 
-                            testimonial={testimonial} 
-                            getSourceColor={getSourceColor} 
-                          />
-                        </CarouselItem>
-                      ))}
-                    </CarouselContent>
-                  </Carousel>
-                </div>
-                
-                {/* View all testimonials button */}
-                <div className="flex justify-center mt-10">
-                  <Button 
-                    variant="outline" 
-                    rounded="full" 
-                    className="border-2 border-blue-200/50 dark:border-gray-700 shadow-md"
-                    size="lg"
-                  >
-                    {translate("Вижте всички отзиви", "View all testimonials")}
-                    <ChevronRight className="ml-1 h-4 w-auto" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
+      {/* Testimonials Carousel */}
+      <div className="mb-8">
+        <Carousel
+          opts={{
+            loop: true,
+          }}
+          plugins={[plugin.current]}
+          onMouseLeave={() => plugin.current.play()}
+          className="lg:-mx-4 relative before:absolute before:top-0 before:bottom-0 before:left-0 before:z-10 before:w-24 sm:before:w-36 before:bg-gradient-to-r before:from-white/90 dark:before:from-gray-900/90 before:to-transparent after:absolute after:top-0 after:right-0 after:bottom-0 after:z-10 after:w-24 sm:after:w-36 after:bg-gradient-to-l after:from-white/90 dark:after:from-gray-900/90 after:to-transparent"
+        >
+          <CarouselContent>
+            {testimonials.map((testimonial, index) => (
+              <CarouselItem key={index} className="basis-auto pl-4 md:basis-1/2 lg:basis-1/3">
+                <TestimonialCard 
+                  testimonial={testimonial} 
+                  getSourceColor={getSourceColor} 
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
       </div>
-    </section>
+      
+      {/* View all testimonials button with neumorphic style */}
+      <div className="flex justify-center mt-8 mb-4">
+        <Link 
+          href="/testimonials" 
+          className={`
+            px-6 py-3 rounded-full 
+            flex items-center justify-center gap-2 
+            text-blue-700 dark:text-blue-400 font-medium
+            bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/20 dark:to-gray-800
+            shadow-[-5px_-5px_10px_rgba(255,255,255,0.8),_5px_5px_10px_rgba(0,0,0,0.15)] 
+            dark:shadow-[-5px_-5px_10px_rgba(40,40,40,0.15),_5px_5px_10px_rgba(0,0,0,0.35)]
+            border border-blue-200/50 dark:border-blue-800/30
+            transition-all duration-300
+
+            hover:shadow-[-1px_-1px_5px_rgba(255,255,255,0.6),_1px_1px_5px_rgba(0,0,0,0.2),inset_-2px_-2px_5px_rgba(255,255,255,1),inset_2px_2px_4px_rgba(0,0,0,0.15)]
+            dark:hover:shadow-[-1px_-1px_5px_rgba(40,40,40,0.2),_1px_1px_5px_rgba(0,0,0,0.3),inset_-2px_-2px_5px_rgba(40,40,40,0.2),inset_2px_2px_4px_rgba(0,0,0,0.3)]
+            hover:text-blue-600 dark:hover:text-blue-300
+          `}
+        >
+          {translate("Вижте всички отзиви", "View All Testimonials")}
+          <ChevronRight className="w-4 h-4" />
+        </Link>
+      </div>
+    </div>
   );
 };
 
