@@ -105,64 +105,98 @@ export default function ServicesSection() {
           )}
         </p>
         
-        {/* Instruction text */}
-        <div className="mt-3 flex justify-center">
-          <div className="bg-gray-50/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-full py-2 px-4 shadow-sm flex items-center gap-2">
-            <Eye className="h-4 w-4 text-purple-600 dark:text-purple-400" />
-            <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">
-              {translate("Разгледайте всеки раздел за повече информация", "Hover over each card to see more details")}
-            </span>
+        {/* Enhanced instruction text with neumorphic badge */}
+        <div className="mt-4 flex justify-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-50 dark:bg-purple-900/30 text-sm text-purple-700 dark:text-purple-400 border border-purple-200/50 dark:border-purple-800/30 shadow-sm">
+            <Eye className="w-3.5 h-3.5 text-purple-500" />
+            {translate(
+              "Задръжте върху услуга, за да видите повече детайли",
+              "Hover over a service to see more details"
+            )}
           </div>
         </div>
       </div>
       
-      {/* Services Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-        {allServices.slice(0, 4).map((service, index) => (
-          <motion.div
-            key={service.id}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="h-[360px]"
-            whileHover={{ 
-              y: -5,
-              transition: { duration: 0.2 }
-            }}
-          >
-            {/* Service Card */}
-            <div className="h-full relative group">
-              {/* Group hover glow effect */}
-              <div className="absolute -inset-0.5 bg-gradient-to-br from-purple-400/0 to-primary/0 rounded-xl opacity-0 group-hover:opacity-100 group-hover:from-purple-400/20 group-hover:to-primary/20 blur-md transition-all duration-500"></div>
-              
-              {/* Inner container with glass effect */}
-              <div className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm rounded-xl border border-gray-100 dark:border-gray-800 shadow-lg p-0.5 h-full relative overflow-hidden">
-                {/* Glass panel effect */}
-                <div className="absolute inset-0 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
-                
-                <FlipCard
-                  frontImage={service.coverImage}
-                  frontTitle={service.title}
-                  frontSubtitle={service.description.split('.')[0] + '.'}
-                  frontIcon={<Package className="h-4 w-4" />}
-                  backTitle={service.title}
-                  backDescription={service.description}
-                  backFeatures={service.includes || []}
-                  backCta={translate("Научи повече", "Learn More")}
-                  onCtaClick={() => window.location.href = `/services/${service.id}`}
-                  popular={(service as any).popular}
-                  className="h-full relative z-0"
-                  triggerMode="hover"
-                />
-              </div>
+      {/* Enhanced Services Container with nested container styling */}
+      <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 shadow-lg overflow-hidden mb-8">
+        {/* Inner container with gradient and shadow effects */}
+        <div className="bg-gradient-to-br from-purple-50/30 via-white/40 to-purple-50/30 dark:from-purple-900/20 dark:via-gray-900/20 dark:to-purple-900/20 p-6 rounded-lg relative">
+          {/* Inner shadow effect */}
+          <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
+          
+          {/* Services Grid */}
+          <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+            {allServices.slice(0, 4).map((service, index) => (
+              <motion.div
+                key={service.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="h-[360px]"
+                whileHover={{ 
+                  y: -5,
+                  transition: { duration: 0.2 }
+                }}
+              >
+                {/* Service Card with enhanced nested container*/}
+                <div className="h-full relative group">
+                  {/* Group hover glow effect */}
+                  <div className="absolute -inset-0.5 bg-gradient-to-br from-purple-400/0 to-primary/0 rounded-xl opacity-0 group-hover:opacity-100 group-hover:from-purple-400/20 group-hover:to-primary/20 blur-md transition-all duration-500"></div>
+                  
+                  {/* Inner container with glass effect */}
+                  <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-xl border border-purple-100/50 dark:border-purple-800/30 shadow-lg p-0.5 h-full relative overflow-hidden">
+                    {/* Glass panel effect */}
+                    <div className="absolute inset-0 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
+                    
+                    <FlipCard
+                      frontImage={service.coverImage}
+                      frontTitle={service.title}
+                      frontSubtitle={service.description.split('.')[0] + '.'}
+                      frontIcon={<Package className="h-4 w-4" />}
+                      backTitle={service.title}
+                      backDescription={service.description}
+                      backFeatures={service.includes || []}
+                      backCta={translate("Научи повече", "Learn More")}
+                      onCtaClick={() => window.location.href = `/services/${service.id}`}
+                      popular={(service as any).popular}
+                      className="h-full relative z-0"
+                      triggerMode="hover"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+          
+          {/* Pricing preview - new nested section */}
+          <div className="mt-8 pt-4 border-t border-purple-200/30 dark:border-purple-800/30 relative z-10">
+            <div className="flex flex-wrap justify-center gap-6">
+              {[
+                { name: translate("Индивидуална", "Individual"), price: "85", duration: "50 мин." },
+                { name: translate("Двойки", "Couples"), price: "120", duration: "90 мин." },
+                { name: translate("Арт Терапия", "Art Therapy"), price: "75", duration: "60 мин." }
+              ].map((option) => (
+                <div 
+                  key={option.name}
+                  className="px-5 py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 border border-purple-200/50 dark:border-purple-800/30 shadow-sm"
+                >
+                  <div className="flex flex-col items-center">
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{option.name}</span>
+                    <div className="flex items-baseline gap-1 mt-1">
+                      <span className="text-xl font-bold text-purple-600 dark:text-purple-400">{option.price}</span>
+                      <span className="text-xs text-gray-500">лв. / {option.duration}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          </motion.div>
-        ))}
+          </div>
+        </div>
       </div>
       
-      {/* View All Services CTA with neumorphic button */}
-      <div className="flex justify-center mt-6 mb-4">
+      {/* View All Services CTA with enhanced neumorphic button */}
+      <div className="flex justify-center mb-4">
         <Link 
           href="/services" 
           className={`

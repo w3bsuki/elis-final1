@@ -269,98 +269,124 @@ export default function BooksSection() {
           )}
         </p>
         
-        {/* Info message similar to services section */}
-        <div className="mt-3 text-xs text-gray-500 dark:text-gray-400 flex justify-center items-center">
-          <Quote className="w-3 h-3 mr-1 text-green-500/60" />
-          {translate(
-            "Задръжте върху книга, за да видите повече информация",
-            "Hover on a book to see more information"
-          )}
+        {/* Info message with neumorphic badge */}
+        <div className="mt-4 flex justify-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 dark:bg-green-900/30 text-sm text-green-700 dark:text-green-400 border border-green-200/50 dark:border-green-800/30 shadow-sm">
+            <Quote className="w-3.5 h-3.5 text-green-500" />
+            {translate(
+              "Задръжте върху книга, за да видите повече информация",
+              "Hover on a book to see more information"
+            )}
+          </div>
         </div>
       </div>
       
-      {/* Book Carousel with improved visuals */}
-      <div 
-        ref={containerRef}
-        className="mb-8 relative overflow-hidden cursor-grab active:cursor-grabbing rounded-xl p-3 bg-gradient-to-b from-green-50/30 to-white/0 dark:from-green-900/10 dark:to-gray-900/0"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-      >
-        {/* Gradient overlays */}
-        <div className="absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-white/90 via-white/70 to-transparent dark:from-gray-900/90 dark:via-gray-900/70 dark:to-transparent pointer-events-none"></div>
-        <div className="absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-white/90 via-white/70 to-transparent dark:from-gray-900/90 dark:via-gray-900/70 dark:to-transparent pointer-events-none"></div>
-        
-        <motion.div 
-          ref={carouselRef}
-          className="flex min-w-full whitespace-nowrap"
-          style={{ x }}
-          drag="x"
-        >
-          {duplicatedBooks.map((book, index) => (
-            <div
-              key={`${book.id}-${index}`}
-              className="min-w-[320px] md:min-w-[280px] h-[380px] px-2 inline-block"
+      {/* Enhanced Book Carousel with nested container styling */}
+      <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 shadow-lg overflow-hidden mb-8">
+        {/* Inner container with gradient and shadow effects */}
+        <div className="bg-gradient-to-br from-gray-50/50 via-white/50 to-gray-50/50 dark:from-gray-900/50 dark:via-gray-900/30 dark:to-gray-900/50 p-4 rounded-lg relative">
+          {/* Inner shadow effect */}
+          <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
+          
+          {/* Carousel Container - inside the nested design */}
+          <div 
+            ref={containerRef}
+            className="relative z-10 overflow-hidden cursor-grab active:cursor-grabbing rounded-xl"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+          >
+            {/* Gradient overlays */}
+            <div className="absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-white/90 via-white/70 to-transparent dark:from-gray-900/90 dark:via-gray-900/70 dark:to-transparent pointer-events-none"></div>
+            <div className="absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-white/90 via-white/70 to-transparent dark:from-gray-900/90 dark:via-gray-900/70 dark:to-transparent pointer-events-none"></div>
+            
+            <motion.div 
+              ref={carouselRef}
+              className="flex min-w-full whitespace-nowrap"
+              style={{ x }}
+              drag="x"
             >
-              <div className="flip-card-container relative h-full w-full perspective-1000 flip-on-hover">
-                <div className="flip-card relative w-full h-full transition-transform duration-700 transform-style-3d">
-                  {/* Front Side */}
-                  <div className="flip-card-front absolute w-full h-full backface-hidden">
-                    <div className="relative h-full rounded-xl overflow-hidden border border-primary/10 bg-white/95 dark:bg-gray-800/95 shadow-lg hover:shadow-xl transition-shadow">
-                      {/* Image */}
-                      <div className="relative h-2/3 w-full overflow-hidden">
-                        <Image
-                          src={book.coverImage}
-                          alt={book.title}
-                          fill
-                          className="object-cover transition-transform duration-700 group-hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              {duplicatedBooks.map((book, index) => (
+                <div
+                  key={`${book.id}-${index}`}
+                  className="min-w-[320px] md:min-w-[280px] h-[380px] px-2 inline-block"
+                >
+                  <div className="flip-card-container relative h-full w-full perspective-1000 flip-on-hover">
+                    <div className="flip-card relative w-full h-full transition-transform duration-700 transform-style-3d">
+                      {/* Front Side - Enhanced with neumorphic styling */}
+                      <div className="flip-card-front absolute w-full h-full backface-hidden">
+                        <div className="relative h-full rounded-xl overflow-hidden border border-green-200/50 dark:border-green-800/30 bg-white/95 dark:bg-gray-800/95 shadow-lg hover:shadow-xl transition-shadow">
+                          {/* Image */}
+                          <div className="relative h-2/3 w-full overflow-hidden">
+                            <Image
+                              src={book.coverImage}
+                              alt={book.title}
+                              fill
+                              className="object-cover transition-transform duration-700 group-hover:scale-110"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                          </div>
+                          
+                          {/* Enhanced Popular Badge with neumorphic style */}
+                          {book.featured && (
+                            <div className="absolute top-4 right-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
+                              Popular
+                            </div>
+                          )}
+                          
+                          {/* Content */}
+                          <div className="absolute bottom-0 w-full p-6 space-y-2">
+                            {/* Icon container with enhanced neumorphic styling */}
+                            {book.featured ? 
+                              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-amber-50 to-white dark:from-amber-900/30 dark:to-amber-800/20 border border-amber-200/50 dark:border-amber-800/30 shadow-sm mb-2">
+                                <Star className="w-4 h-4 fill-amber-500" />
+                              </div>
+                              : 
+                              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-green-50 to-white dark:from-green-900/30 dark:to-green-800/20 border border-green-200/50 dark:border-green-800/30 shadow-sm mb-2">
+                                <BookOpen className="w-4 h-4 text-green-500" />
+                              </div>
+                            }
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white">{book.title}</h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">{book.price} лв.</p>
+                            
+                            <div className="pt-2 text-sm text-green-600 dark:text-green-400 font-medium flex items-center gap-1">
+                              {translate("Научи повече", "Learn more")} <ChevronRight className="h-4 w-4" />
+                            </div>
+                          </div>
+                        </div>
                       </div>
                       
-                      {/* Popular Badge */}
-                      {book.featured && (
-                        <div className="absolute top-4 right-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
-                          Popular
-                        </div>
-                      )}
-                      
-                      {/* Content */}
-                      <div className="absolute bottom-0 w-full p-6 space-y-2">
-                        {book.featured ? 
-                          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-2">
-                            <Star className="w-4 h-4 fill-amber-500" />
-                          </div>
-                          : 
-                          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-2">
-                            <BookOpen className="w-4 h-4 text-green-500" />
-                          </div>
-                        }
-                        <h3 className="text-xl font-bold text-foreground">{book.title}</h3>
-                        <p className="text-sm text-muted-foreground">{book.price} лв.</p>
-                        
-                        <div className="pt-2 text-sm text-primary font-medium flex items-center gap-1">
-                          {translate("Научи повече", "Learn more")} <ChevronRight className="h-4 w-4" />
-                        </div>
+                      {/* Back Side - with enhanced container */}
+                      <div className="flip-card-back absolute w-full h-full backface-hidden rotate-y-180">
+                        <EnhancedFlipCardBack 
+                          book={book}
+                          translate={translate}
+                          onCtaClick={() => window.location.href = `/book/${book.id}`}
+                        />
                       </div>
                     </div>
                   </div>
-                  
-                  {/* Back Side */}
-                  <div className="flip-card-back absolute w-full h-full backface-hidden rotate-y-180">
-                    <EnhancedFlipCardBack 
-                      book={book}
-                      translate={translate}
-                      onCtaClick={() => window.location.href = `/book/${book.id}`}
-                    />
-                  </div>
                 </div>
-              </div>
+              ))}
+            </motion.div>
+          </div>
+          
+          {/* Book categories and quick links - new nested section */}
+          <div className="mt-6 pt-4 border-t border-green-200/30 dark:border-green-800/30 relative z-10">
+            <div className="flex flex-wrap justify-center gap-2">
+              {["All", "Self-help", "Poetry", "Health", "Relationships"].map((category) => (
+                <div 
+                  key={category}
+                  className="px-4 py-2 rounded-full bg-white/80 dark:bg-gray-800/80 border border-green-200/50 dark:border-green-800/30 shadow-sm hover:shadow text-sm text-gray-700 dark:text-gray-300 cursor-pointer transition-all hover:bg-green-50 hover:text-green-700 dark:hover:bg-green-900/20 dark:hover:text-green-400"
+                >
+                  {category}
+                </div>
+              ))}
             </div>
-          ))}
-        </motion.div>
+          </div>
+        </div>
       </div>
       
-      {/* View All Books CTA with green neumorphic styling */}
+      {/* View All Books CTA with enhanced neumorphic styling */}
       <div className="flex justify-center mb-4">
         <Link 
           href="/books" 
