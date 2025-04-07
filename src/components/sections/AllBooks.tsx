@@ -6,7 +6,7 @@ import { Library, ChevronRight, Eye, BookText, FileText, ShoppingCart, TrendingU
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/LanguageContext";
 import { shopBooks } from "@/lib/shop-data";
-import FlipCard from "@/components/animata/card/flip-card";
+import { FlipCard } from "@/components/ui/flip-card";
 import { BookPreviewDialog } from "@/components/ui/book-preview-dialog";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -198,6 +198,7 @@ export default function AllBooks() {
                         description={book.description}
                         className="w-full h-full"
                         onClick={() => handleBookClick(book)}
+                        simpleMode={true}
                       />
                     </div>
                     

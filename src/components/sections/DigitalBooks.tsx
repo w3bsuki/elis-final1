@@ -6,11 +6,13 @@ import { Download, ChevronRight, Laptop, FileText, BookOpen } from "lucide-react
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/LanguageContext";
 import { shopBooks } from "@/lib/shop-data";
-import FlipCard from "@/components/animata/card/flip-card";
+import { FlipCard } from "@/components/ui/flip-card";
 import { BookPreviewDialog } from "@/components/ui/book-preview-dialog";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Image from "next/image";
 
 // Define a Book type to replace 'any'
 interface Book {
@@ -129,12 +131,12 @@ export default function DigitalBooks() {
                   >
                     <div className="bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden" style={{ aspectRatio: '3/5' }}>
                       <FlipCard
-                        image={book.coverImage || "/images/books/vdahnovenia-kniga-1.png"}
+                        image={book.coverImage || "/images/books/digital-placeholder.jpg"}
                         title={book.title}
-                        subtitle={formatCategory(book.category)}
+                        subtitle={book.category}
                         description={book.description}
-                        category={book.category || 'default'}
-                        className="mx-auto shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.2)] w-full h-full"
+                        className="h-full"
+                        simpleMode={true}
                       />
                     </div>
                   </div>

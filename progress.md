@@ -41,9 +41,11 @@ This document tracks the progress of our website enhancement efforts based on th
 
 ## In Progress
 
-| Component | Description | Type | Started On | Target Completion |
-|-----------|-------------|------|------------|-------------------|
-| Shop Component | Improve visual hierarchy and accessibility | Visual/Accessibility | Upcoming | TBD |
+| Component/File | Type of Change | Started On | Target Completion | Notes |
+|----------------|----------------|------------|-------------------|-------|
+| FlipCard components | Consolidation | April 7, 2024 | April 8, 2024 | Analyzing three different FlipCard implementations to determine consolidation strategy |
+| animata/card/flip-card.tsx | Planned Removal | April 7, 2024 | April 8, 2024 | All components have been updated, ready to remove this file |
+| Hero components structure | Consolidation | April 7, 2024 | April 8, 2024 | Analyzing duplicate Hero components and content |
 
 ## Detailed Progress Notes
 
@@ -73,6 +75,114 @@ This document tracks the progress of our website enhancement efforts based on th
 
 ## Next Steps
 
-1. Analyze Shop Component for improvements
-2. Review and enhance overall site navigation
-3. Implement additional accessibility features site-wide 
+1. Continue with Phase 1 by:
+   - ✅ Removing the Hero.original-backup.tsx file
+   - ✅ Checking for other unused section components
+   - ✅ Starting to identify duplicate UI components (like flip-card.tsx vs FlipCard.tsx)
+   - ✅ Removing the unused FlipCard.tsx file
+2. Continue Phase 1 & Start Phase 2:
+   - Complete consolidation of the remaining FlipCard implementations
+   - Check for other duplicate components that need consolidation
+   - Identify and remove unused utility files and hooks
+3. Prepare for Phase 3:
+   - Start analyzing the import tree and dependencies
+   - Identify unused imports across files
+4. Begin analyzing the App Router migration path
+
+# Website Cleanup Progress Tracker
+
+## Overview
+This document tracks the progress of our website cleanup efforts based on the plan outlined in website-cleanup-plan.md. We'll document all removed components, refactorings, and optimizations here.
+
+## Current Status
+
+**Cleanup Start Date:** April 7, 2024
+**Last Updated:** April 7, 2024
+
+## Completed Cleanup Tasks
+
+| Date | Component/File | Type of Change | Description | Impact | Dependencies |
+|------|---------------|----------------|-------------|--------|--------------|
+| April 7, 2024 | AboutAuthor.tsx | Removal | Removed unused AboutAuthor component that wasn't referenced anywhere in the codebase | Reduced bundle size, simplified codebase | None - component was unused |
+| April 7, 2024 | src/pages/index.tsx | Optimization | Removed unnecessary imports that weren't being used (dynamic, Link, Button, ChevronRight, Image, Suspense) | Reduced JS bundle size, cleaner code | None - imports weren't being used |
+| April 7, 2024 | Hero.original-backup.tsx | Removal | Removed backup file of Hero component | Reduced repo size, removed obsolete code | None - was a backup file |
+| April 7, 2024 | HeroLanding.tsx | Removal | Removed unused HeroLanding component | Simplified codebase | None - component was unused |
+| April 7, 2024 | FeaturedBooks.tsx | Removal | Removed unused FeaturedBooks component | Simplified codebase | None - component was unused |
+| April 7, 2024 | FeaturedServices.tsx | Removal | Removed unused FeaturedServices component | Simplified codebase | None - component was unused |
+| April 7, 2024 | BookTimeline.tsx | Removal | Removed unused BookTimeline component | Simplified codebase | None - component was unused |
+| April 7, 2024 | AuthorTimeline.tsx | Removal | Removed unused AuthorTimeline component | Simplified codebase | None - component was unused |
+| April 7, 2024 | AboutUs.tsx | Removal | Removed unused AboutUs component | Simplified codebase | None - component was unused |
+| April 7, 2024 | FlipCard.tsx | Removal | Removed unused capital-F FlipCard component | Simplified codebase, reduced duplication | None - component was unused |
+| April 7, 2024 | flip-card.tsx | Consolidation | Enhanced flip-card.tsx to support both usage patterns (from ui/flip-card.tsx and animata/card/flip-card.tsx) | Improved code reuse, simplified maintenance | Multiple components updated to use the consolidated version |
+| April 7, 2024 | AllBooks.tsx | Update | Updated to use the consolidated FlipCard component | Simplified dependency tree | Now depends on the consolidated flip-card component |
+| April 7, 2024 | Bestsellers.tsx | Update | Updated to use the consolidated FlipCard component | Simplified dependency tree | Now depends on the consolidated flip-card component |
+| April 7, 2024 | DigitalBooks.tsx | Update | Updated to use the consolidated FlipCard component | Simplified dependency tree | Now depends on the consolidated flip-card component |
+| April 7, 2024 | animata/card/flip-card.tsx | Removal | Removed the animata version of flip-card as all components now use the consolidated version | Further reduced code duplication and simplified maintenance | None - all components updated to use the consolidated version |
+
+## In Progress
+
+| Component/File | Type of Change | Started On | Target Completion | Notes |
+|----------------|----------------|------------|-------------------|-------|
+| Hero components structure | Consolidation | April 7, 2024 | April 8, 2024 | Analyzing duplicate Hero components and content |
+
+## Detailed Notes
+
+### Phase 1: Remove Unused Files & Components (In Progress)
+
+We've started the cleanup process by:
+1. Creating a comprehensive cleanup plan (website-cleanup-plan.md)
+2. Identifying actively used components vs. unused ones
+3. Removing the first batch of unused components/imports
+4. Setting up this progress tracking system
+
+Initial observations:
+- The codebase has several backup or duplicate components that can be safely removed
+- There's significant duplication between different UI component implementations
+- We need to carefully analyze the relationship between Pages Router and App Router code
+
+### FlipCard Components Analysis
+
+We've discovered three different FlipCard implementations:
+
+1. **`src/components/ui/FlipCard.tsx`** (capital F):
+   - Feature-rich with Framer Motion animations
+   - Good organization and styling
+   - ✅ REMOVED - Was not imported anywhere in the codebase
+
+2. **`src/components/ui/flip-card.tsx`** (lowercase f):
+   - Uses Next.js Image component for better image optimization
+   - Good accessibility features
+   - Used in main sections: BooksSection and ServicesSection
+   - ✅ ENHANCED - Now supports both usage patterns with a simpleMode flag
+
+3. **`src/components/animata/card/flip-card.tsx`**:
+   - Simpler implementation with less features
+   - Used in AllBooks, DigitalBooks, and Bestsellers components
+   - ✅ COMPONENTS UPDATED - All components now import from ui/flip-card.tsx
+   - ✅ REMOVED - File deleted after all references were updated
+
+**Consolidation Status:**
+1. ✅ Removed the unused `FlipCard.tsx` (capital F) implementation
+2. ✅ Enhanced the lowercase `flip-card.tsx` to support all use cases with a `simpleMode` flag
+3. ✅ Updated imports in components using the animata version:
+   - AllBooks.tsx
+   - Bestsellers.tsx
+   - DigitalBooks.tsx
+4. ✅ Removed the now-unused animata/card/flip-card.tsx file
+5. ⬜ Final testing to ensure all functionality works correctly
+
+### Next Steps
+
+1. Continue with Phase 1 by:
+   - ✅ Removing the Hero.original-backup.tsx file
+   - ✅ Checking for other unused section components
+   - ✅ Starting to identify duplicate UI components (like flip-card.tsx vs FlipCard.tsx)
+   - ✅ Removing the unused FlipCard.tsx file
+2. Continue Phase 1 & Start Phase 2:
+   - Complete consolidation of the remaining FlipCard implementations
+   - Check for other duplicate components that need consolidation
+   - Identify and remove unused utility files and hooks
+3. Prepare for Phase 3:
+   - Start analyzing the import tree and dependencies
+   - Identify unused imports across files
+4. Begin analyzing the App Router migration path 

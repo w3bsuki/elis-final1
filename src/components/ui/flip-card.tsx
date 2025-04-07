@@ -7,42 +7,121 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 interface FlipCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  frontImage: string;
-  frontTitle: string;
+  // Support both naming conventions for images
+  frontImage?: string;
+  image?: string;
+  
+  // Support both naming conventions for titles
+  frontTitle?: string; 
+  title?: string;
+  
+  // Support both naming conventions for descriptions
+  backDescription?: string;
+  description?: string;
+  
+  // Other properties
   frontSubtitle?: string;
   frontIcon?: React.ReactNode;
-  backTitle: string;
-  backDescription: string;
+  backTitle?: string;
+  subtitle?: string;
   backFeatures?: string[];
   backCta?: string;
   onCtaClick?: () => void;
   triggerMode?: "hover" | "click";
   popular?: boolean;
+  rotate?: "x" | "y"; // Support x/y rotation from the animata version
+  simpleMode?: boolean; // Flag to use the simpler animata style when true
 }
 
 export function FlipCard({
+  // Handle both naming conventions with defaults
   frontImage,
+  image,
   frontTitle,
+  title,
+  backDescription,
+  description,
+  
+  // Other properties
   frontSubtitle,
   frontIcon,
   backTitle,
-  backDescription,
+  subtitle,
   backFeatures = [],
   backCta,
   onCtaClick,
   triggerMode = "hover",
   popular = false,
+  rotate = "y",
+  simpleMode = false,
   className,
   ...props
 }: FlipCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
 
+  // Consolidated values using both naming conventions
+  const finalImage = frontImage || image || "";
+  const finalFrontTitle = frontTitle || title || "";
+  const finalBackDescription = backDescription || description || "";
+  const finalBackTitle = backTitle || subtitle || finalFrontTitle;
+
+  // Handle flip action based on trigger mode
   const handleFlip = () => {
     if (triggerMode === "click") {
       setIsFlipped(!isFlipped);
     }
   };
 
+  // Define rotation classes based on axis
+  const rotationClass = {
+    x: ["group-hover:[transform:rotateX(180deg)]", "[transform:rotateX(180deg)]"],
+    y: ["group-hover:[transform:rotateY(180deg)]", "[transform:rotateY(180deg)]"],
+  };
+  
+  // Use the correct rotation
+  const rotateClasses = rotationClass[rotate];
+  
+  // If simpleMode is true, use the simpler animata style
+  if (simpleMode) {
+    return (
+      <div className={cn("group [perspective:1000px]", className)} {...props}>
+        <div
+          className={cn(
+            "relative h-full rounded-xl transition-all duration-500 [transform-style:preserve-3d]",
+            triggerMode === "hover" ? rotateClasses[0] : "",
+            isFlipped ? rotateClasses[1] : "",
+          )}
+        >
+          {/* Front */}
+          <div className="absolute h-full w-full [backface-visibility:hidden]">
+            <img
+              src={finalImage}
+              alt={finalFrontTitle}
+              className="h-full w-full rounded-xl object-cover shadow-xl shadow-black/40"
+            />
+            <div className="absolute bottom-3 left-3 right-3 text-base font-bold text-white line-clamp-2 bg-black/30 p-1 rounded backdrop-blur-sm">{finalFrontTitle}</div>
+          </div>
+
+          {/* Back */}
+          <div
+            className={cn(
+              "absolute h-full w-full rounded-xl bg-black/80 p-3 text-slate-200 [backface-visibility:hidden]",
+              rotateClasses[1],
+            )}
+          >
+            <div className="flex min-h-full flex-col gap-1">
+              <h1 className="text-base font-bold text-white">{finalBackTitle}</h1>
+              <p className="mt-1 border-t border-t-gray-200 py-2 text-xs font-medium leading-normal text-gray-100 overflow-y-auto max-h-[80%]">
+                {finalBackDescription}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Default rich implementation
   return (
     <div 
       className={cn(
@@ -56,20 +135,26 @@ export function FlipCard({
     >
       <div className={cn(
         "flip-card relative w-full h-full transition-transform duration-700 transform-style-3d", 
-        (triggerMode === "hover" ? "group-hover:rotate-y-180" : ""),
-        (isFlipped ? "rotate-y-180" : "")
+        triggerMode === "hover" ? rotateClasses[0] : "",
+        isFlipped ? rotateClasses[1] : ""
       )}>
         {/* Front Side */}
         <div className="flip-card-front absolute w-full h-full backface-hidden">
           <div className="relative h-full rounded-xl overflow-hidden border border-primary/10 bg-white/95 dark:bg-gray-800/95 shadow-lg hover:shadow-xl transition-shadow">
             {/* Image */}
             <div className="relative h-2/3 w-full overflow-hidden">
-              <Image
-                src={frontImage}
-                alt={frontTitle}
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-110"
-              />
+              {typeof finalImage === 'string' && finalImage ? (
+                <Image
+                  src={finalImage}
+                  alt={finalFrontTitle}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+              ) : (
+                <div className="bg-gray-200 dark:bg-gray-700 h-full w-full flex items-center justify-center">
+                  <span className="text-gray-500 dark:text-gray-400">No Image</span>
+                </div>
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
             </div>
             
@@ -87,7 +172,7 @@ export function FlipCard({
                   {frontIcon}
                 </div>
               )}
-              <h3 className="text-xl font-bold text-foreground">{frontTitle}</h3>
+              <h3 className="text-xl font-bold text-foreground">{finalFrontTitle}</h3>
               {frontSubtitle && (
                 <p className="text-sm text-muted-foreground">{frontSubtitle}</p>
               )}
@@ -102,12 +187,12 @@ export function FlipCard({
         {/* Back Side */}
         <div className="flip-card-back absolute w-full h-full backface-hidden rotate-y-180">
           <div className="h-full flex flex-col rounded-xl overflow-hidden border border-green-200/50 dark:border-green-800/30 bg-gradient-to-br from-green-50/80 to-white/90 dark:from-gray-800/90 dark:to-gray-900/80 shadow-xl p-4">
-            <h3 className="text-lg font-bold text-green-700 dark:text-green-400 mb-1.5 line-clamp-1">{backTitle}</h3>
+            <h3 className="text-lg font-bold text-green-700 dark:text-green-400 mb-1.5 line-clamp-1">{finalBackTitle}</h3>
             
             {/* Description - using more space */}
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-2 line-clamp-6 flex-grow-0">{backDescription}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-2 line-clamp-6 flex-grow-0">{finalBackDescription}</p>
             
-            {backFeatures.length > 0 && (
+            {backFeatures && backFeatures.length > 0 && (
               <div className="mb-2">
                 <h4 className="text-xs font-semibold text-green-600 dark:text-green-400 mb-1">Details:</h4>
                 <ul className="grid grid-cols-2 gap-x-2 gap-y-1.5">
@@ -141,4 +226,7 @@ export function FlipCard({
       </div>
     </div>
   );
-} 
+}
+
+// Add a default export for compatibility with animata version
+export default FlipCard; 

@@ -8,12 +8,12 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/LanguageContext";
 import { shopBooks } from "@/lib/shop-data";
 import { services } from "@/data/services";
-import FlipCard from "@/components/animata/card/flip-card";
-import { BookPreviewDialog } from "@/components/ui/book-preview-dialog";
+import { BookExcerptDialog } from "@/components/ui/book-excerpt-dialog";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { FlipCard } from "@/components/ui/flip-card";
 
 // Define types
 interface Book {
@@ -113,12 +113,13 @@ const BookCard = ({ book, onBookClick, formatCategory, getDisplayTitle, language
         {/* Fixed sizing container for consistent flip behavior */}
         <div className="w-[150px] h-[220px] relative">
           <FlipCard
-            image={book.coverImage || "/images/books/vdahnovenia-kniga-1.png"}
+            image={book.coverImage || "/images/books/placeholder-cover.png"}
             title={book.title}
             subtitle={formatCategory(book.category)}
             description={book.description}
             className="w-full h-full"
             onClick={handleClick}
+            simpleMode={true}
           />
         </div>
         
