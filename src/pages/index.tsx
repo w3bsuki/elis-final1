@@ -1,23 +1,8 @@
 import Head from 'next/head';
-import dynamic from 'next/dynamic';
-import Link from 'next/link';
 import { Toaster } from '@/components/ui/toaster';
 import type { NextPage } from "next";
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
-import Image from "next/image";
 import Hero from "@/components/sections/Hero";
 import { useLanguage } from "@/lib/LanguageContext";
-import { Suspense } from "react";
-
-// Dynamically import components with suspense and loading states
-const Testimonials = dynamic(
-  () => import("@/components/sections/Testimonials").then(mod => ({ default: mod.Testimonials })),
-  {
-    loading: () => <div className="h-96 flex items-center justify-center"><div className="animate-pulse w-8 h-8 rounded-full bg-primary/20"></div></div>,
-    ssr: false,
-  }
-);
 
 const Home: NextPage = () => {
   const { language } = useLanguage();

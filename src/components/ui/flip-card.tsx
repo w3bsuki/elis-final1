@@ -123,22 +123,6 @@ export function FlipCard({
               </div>
             )}
             
-            {/* Additional information section - new */}
-            <div className="flex flex-col mb-2">
-              <h4 className="text-xs font-semibold text-green-600 dark:text-green-400 mb-1">Summary:</h4>
-              <p className="text-xs text-gray-600 dark:text-gray-300 mb-1.5">
-                This book provides valuable insights on personal growth and well-being, with practical techniques you can apply to your daily life.
-              </p>
-              <div className="flex items-center text-xs text-green-600 dark:text-green-400 mt-1">
-                <span className="flex items-center">
-                  <span className="text-amber-500">★★★★</span><span className="text-gray-300">★</span>
-                  <span className="ml-1 text-gray-600 dark:text-gray-400">4.0/5 rating</span>
-                </span>
-                <span className="mx-2">•</span>
-                <span className="text-gray-600 dark:text-gray-400">16 reviews</span>
-              </div>
-            </div>
-            
             {backCta && (
               <div className="mt-auto pt-1">
                 <Button 

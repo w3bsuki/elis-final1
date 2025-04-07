@@ -1,13 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { ShoppingBag, ShoppingCart } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useRouter, usePathname } from "next/navigation";
 import { useLanguage } from "@/lib/LanguageContext";
 import { useCart } from "@/lib/CartContext";
-import { cn } from "@/lib/utils";
 
 // Custom hook that safely uses language context
 function useSafeLanguage() {
@@ -27,48 +25,34 @@ function useSafeLanguage() {
 }
 
 export function ShopButton() {
-  const { language } = useSafeLanguage();
-  const { totalItems, setIsCartOpen } = useCart();
-  const pathname = usePathname();
   const router = useRouter();
+  const pathname = usePathname();
+  const { language } = useSafeLanguage();
+  const { cartItems } = useCart();
   
-  const handleShopClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    // Prevent navigating to the current page
-    if (pathname === '/shop' || pathname === '/shop/') {
-      e.preventDefault();
+  const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  
+  const handleShopClick = () => {
+    if (pathname !== '/shop' && pathname !== '/shop/') {
+      router.push('/shop');
     }
   };
   
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center space-x-2">
       <Button 
-        className="bg-white hover:bg-gray-100 text-gray-900 text-sm px-4 py-1 h-9 rounded-md border border-gray-300 dark:border-gray-700 shadow-sm transition-all duration-200 font-medium group dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700" 
-        asChild
+        onClick={handleShopClick}
+        variant="outline"
+        size="sm"
+        className="bg-background border border-border text-foreground hover:bg-muted rounded-lg h-10 px-4 shadow-sm"
       >
-        <Link 
-          href="/shop" 
-          className="flex items-center"
-          onClick={handleShopClick}
-        >
-          <ShoppingBag className="mr-1.5 h-4 w-4 text-green-600 dark:text-green-400" />
-          {language === "en" ? "Shop" : "Магазин"}
-        </Link>
-      </Button>
-      
-      <Button
-        variant="ghost"
-        size="icon"
-        className={cn(
-          "relative rounded-full h-9 w-9 transition-colors",
-          "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-        )}
-        onClick={() => setIsCartOpen(true)}
-        aria-label="Open cart"
-      >
-        <ShoppingCart className="h-5 w-5" />
-        {totalItems > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
-            {totalItems > 99 ? '99+' : totalItems}
+        <ShoppingBag className="h-5 w-5 mr-2" />
+        <span className="text-sm font-medium">
+          {language === 'en' ? 'Shop' : 'Магазин'}
+        </span>
+        {totalQuantity > 0 && (
+          <span className="ml-2 flex items-center justify-center w-5 h-5 rounded-full bg-primary text-primary-foreground text-xs">
+            {totalQuantity}
           </span>
         )}
       </Button>

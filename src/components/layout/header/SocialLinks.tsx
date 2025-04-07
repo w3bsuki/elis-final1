@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+import { Facebook, Instagram, Twitter } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const socialMediaLinks = [
@@ -19,12 +19,7 @@ const socialMediaLinks = [
     name: "Twitter",
     href: "https://twitter.com/authorELIS",
     icon: Twitter,
-  },
-  {
-    name: "Youtube",
-    href: "https://youtube.com/authorELIS",
-    icon: Youtube,
-  },
+  }
 ];
 
 export function SocialLinks() {

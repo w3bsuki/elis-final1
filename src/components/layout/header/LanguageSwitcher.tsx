@@ -1,74 +1,83 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Globe } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React, { useState, useEffect } from "react";
+import { LanguagesIcon } from "lucide-react";
+import { useLanguage } from "@/lib/LanguageContext";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useLanguage } from "@/lib/LanguageContext";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 // Custom hook that safely uses language context
 function useSafeLanguage() {
   const [language, setLanguage] = useState('bg'); // Default to Bulgarian
-  const [setLanguageFunction, setSetLanguageFunction] = useState<(lang: string) => void>(() => {
-    // Default implementation that just updates local state
-    return (lang: string) => setLanguage(lang);
-  });
+  const [setLanguageFunc, setSetLanguageFunc] = useState<((lang: string) => void) | null>(null);
   
   useEffect(() => {
     try {
       const context = useLanguage();
       setLanguage(context.language);
-      setSetLanguageFunction(() => context.setLanguage);
+      setSetLanguageFunc(() => context.setLanguage);
     } catch (e) {
       console.warn("Language context not available in LanguageSwitcher", e);
-      // Keep using default values
+      // Keep using default language
     }
   }, []);
   
-  return { language, setLanguage: setLanguageFunction };
+  return { language, setLanguage: setLanguageFunc };
 }
 
-export function LanguageSwitcher() {
+export default function LanguageSwitcher() {
   const { language, setLanguage } = useSafeLanguage();
-  
+
+  const toggleLanguage = (lang: string) => {
+    if (setLanguage) {
+      setLanguage(lang);
+    }
+  };
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg h-10 px-3"
-        >
-          <Globe className="h-5 w-5" />
-          <span className="sr-only">Change language</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="z-[150]">
-        <DropdownMenuItem 
-          onClick={() => setLanguage('en')} 
-          className={cn(
-            "cursor-pointer flex items-center",
-            language === "en" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""
-          )}
-        >
-          <span className="mr-2 text-base">🇬🇧</span> English
-        </DropdownMenuItem>
-        <DropdownMenuItem 
-          onClick={() => setLanguage('bg')} 
-          className={cn(
-            "cursor-pointer flex items-center",
-            language === "bg" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""
-          )}
-        >
-          <span className="mr-2 text-base">🇧🇬</span> Български
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="relative">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button 
+            variant="ghost" 
+            size="sm"
+            className="bg-background hover:bg-muted text-foreground hover:text-foreground rounded-lg h-10 px-3 focus:ring-0 focus:outline-none focus:ring-offset-0"
+          >
+            <LanguagesIcon className="h-5 w-5" />
+            <span className="ml-2 text-sm font-medium">
+              {language === 'en' ? 'EN' : 'BG'}
+            </span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="z-[150]">
+          <DropdownMenuItem 
+            onClick={() => toggleLanguage('en')}
+            className={cn(
+              "flex items-center",
+              language === 'en' ? "font-medium" : "font-normal"
+            )}
+          >
+            <span className="mr-2">🇬🇧</span>
+            <span>English</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem 
+            onClick={() => toggleLanguage('bg')}
+            className={cn(
+              "flex items-center",
+              language === 'bg' ? "font-medium" : "font-normal"
+            )}
+          >
+            <span className="mr-2">🇧🇬</span>
+            <span>Български</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 } 

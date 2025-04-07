@@ -232,7 +232,7 @@ export const Testimonials = () => {
       </div>
       
       {/* Main container with neumorphic styling */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative container mx-auto">
         <div className="absolute inset-0 bg-pattern-dots opacity-5"></div>
         
         {/* Outer container with neumorphic styling */}

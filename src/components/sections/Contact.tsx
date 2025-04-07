@@ -167,7 +167,7 @@ export function Contact() {
       </div>
       
       {/* Main container */}
-      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container relative z-10 mx-auto">
         {/* Outer section container */}
         <div className="relative z-10 rounded-2xl 
           bg-gradient-to-br from-white/80 to-blue-50/50 dark:from-gray-900/80 dark:to-blue-950/30 
@@ -214,11 +214,15 @@ export function Contact() {
               {/* Tabs for Contact/Booking */}
               <Tabs defaultValue="booking" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto bg-blue-50/70 dark:bg-gray-800/70 border border-blue-200/50 dark:border-blue-800/20 p-1.5 rounded-full">
-                  <TabsTrigger value="booking" className="text-base gap-2 py-3 rounded-full">
+                  <TabsTrigger 
+                    value="booking" 
+                    className="text-sm gap-2 py-2.5 px-4 rounded-full data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300">
                     <CalendarClock className="h-4 w-4" />
                     {translate("Резервирай", "Book")}
                   </TabsTrigger>
-                  <TabsTrigger value="contact" className="text-base gap-2 py-3 rounded-full">
+                  <TabsTrigger 
+                    value="contact" 
+                    className="text-sm gap-2 py-2.5 px-4 rounded-full data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300">
                     <MessageSquare className="h-4 w-4" />
                     {translate("Контакт", "Contact")}
                   </TabsTrigger>

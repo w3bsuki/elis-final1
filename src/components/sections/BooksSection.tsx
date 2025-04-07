@@ -244,80 +244,8 @@ export default function BooksSection() {
       <div className="absolute right-0 top-8 w-48 h-48 bg-gradient-to-br from-green-400/10 to-teal-500/5 rounded-full blur-3xl -z-10"></div>
       <div className="absolute left-0 bottom-8 w-48 h-48 bg-gradient-to-tr from-green-500/10 to-emerald-400/5 rounded-full blur-3xl -z-10"></div>
       
-      {/* Section header with enhanced nested neumorphic design */}
-      <div className="text-center mb-10">
-        {/* Outer neumorphic container for headline */}
-        <div className="inline-block rounded-2xl p-[3px]
-          bg-gradient-to-br from-gray-200/80 via-white/90 to-gray-100/80 
-          dark:from-gray-800/80 dark:via-gray-900/90 dark:to-gray-800/80
-          shadow-[5px_5px_10px_rgba(0,0,0,0.1),-5px_-5px_10px_rgba(255,255,255,0.8)]
-          dark:shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(30,30,30,0.2)]
-          mb-6">
-          
-          {/* Inner container for headline */}
-          <div className="inline-flex items-center gap-3 px-6 py-3
-            bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-xl 
-            border border-green-100/50 dark:border-green-800/50
-            shadow-inner relative">
-            
-            {/* Subtle pattern background */}
-            <div className="absolute inset-0 bg-[url('/images/pattern-light.svg')] dark:bg-[url('/images/pattern-dark.svg')] opacity-[0.03] bg-repeat bg-[length:24px_24px] pointer-events-none rounded-lg"></div>
-            
-            {/* Icon with neumorphic style */}
-            <div className="rounded-full p-2
-              bg-gradient-to-br from-green-50 to-white dark:from-green-900/30 dark:to-gray-800
-              shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
-              dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]
-              border border-green-100/50 dark:border-green-800/30 relative">
-              <BookMarked className="w-5 h-5 text-green-600 dark:text-green-400" aria-hidden="true" />
-            </div>
-            
-            <h2 className="text-xl md:text-2xl font-bold font-serif text-black dark:text-white antialiased relative">
-              {translate("Моите книги", "My Books")}
-            </h2>
-          </div>
-        </div>
-        
-        <div className="w-24 h-1 bg-gradient-to-r from-green-500 to-teal-400 rounded-full mx-auto mb-5"></div>
-        
-        {/* Description text in neumorphic container */}
-        <div className="max-w-2xl mx-auto rounded-xl p-[2px]
-            bg-gradient-to-br from-gray-200/60 via-white/70 to-gray-100/60 
-            dark:from-gray-800/60 dark:via-gray-900/70 dark:to-gray-800/60
-            shadow-[3px_3px_6px_rgba(0,0,0,0.05),-3px_-3px_6px_rgba(255,255,255,0.6)]
-            dark:shadow-[3px_3px_6px_rgba(0,0,0,0.2),-3px_-3px_6px_rgba(30,30,30,0.1)]
-            mb-4">
-          
-          <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-lg p-4 relative
-              shadow-inner border border-white/50 dark:border-gray-800/50">
-            <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base antialiased">
-              {translate(
-                "Автор на поредица книги, посветени на личностното развитие, психологията и творческото мислене.",
-                "Author of a series of books dedicated to personal development, psychology, and creative thinking."
-              )}
-            </p>
-          </div>
-        </div>
-        
-        {/* Enhanced instruction text with neumorphic badge */}
-        <div className="mt-5 flex justify-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 
-            rounded-full bg-gradient-to-br from-green-50 to-white dark:from-green-900/20 dark:to-gray-800
-            text-sm text-green-700 dark:text-green-400 
-            border border-green-100/50 dark:border-green-800/30 
-            shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
-            dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]">
-            <BookOpen className="w-3.5 h-3.5 text-green-500" />
-            {translate(
-              "Задръжте или натиснете върху книга за повече информация",
-              "Hover or tap on a book for more information"
-            )}
-          </div>
-        </div>
-      </div>
-      
-      {/* Featured book section with nested neumorphic container */}
-      <div className="mb-12 rounded-2xl p-[3px]
+      {/* Enhanced Books Container with nested neumorphic styling - now includes header */}
+      <div className="rounded-2xl p-[3px] mb-10
           bg-gradient-to-br from-gray-200/80 via-white/90 to-gray-100/80 
           dark:from-gray-800/80 dark:via-gray-900/90 dark:to-gray-800/80
           shadow-[6px_6px_12px_rgba(0,0,0,0.1),-6px_-6px_12px_rgba(255,255,255,0.9)]
@@ -325,11 +253,57 @@ export default function BooksSection() {
           overflow-hidden">
         
         {/* Inner container with gradient and shadow effects */}
-        <div className="bg-gradient-to-br from-gray-50/50 via-white/50 to-gray-50/50 dark:from-gray-900/50 dark:via-gray-900/30 dark:to-gray-900/50 p-6 rounded-xl relative">
+        <div className="bg-gradient-to-br from-green-50/30 via-white/40 to-green-50/30 dark:from-green-900/20 dark:via-gray-900/20 dark:to-green-900/20 p-6 rounded-xl relative">
           {/* Inner shadow effect */}
           <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
           
-          <div className="relative z-10">
+          {/* Section header - now nested inside the main container */}
+          <div className="text-center mb-10 relative z-10">
+            {/* Header with icon and title */}
+            <div className="flex items-center justify-center gap-3 mb-2">
+              {/* Icon with neumorphic style */}
+              <div className="rounded-full p-2
+                bg-gradient-to-br from-green-50 to-white dark:from-green-900/30 dark:to-gray-800
+                shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
+                dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]
+                border border-green-100/50 dark:border-green-800/30 relative">
+                <BookMarked className="w-5 h-5 text-green-600 dark:text-green-400" aria-hidden="true" />
+              </div>
+              
+              <h2 className="text-xl md:text-2xl font-bold font-serif text-black dark:text-white antialiased relative">
+                {translate("Моите книги", "My Books")}
+              </h2>
+            </div>
+            
+            <div className="w-24 h-1 bg-gradient-to-r from-green-500 to-teal-400 rounded-full mx-auto mb-4"></div>
+            
+            {/* Description text */}
+            <div className="max-w-2xl mx-auto mb-5">
+              <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base antialiased">
+                {translate(
+                  "Автор на поредица книги, посветени на личностното развитие, психологията и творческото мислене.",
+                  "Author of a series of books dedicated to personal development, psychology, and creative thinking."
+                )}
+              </p>
+            </div>
+            
+            {/* Instruction badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2
+              rounded-full bg-gradient-to-br from-green-50 to-white dark:from-green-900/20 dark:to-gray-800
+              text-sm text-green-700 dark:text-green-400 
+              border border-green-100/50 dark:border-green-800/30 
+              shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
+              dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]">
+              <BookOpen className="w-3.5 h-3.5 text-green-500" />
+              {translate(
+                "Задръжте или натиснете върху книга за повече информация",
+                "Hover or tap on a book for more information"
+              )}
+            </div>
+          </div>
+      
+          {/* Featured book section - now included within the same main container */}
+          <div className="mb-10 relative z-10">
             {/* Featured tag with enhanced neumorphic style */}
             <div className="mb-5 flex justify-center">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 
@@ -344,9 +318,9 @@ export default function BooksSection() {
             </div>
             
             {/* Featured book content with nested neumorphic elements */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
               {/* Book cover with enhanced neumorphic frame */}
-              <div className="rounded-xl p-[3px]
+              <div className="md:col-span-3 lg:col-span-3 rounded-xl p-[3px]
                 bg-gradient-to-br from-gray-200/60 via-white/70 to-gray-100/60 
                 dark:from-gray-800/60 dark:via-gray-900/70 dark:to-gray-800/60
                 shadow-[4px_4px_8px_rgba(0,0,0,0.1),-4px_-4px_8px_rgba(255,255,255,0.8)]
@@ -366,9 +340,8 @@ export default function BooksSection() {
                 </div>
               </div>
               
-              {/* Book details */}
-              <div className="md:col-span-2 flex flex-col space-y-4">
-                {/* Title and description in subtle container */}
+              {/* Book details & metadata */}
+              <div className="md:col-span-5 lg:col-span-5 flex flex-col space-y-4">
                 <div className="p-5 rounded-xl
                   bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm
                   shadow-inner border border-gray-100/50 dark:border-gray-800/50">
@@ -378,71 +351,150 @@ export default function BooksSection() {
                   <p className="text-gray-700 dark:text-gray-300 text-sm antialiased">
                     {featuredBook.description}
                   </p>
-                </div>
-                
-                {/* Book metadata with neumorphic elements */}
-                <div className="grid grid-cols-3 gap-4">
-                  {[
-                    { label: translate("Страници", "Pages"), value: featuredBook.pages, icon: <BookOpen className="w-3.5 h-3.5 text-green-600/80" /> },
-                    { label: translate("Година", "Year"), value: featuredBook.publishDate, icon: <span className="text-xs font-bold text-green-600/80">📅</span> },
-                    { label: translate("Цена", "Price"), value: `${featuredBook.price} лв.`, icon: <span className="text-xs font-bold text-green-600/80">лв</span> }
-                  ].map((item, index) => (
-                    <div key={index} className="rounded-lg p-[2px]
-                      bg-gradient-to-br from-gray-200/60 via-white/70 to-gray-100/60 
-                      dark:from-gray-800/60 dark:via-gray-900/70 dark:to-gray-800/60
-                      shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.6)]
-                      dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]">
-                      <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-lg p-3
-                        shadow-inner border border-white/50 dark:border-gray-700/50
-                        flex flex-col items-center justify-center text-center">
-                        <div className="w-8 h-8 rounded-full 
-                          bg-gradient-to-br from-green-50 to-white dark:from-green-900/30 dark:to-gray-800
-                          flex items-center justify-center mb-1 
-                          shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
-                          dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]
-                          border border-green-100/50 dark:border-green-800/30">
-                          {item.icon}
+                  
+                  {/* Book metadata in a streamlined layout */}
+                  <div className="grid grid-cols-3 gap-4 mt-4 pt-3 border-t border-gray-200/50 dark:border-gray-700/50">
+                    {[
+                      { label: translate("Страници", "Pages"), value: featuredBook.pages, icon: <BookOpen className="w-3.5 h-3.5 text-green-600/80" /> },
+                      { label: translate("Година", "Year"), value: featuredBook.publishDate, icon: <span className="text-xs font-bold text-green-600/80">📅</span> },
+                      { label: translate("Цена", "Price"), value: `${featuredBook.price} лв.`, icon: <span className="text-xs font-bold text-green-600/80">лв</span> }
+                    ].map((item, index) => (
+                      <div key={index} className="rounded-lg p-[2px]
+                        bg-gradient-to-br from-gray-200/60 via-white/70 to-gray-100/60 
+                        dark:from-gray-800/60 dark:via-gray-900/70 dark:to-gray-800/60
+                        shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.6)]
+                        dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]">
+                        <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-lg p-3
+                          shadow-inner border border-white/50 dark:border-gray-700/50
+                          flex flex-col items-center justify-center text-center">
+                          <div className="w-8 h-8 rounded-full 
+                            bg-gradient-to-br from-green-50 to-white dark:from-green-900/30 dark:to-gray-800
+                            flex items-center justify-center mb-1 
+                            shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
+                            dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]
+                            border border-green-100/50 dark:border-green-800/30">
+                            {item.icon}
+                          </div>
+                          <span className="text-xs text-gray-500 dark:text-gray-400">{item.label}</span>
+                          <span className="text-sm font-medium text-gray-900 dark:text-gray-200">{item.value}</span>
                         </div>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">{item.label}</span>
-                        <span className="text-sm font-medium text-gray-900 dark:text-gray-200">{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* CTA buttons now inside the details container */}
+                  <div className="flex flex-wrap gap-4 justify-center md:justify-start mt-5 pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
+                    <Link 
+                      href={`/book/${featuredBook.id}`} 
+                      className="px-6 py-3 rounded-full 
+                        bg-gradient-to-br from-green-50 to-white dark:from-green-900/20 dark:to-gray-800
+                        text-green-700 dark:text-green-400 font-medium
+                        border border-green-100/50 dark:border-green-800/30 
+                        shadow-[3px_3px_6px_rgba(0,0,0,0.1),-3px_-3px_6px_rgba(255,255,255,0.8)]
+                        dark:shadow-[3px_3px_6px_rgba(0,0,0,0.3),-3px_-3px_6px_rgba(30,30,30,0.15)]
+                        hover:shadow-[1px_1px_3px_rgba(0,0,0,0.1),-1px_-1px_3px_rgba(255,255,255,0.8),inset_1px_1px_3px_rgba(0,0,0,0.1),inset_-1px_-1px_3px_rgba(255,255,255,0.8)]
+                        dark:hover:shadow-[1px_1px_3px_rgba(0,0,0,0.3),-1px_-1px_3px_rgba(30,30,30,0.1),inset_1px_1px_3px_rgba(0,0,0,0.3),inset_-1px_-1px_3px_rgba(30,30,30,0.15)]
+                        transition-all duration-300 flex items-center gap-2"
+                    >
+                      <BookOpen className="w-4 h-4" />
+                      {translate("Прочети повече", "Read More")}
+                    </Link>
+                    
+                    <Link 
+                      href={`/shop/book/${featuredBook.id}`} 
+                      className="px-6 py-3 rounded-full 
+                        bg-gradient-to-r from-green-500 to-teal-500 
+                        text-white font-medium
+                        border border-green-400/50 dark:border-green-600/30 
+                        shadow-[3px_3px_6px_rgba(0,0,0,0.1),-3px_-3px_6px_rgba(255,255,255,0.1)]
+                        dark:shadow-[3px_3px_6px_rgba(0,0,0,0.3),-3px_-3px_6px_rgba(30,30,30,0.1)]
+                        hover:shadow-[1px_1px_3px_rgba(0,0,0,0.1),-1px_-1px_3px_rgba(255,255,255,0.1),inset_1px_1px_3px_rgba(0,0,0,0.1)]
+                        dark:hover:shadow-[1px_1px_3px_rgba(0,0,0,0.3),-1px_-1px_3px_rgba(30,30,30,0.1),inset_1px_1px_3px_rgba(0,0,0,0.3)]
+                        transition-all duration-300 flex items-center gap-2"
+                    >
+                      <ArrowRight className="w-4 h-4" />
+                      {translate("Купи сега", "Buy Now")}
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Service Upsell Section - Related to the featured book */}
+              <div className="md:col-span-4 lg:col-span-4 bg-gradient-to-br from-purple-50/30 via-white/40 to-purple-50/30 dark:from-purple-900/20 dark:via-gray-900/20 dark:to-purple-900/20 p-5 rounded-xl relative
+                  shadow-[4px_4px_8px_rgba(0,0,0,0.05),-4px_-4px_8px_rgba(255,255,255,0.8)]
+                  dark:shadow-[4px_4px_8px_rgba(0,0,0,0.15),-4px_-4px_8px_rgba(30,30,30,0.1)]
+                  border border-purple-100/50 dark:border-purple-800/30 h-full flex flex-col">
+                {/* Inner shadow effect */}
+                <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
+                
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className="mb-3 flex items-center">
+                    <div className="p-1.5 bg-purple-100 dark:bg-purple-900/30 rounded-md mr-2">
+                      <span className="text-base" aria-hidden="true">⚡</span>
+                    </div>
+                    <h4 className="font-medium text-gray-900 dark:text-white text-base">
+                      {translate("Свързана услуга", "Related Service")}
+                    </h4>
+                  </div>
+                  
+                  <div className="flex-1 p-4 
+                    bg-gradient-to-br from-purple-50/80 via-white/90 to-purple-50/80 
+                    dark:from-purple-800/40 dark:via-gray-900/50 dark:to-purple-800/40 
+                    backdrop-blur-sm rounded-xl
+                    shadow-[4px_4px_8px_rgba(0,0,0,0.05),-4px_-4px_8px_rgba(255,255,255,0.8)]
+                    dark:shadow-[4px_4px_8px_rgba(0,0,0,0.15),-4px_-4px_8px_rgba(30,30,30,0.1)]
+                    border border-purple-100/50 dark:border-purple-800/30 
+                    transition-all duration-300 relative overflow-hidden 
+                    flex flex-col">
+                    
+                    {/* Inner shadow for neumorphic effect */}
+                    <div className="absolute inset-1 bg-gradient-to-br from-white/60 to-purple-50/40 dark:from-gray-800/40 dark:to-purple-900/20 rounded shadow-inner pointer-events-none"></div>
+                    
+                    <div className="flex flex-col relative h-full">
+                      <div className="flex items-start gap-3 mb-3">
+                        <div className="p-2 bg-purple-50 dark:bg-purple-900/30 rounded-full
+                            shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
+                            dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]
+                            flex-shrink-0 mt-1">
+                          <span className="text-base" aria-hidden="true">💡</span>
+                        </div>
+                        <div>
+                          <h5 className="font-medium text-gray-900 dark:text-gray-100 text-base">
+                            {translate("Уъркшоп за личностно развитие", "Personal Growth Workshop")}
+                          </h5>
+                        </div>
+                      </div>
+                      
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 flex-grow">
+                        {translate(
+                          "Практически упражнения и техники от книгата, приложени в групова среда с професионално ръководство. Открийте потенциала си заедно с единомишленици.", 
+                          "Practical exercises and techniques from the book applied in a guided group setting. Discover your potential together with like-minded individuals."
+                        )}
+                      </p>
+                      
+                      <div className="flex justify-between items-center mt-auto">
+                        <span className="text-purple-600 dark:text-purple-400 font-medium text-sm">
+                          {translate("От 120.00 лв.", "From 120.00 лв.")}
+                        </span>
+                        <Button 
+                          size="sm" 
+                          className="bg-purple-600 hover:bg-purple-700 rounded-full 
+                            shadow-[2px_2px_4px_rgba(0,0,0,0.1),-2px_-2px_4px_rgba(255,255,255,0.1)] 
+                            dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.05)]
+                            px-4 py-1.5 h-auto transition-all 
+                            hover:shadow-[1px_1px_2px_rgba(0,0,0,0.1),-1px_-1px_2px_rgba(255,255,255,0.1),inset_1px_1px_2px_rgba(0,0,0,0.1)] 
+                            dark:hover:shadow-[1px_1px_2px_rgba(0,0,0,0.2),-1px_-1px_2px_rgba(30,30,30,0.05),inset_1px_1px_2px_rgba(0,0,0,0.2)]
+                            focus:ring-2 focus:ring-purple-600 focus:ring-offset-2"
+                          asChild
+                        >
+                          <Link href="/services/workshops" className="flex items-center gap-2 text-xs whitespace-nowrap">
+                            {translate("Научете повече", "Learn more")}
+                            <ArrowRight className="size-3" aria-hidden="true" />
+                          </Link>
+                        </Button>
                       </div>
                     </div>
-                  ))}
-                </div>
-                
-                {/* CTA buttons with enhanced neumorphic styling */}
-                <div className="flex flex-wrap gap-4 justify-center md:justify-start mt-2">
-                  <Link 
-                    href={`/book/${featuredBook.id}`} 
-                    className="px-6 py-3 rounded-full 
-                      bg-gradient-to-br from-green-50 to-white dark:from-green-900/20 dark:to-gray-800
-                      text-green-700 dark:text-green-400 font-medium
-                      border border-green-100/50 dark:border-green-800/30 
-                      shadow-[3px_3px_6px_rgba(0,0,0,0.1),-3px_-3px_6px_rgba(255,255,255,0.8)]
-                      dark:shadow-[3px_3px_6px_rgba(0,0,0,0.3),-3px_-3px_6px_rgba(30,30,30,0.15)]
-                      hover:shadow-[1px_1px_3px_rgba(0,0,0,0.1),-1px_-1px_3px_rgba(255,255,255,0.8),inset_1px_1px_3px_rgba(0,0,0,0.1),inset_-1px_-1px_3px_rgba(255,255,255,0.8)]
-                      dark:hover:shadow-[1px_1px_3px_rgba(0,0,0,0.3),-1px_-1px_3px_rgba(30,30,30,0.15),inset_1px_1px_3px_rgba(0,0,0,0.3),inset_-1px_-1px_3px_rgba(30,30,30,0.15)]
-                      transition-all duration-300 flex items-center gap-2"
-                  >
-                    <BookOpen className="w-4 h-4" />
-                    {translate("Прочети повече", "Read More")}
-                  </Link>
-                  
-                  <Link 
-                    href={`/shop/book/${featuredBook.id}`} 
-                    className="px-6 py-3 rounded-full 
-                      bg-gradient-to-r from-green-500 to-teal-500 
-                      text-white font-medium
-                      border border-green-400/50 dark:border-green-600/30 
-                      shadow-[3px_3px_6px_rgba(0,0,0,0.1),-3px_-3px_6px_rgba(255,255,255,0.1)]
-                      dark:shadow-[3px_3px_6px_rgba(0,0,0,0.3),-3px_-3px_6px_rgba(30,30,30,0.1)]
-                      hover:shadow-[1px_1px_3px_rgba(0,0,0,0.1),-1px_-1px_3px_rgba(255,255,255,0.1),inset_1px_1px_3px_rgba(0,0,0,0.1)]
-                      dark:hover:shadow-[1px_1px_3px_rgba(0,0,0,0.3),-1px_-1px_3px_rgba(30,30,30,0.1),inset_1px_1px_3px_rgba(0,0,0,0.3)]
-                      transition-all duration-300 flex items-center gap-2"
-                  >
-                    <ArrowRight className="w-4 h-4" />
-                    {translate("Купи сега", "Buy Now")}
-                  </Link>
+                  </div>
                 </div>
               </div>
             </div>
@@ -450,8 +502,8 @@ export default function BooksSection() {
         </div>
       </div>
       
-      {/* Book carousel section with enhanced neumorphic container */}
-      <div ref={containerRef} className="relative mb-10">
+      {/* Book Carousel Section */}
+      <div ref={containerRef} className="relative overflow-hidden py-6 mb-10">
         {/* Outer neumorphic container */}
         <div className="rounded-2xl p-[3px]
             bg-gradient-to-br from-gray-200/80 via-white/90 to-gray-100/80 
@@ -479,7 +531,23 @@ export default function BooksSection() {
                 </h3>
               </div>
               
-              <div className="inline-flex items-center">
+              <div className="inline-flex items-center gap-2">
+                <Link 
+                  href="/books" 
+                  className="px-5 py-2 rounded-full 
+                    bg-gradient-to-br from-green-50 to-white dark:from-green-900/20 dark:to-gray-800
+                    text-green-700 dark:text-green-400 font-medium
+                    border border-green-100/50 dark:border-green-800/30 
+                    shadow-[3px_3px_6px_rgba(0,0,0,0.1),-3px_-3px_6px_rgba(255,255,255,0.8)]
+                    dark:shadow-[3px_3px_6px_rgba(0,0,0,0.3),-3px_-3px_6px_rgba(30,30,30,0.15)]
+                    hover:shadow-[1px_1px_3px_rgba(0,0,0,0.05),-1px_-1px_3px_rgba(255,255,255,0.8),inset_1px_1px_3px_rgba(0,0,0,0.05),inset_-1px_-1px_3px_rgba(255,255,255,0.8)]
+                    dark:hover:shadow-[1px_1px_3px_rgba(0,0,0,0.2),-1px_-1px_3px_rgba(30,30,30,0.1),inset_1px_1px_3px_rgba(0,0,0,0.1),inset_-1px_-1px_3px_rgba(30,30,30,0.05)]
+                    transition-all duration-300 flex items-center gap-2 text-sm"
+                >
+                  {translate("Разгледай всички книги", "Browse All Books")}
+                  <ChevronRight className="w-4 h-4" />
+                </Link>
+                
                 <button 
                   type="button"
                   onClick={() => setIsPaused(!isPaused)}
@@ -551,25 +619,6 @@ export default function BooksSection() {
         
         {/* Gradient fade on the right */}
         <div className="absolute right-0 top-0 w-20 h-full bg-gradient-to-l from-white to-transparent dark:from-gray-950 dark:to-transparent z-20 pointer-events-none"></div>
-      </div>
-      
-      {/* View all books CTA with enhanced neumorphic button */}
-      <div className="flex justify-center mb-4">
-        <Link 
-          href="/books" 
-          className="px-6 py-3 rounded-full 
-            bg-gradient-to-br from-green-50 to-white dark:from-green-900/20 dark:to-gray-800
-            text-green-700 dark:text-green-400 font-medium
-            border border-green-100/50 dark:border-green-800/30 
-            shadow-[5px_5px_10px_rgba(0,0,0,0.1),-5px_-5px_10px_rgba(255,255,255,0.8)]
-            dark:shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(30,30,30,0.15)]
-            hover:shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8),inset_2px_2px_4px_rgba(0,0,0,0.05),inset_-2px_-2px_4px_rgba(255,255,255,0.8)]
-            dark:hover:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1),inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(30,30,30,0.05)]
-            transition-all duration-300 flex items-center gap-2"
-        >
-          {translate("Разгледай всички книги", "Browse All Books")}
-          <ChevronRight className="w-4 h-4" />
-        </Link>
       </div>
     </div>
   );

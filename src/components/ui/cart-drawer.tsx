@@ -148,13 +148,13 @@ export function CartDrawer() {
                             sizes="80px"
                           />
                           {item.type === 'service' && (
-                            <div className="absolute inset-0 bg-blue-500/10 backdrop-blur-sm flex items-center justify-center">
-                              <Clock className="h-5 w-5 text-blue-600" />
+                            <div className="absolute inset-0 bg-muted/30 backdrop-blur-sm flex items-center justify-center">
+                              <Clock className="h-5 w-5 text-foreground/80" />
                             </div>
                           )}
                           {item.type === 'book' && item.itemData?.digital && (
-                            <div className="absolute inset-0 bg-green-500/10 backdrop-blur-sm flex items-center justify-center">
-                              <Download className="h-5 w-5 text-green-600" />
+                            <div className="absolute inset-0 bg-muted/30 backdrop-blur-sm flex items-center justify-center">
+                              <Download className="h-5 w-5 text-foreground/80" />
                             </div>
                           )}
                         </div>

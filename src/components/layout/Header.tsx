@@ -8,13 +8,14 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/LanguageContext";
 import Link from "next/link";
 import Image from "next/image";
+import { CONTAINER_WIDTH_CLASSES } from "@/lib/constants";
 
 // Header components
 import { Logo } from "./header/Logo";
 import { DesktopNavigation } from "./header/DesktopNavigation";
 import { MobileNavigation } from "./header/MobileNavigation";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { LanguageSwitcher } from "./header/LanguageSwitcher";
+import LanguageSwitcher from "./header/LanguageSwitcher";
 import { SocialLinks } from "./header/SocialLinks";
 import { ShopButton } from "./header/ShopButton";
 import { BookType, ServiceType } from "./header/types";
@@ -195,11 +196,11 @@ export default function Header() {
         )}
         style={{ overflow: 'visible' }}
       >
-        <div className="container mx-auto px-4 flex justify-center" style={{ overflow: 'visible' }}>
-          <div className="relative w-full max-w-7xl mx-auto mb-3" style={{ overflow: 'visible' }}>
+        <div className={CONTAINER_WIDTH_CLASSES} style={{ overflow: 'visible' }}>
+          <div className="relative w-full mx-auto mb-3" style={{ overflow: 'visible' }}>
             <HeaderContainer style={{ overflow: 'visible' }}>
               <div className={cn(
-                "flex w-full items-center justify-between px-4 md:px-6 transition-all duration-200 relative",
+                "flex w-full items-center justify-between transition-all duration-200 relative",
                 isScrolled ? "h-14" : "h-16"
               )}
               style={{ overflow: 'visible' }}

@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { useToast } from '@/components/ui/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
+import { CONTAINER_WIDTH_CLASSES } from '@/lib/constants';
 import { 
   Loader2, 
   ShoppingBag, 
@@ -216,7 +217,7 @@ export default function CheckoutPage() {
           />
         </Head>
 
-        <div className="container max-w-4xl mx-auto px-4">
+        <div className={CONTAINER_WIDTH_CLASSES}>
           {/* Success Message Card */}
           <Card className="border-border/40 bg-card/30 backdrop-blur supports-[backdrop-filter]:bg-background/60 mb-8">
             <CardContent className="pt-12 pb-8 text-center">
@@ -537,336 +538,417 @@ export default function CheckoutPage() {
   }
   
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-background/80">
+    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pt-24 pb-8">
       <Head>
-        <title>{translate("Плащане", "Checkout")} | Author Name</title>
+        <title>{translate("Плащане", "Checkout")} | Elis</title>
       </Head>
 
-      <div className="container h-screen flex flex-col">
+      <div className={CONTAINER_WIDTH_CLASSES}>
         {/* Header */}
-        <div className="py-4 flex items-center justify-between border-b border-border/40">
+        <div className="mb-6 flex items-center justify-between">
           <Button
             variant="ghost"
             onClick={() => router.back()}
-            className="gap-2 rounded-full hover:bg-primary/10 hover:text-primary transition-colors duration-300"
+            className="group text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="mr-1 h-4 w-4 transition-transform duration-200 group-hover:-translate-x-1" />
             {translate("Обратно", "Back")}
           </Button>
-          <h1 className="text-xl font-medium">
+          <h1 className="text-xl font-medium text-gray-900 dark:text-gray-100">
             {translate("Завърши поръчката", "Complete Order")}
           </h1>
           <div className="w-[100px]" /> {/* Spacer for alignment */}
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 grid grid-cols-[1fr,400px] gap-6 py-6 h-[calc(100vh-80px)] overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Form Section */}
-          <div className="overflow-y-auto pr-6 space-y-6">
-            {/* Personal Information */}
-            <Card className="border-border/40 bg-card/30 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-lg">{translate("Лични данни", "Personal Information")}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">{translate("Име", "First Name")}</Label>
-                    <Input
-                      id="firstName"
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      className="rounded-lg border-border/40 bg-card/50"
-                      placeholder={translate("Вашето име", "Your first name")}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">{translate("Фамилия", "Last Name")}</Label>
-                    <Input
-                      id="lastName"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      className="rounded-lg border-border/40 bg-card/50"
-                      placeholder={translate("Вашата фамилия", "Your last name")}
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">{translate("Имейл", "Email")}</Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="rounded-lg border-border/40 bg-card/50"
-                      placeholder={translate("вашият@имейл.com", "your@email.com")}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">{translate("Телефон", "Phone")}</Label>
-                    <Input
-                      id="phone"
-                      name="phone"
-                      type="tel"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      className="rounded-lg border-border/40 bg-card/50"
-                      placeholder="+359"
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Shipping Information */}
-            <Card className="border-border/40 bg-card/30 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-lg">{translate("Адрес за доставка", "Shipping Address")}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="address">{translate("Адрес", "Address")}</Label>
-                  <Input
-                    id="address"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    className="rounded-lg border-border/40 bg-card/50"
-                    placeholder={translate("Улица и номер", "Street address")}
-                  />
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="city">{translate("Град", "City")}</Label>
-                    <Input
-                      id="city"
-                      name="city"
-                      value={formData.city}
-                      onChange={handleInputChange}
-                      className="rounded-lg border-border/40 bg-card/50"
-                      placeholder={translate("Вашият град", "Your city")}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="postalCode">{translate("Пощ. код", "Postal Code")}</Label>
-                    <Input
-                      id="postalCode"
-                      name="postalCode"
-                      value={formData.postalCode}
-                      onChange={handleInputChange}
-                      className="rounded-lg border-border/40 bg-card/50"
-                      placeholder="1000"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="country">{translate("Държава", "Country")}</Label>
-                    <Input
-                      id="country"
-                      name="country"
-                      value={formData.country}
-                      onChange={handleInputChange}
-                      className="rounded-lg border-border/40 bg-card/50"
-                      disabled
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="notes">{translate("Бележки", "Notes")}</Label>
-                  <Textarea
-                    id="notes"
-                    name="notes"
-                    value={formData.notes}
-                    onChange={handleInputChange}
-                    className="rounded-lg border-border/40 bg-card/50 min-h-[80px]"
-                    placeholder={translate(
-                      "Допълнителни инструкции за доставка...",
-                      "Additional delivery instructions..."
-                    )}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Payment Method */}
-            <Card className="border-border/40 bg-card/30 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-lg">{translate("Начин на плащане", "Payment Method")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <RadioGroup
-                  value={formData.paymentMethod}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, paymentMethod: value }))}
-                  className="grid grid-cols-2 gap-4"
-                >
+          <div className="lg:col-span-2 space-y-6">
+            {/* Main neumorphic container with shadow and gradient effects */}
+            <div className="p-1 rounded-xl
+              bg-gradient-to-br from-gray-50/80 via-white/90 to-gray-50/80 
+              dark:from-gray-800/80 dark:via-gray-900/90 dark:to-gray-800/80
+              shadow-[6px_6px_12px_rgba(0,0,0,0.1),-6px_-6px_12px_rgba(255,255,255,0.9)]
+              dark:shadow-[6px_6px_12px_rgba(0,0,0,0.3),-6px_-6px_12px_rgba(30,30,30,0.2)]
+              overflow-hidden">
+              
+              {/* Inner container with gradient and shadow effects */}
+              <div className="bg-gradient-to-br from-gray-50/30 via-white/40 to-gray-50/30 dark:from-gray-900/20 dark:via-gray-900/20 dark:to-gray-900/20 p-5 rounded-xl relative">
+                {/* Inner shadow effect */}
+                <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
+                
+                {/* Content */}
+                <div className="relative z-10 space-y-6">
+                  {/* Personal Information */}
                   <div>
-                    <RadioGroupItem
-                      value="cod"
-                      id="cod"
-                      className="peer sr-only"
-                    />
-                    <Label
-                      htmlFor="cod"
-                      className="flex items-center gap-3 rounded-lg border border-border/40 p-4 hover:bg-muted/50 peer-checked:border-primary [&:has([data-state=checked])]:border-primary h-full"
-                    >
-                      <div className="rounded-full bg-primary/10 p-2">
-                        <Truck className="h-4 w-4 text-primary" />
+                    <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">{translate("Лични данни", "Personal Information")}</h2>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="firstName" className="text-gray-700 dark:text-gray-300">{translate("Име", "First Name")}</Label>
+                          <Input
+                            id="firstName"
+                            name="firstName"
+                            value={formData.firstName}
+                            onChange={handleInputChange}
+                            className="rounded-lg border-gray-200/80 dark:border-gray-700/80 bg-white/90 dark:bg-gray-800/90 h-10
+                              shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),inset_-2px_-2px_4px_rgba(255,255,255,0.7)]
+                              dark:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.2),inset_-2px_-2px_4px_rgba(60,60,60,0.1)]
+                              focus-visible:ring-gray-400/50 dark:focus-visible:ring-gray-500/50"
+                            placeholder={translate("Вашето име", "Your first name")}
+                          />
+                          {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>}
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="lastName" className="text-gray-700 dark:text-gray-300">{translate("Фамилия", "Last Name")}</Label>
+                          <Input
+                            id="lastName"
+                            name="lastName"
+                            value={formData.lastName}
+                            onChange={handleInputChange}
+                            className="rounded-lg border-gray-200/80 dark:border-gray-700/80 bg-white/90 dark:bg-gray-800/90 h-10
+                              shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),inset_-2px_-2px_4px_rgba(255,255,255,0.7)]
+                              dark:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.2),inset_-2px_-2px_4px_rgba(60,60,60,0.1)]
+                              focus-visible:ring-gray-400/50 dark:focus-visible:ring-gray-500/50"
+                            placeholder={translate("Вашата фамилия", "Your last name")}
+                          />
+                          {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium">
-                          {translate("Наложен платеж", "Cash on Delivery")}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {translate(
-                            "Плащане при доставка",
-                            "Pay when you receive"
-                          )}
-                        </p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="email" className="text-gray-700 dark:text-gray-300">{translate("Имейл", "Email")}</Label>
+                          <Input
+                            id="email"
+                            name="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            className="rounded-lg border-gray-200/80 dark:border-gray-700/80 bg-white/90 dark:bg-gray-800/90 h-10
+                              shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),inset_-2px_-2px_4px_rgba(255,255,255,0.7)]
+                              dark:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.2),inset_-2px_-2px_4px_rgba(60,60,60,0.1)]
+                              focus-visible:ring-gray-400/50 dark:focus-visible:ring-gray-500/50"
+                            placeholder={translate("вашият@имейл.com", "your@email.com")}
+                          />
+                          {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300">{translate("Телефон", "Phone")}</Label>
+                          <Input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            value={formData.phone}
+                            onChange={handleInputChange}
+                            className="rounded-lg border-gray-200/80 dark:border-gray-700/80 bg-white/90 dark:bg-gray-800/90 h-10
+                              shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),inset_-2px_-2px_4px_rgba(255,255,255,0.7)]
+                              dark:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.2),inset_-2px_-2px_4px_rgba(60,60,60,0.1)]
+                              focus-visible:ring-gray-400/50 dark:focus-visible:ring-gray-500/50"
+                            placeholder="+359"
+                          />
+                          {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
+                        </div>
                       </div>
-                    </Label>
+                    </div>
                   </div>
 
+                  <Separator className="bg-gray-200/70 dark:bg-gray-700/70" />
+
+                  {/* Shipping Information */}
                   <div>
-                    <RadioGroupItem
-                      value="card"
-                      id="card"
-                      className="peer sr-only"
-                      disabled
-                    />
-                    <Label
-                      htmlFor="card"
-                      className="flex items-center gap-3 rounded-lg border border-border/40 p-4 hover:bg-muted/50 peer-checked:border-primary [&:has([data-state=checked])]:border-primary opacity-50 h-full"
-                    >
-                      <div className="rounded-full bg-primary/10 p-2">
-                        <CardIcon className="h-4 w-4 text-primary" />
+                    <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">{translate("Адрес за доставка", "Shipping Address")}</h2>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="address" className="text-gray-700 dark:text-gray-300">{translate("Адрес", "Address")}</Label>
+                        <Input
+                          id="address"
+                          name="address"
+                          value={formData.address}
+                          onChange={handleInputChange}
+                          className="rounded-lg border-gray-200/80 dark:border-gray-700/80 bg-white/90 dark:bg-gray-800/90 h-10
+                            shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),inset_-2px_-2px_4px_rgba(255,255,255,0.7)]
+                            dark:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.2),inset_-2px_-2px_4px_rgba(60,60,60,0.1)]
+                            focus-visible:ring-gray-400/50 dark:focus-visible:ring-gray-500/50"
+                          placeholder={translate("Улица и номер", "Street address")}
+                        />
+                        {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
                       </div>
-                      <div>
-                        <p className="font-medium">
-                          {translate("Карта", "Credit Card")}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {translate(
-                            "Очаквайте скоро",
-                            "Coming soon"
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="city" className="text-gray-700 dark:text-gray-300">{translate("Град", "City")}</Label>
+                          <Input
+                            id="city"
+                            name="city"
+                            value={formData.city}
+                            onChange={handleInputChange}
+                            className="rounded-lg border-gray-200/80 dark:border-gray-700/80 bg-white/90 dark:bg-gray-800/90 h-10
+                              shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),inset_-2px_-2px_4px_rgba(255,255,255,0.7)]
+                              dark:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.2),inset_-2px_-2px_4px_rgba(60,60,60,0.1)]
+                              focus-visible:ring-gray-400/50 dark:focus-visible:ring-gray-500/50"
+                            placeholder={translate("Вашият град", "Your city")}
+                          />
+                          {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="postalCode" className="text-gray-700 dark:text-gray-300">{translate("Пощ. код", "Postal Code")}</Label>
+                          <Input
+                            id="postalCode"
+                            name="postalCode"
+                            value={formData.postalCode}
+                            onChange={handleInputChange}
+                            className="rounded-lg border-gray-200/80 dark:border-gray-700/80 bg-white/90 dark:bg-gray-800/90 h-10
+                              shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),inset_-2px_-2px_4px_rgba(255,255,255,0.7)]
+                              dark:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.2),inset_-2px_-2px_4px_rgba(60,60,60,0.1)]
+                              focus-visible:ring-gray-400/50 dark:focus-visible:ring-gray-500/50"
+                            placeholder="1000"
+                          />
+                          {errors.postalCode && <p className="text-red-500 text-xs mt-1">{errors.postalCode}</p>}
+                        </div>
+                        <div className="space-y-2 col-span-2 sm:col-span-1">
+                          <Label htmlFor="country" className="text-gray-700 dark:text-gray-300">{translate("Държава", "Country")}</Label>
+                          <Input
+                            id="country"
+                            name="country"
+                            value={formData.country}
+                            onChange={handleInputChange}
+                            className="rounded-lg border-gray-200/80 dark:border-gray-700/80 bg-white/90 dark:bg-gray-800/90 h-10
+                              shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),inset_-2px_-2px_4px_rgba(255,255,255,0.7)]
+                              dark:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.2),inset_-2px_-2px_4px_rgba(60,60,60,0.1)]
+                              focus-visible:ring-gray-400/50 dark:focus-visible:ring-gray-500/50"
+                            disabled
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="notes" className="text-gray-700 dark:text-gray-300">{translate("Бележки", "Notes")}</Label>
+                        <Textarea
+                          id="notes"
+                          name="notes"
+                          value={formData.notes}
+                          onChange={handleInputChange}
+                          className="rounded-lg border-gray-200/80 dark:border-gray-700/80 bg-white/90 dark:bg-gray-800/90 min-h-[80px]
+                            shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),inset_-2px_-2px_4px_rgba(255,255,255,0.7)]
+                            dark:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.2),inset_-2px_-2px_4px_rgba(60,60,60,0.1)]
+                            focus-visible:ring-gray-400/50 dark:focus-visible:ring-gray-500/50"
+                          placeholder={translate(
+                            "Допълнителни инструкции за доставка...",
+                            "Additional delivery instructions..."
                           )}
-                        </p>
+                        />
                       </div>
-                    </Label>
+                    </div>
                   </div>
-                </RadioGroup>
-              </CardContent>
-            </Card>
+
+                  <Separator className="bg-gray-200/70 dark:bg-gray-700/70" />
+
+                  {/* Payment Method */}
+                  <div>
+                    <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">{translate("Начин на плащане", "Payment Method")}</h2>
+                    <RadioGroup
+                      value={formData.paymentMethod}
+                      onValueChange={(value) => setFormData(prev => ({ ...prev, paymentMethod: value }))}
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+                    >
+                      <div>
+                        <RadioGroupItem
+                          value="cod"
+                          id="cod"
+                          className="peer sr-only"
+                        />
+                        <Label
+                          htmlFor="cod"
+                          className="flex items-center gap-3 rounded-xl p-4 h-full
+                            border border-gray-200/50 dark:border-gray-700/50
+                            bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900
+                            shadow-[2px_2px_5px_rgba(0,0,0,0.05),-2px_-2px_5px_rgba(255,255,255,0.8)]
+                            dark:shadow-[2px_2px_5px_rgba(0,0,0,0.2),-2px_-2px_5px_rgba(30,30,30,0.1)]
+                            peer-checked:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.05),inset_-2px_-2px_5px_rgba(255,255,255,0.8)]
+                            dark:peer-checked:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.2),inset_-2px_-2px_5px_rgba(30,30,30,0.1)]
+                            peer-checked:border-gray-400/50 dark:peer-checked:border-gray-500/50
+                            transition-all duration-200"
+                        >
+                          <div className="rounded-full bg-gradient-to-br from-gray-100 to-white dark:from-gray-700 dark:to-gray-800 p-2.5
+                            shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
+                            dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]">
+                            <Truck className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-800 dark:text-gray-200">
+                              {translate("Наложен платеж", "Cash on Delivery")}
+                            </p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              {translate(
+                                "Плащане при доставка",
+                                "Pay when you receive"
+                              )}
+                            </p>
+                          </div>
+                        </Label>
+                      </div>
+
+                      <div>
+                        <RadioGroupItem
+                          value="card"
+                          id="card"
+                          className="peer sr-only"
+                          disabled
+                        />
+                        <Label
+                          htmlFor="card"
+                          className="flex items-center gap-3 rounded-xl p-4 h-full opacity-60
+                            border border-gray-200/50 dark:border-gray-700/50
+                            bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900
+                            shadow-[2px_2px_5px_rgba(0,0,0,0.05),-2px_-2px_5px_rgba(255,255,255,0.8)]
+                            dark:shadow-[2px_2px_5px_rgba(0,0,0,0.2),-2px_-2px_5px_rgba(30,30,30,0.1)]"
+                        >
+                          <div className="rounded-full bg-gradient-to-br from-gray-100 to-white dark:from-gray-700 dark:to-gray-800 p-2.5
+                            shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
+                            dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]">
+                            <CardIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-800 dark:text-gray-200">
+                              {translate("Карта", "Credit Card")}
+                            </p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              {translate(
+                                "Очаквайте скоро",
+                                "Coming soon"
+                              )}
+                            </p>
+                          </div>
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Order Summary */}
-          <div className="border-l border-border/40 pl-6">
+          <div className="lg:col-span-1">
             <div className="sticky top-6 space-y-6">
-              <Card className="border-border/40 bg-card/30 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-lg">{translate("Вашата поръчка", "Your Order")}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ScrollArea className="h-[calc(100vh-400px)]">
-                    <div className="space-y-4 pr-4">
-                      {cartItems.map((item) => (
-                        <div key={item.id} className="flex gap-4">
-                          <div className="relative aspect-[3/4] w-16 overflow-hidden rounded-lg border border-border/40 bg-muted/40">
-                            <Image
-                              src={item.coverImage || item.image || "/placeholder.jpg"}
-                              alt={item.title}
-                              fill
-                              className="object-cover"
-                              sizes="64px"
-                            />
-                            {item.type === 'service' && (
-                              <div className="absolute inset-0 bg-blue-500/10 backdrop-blur-sm flex items-center justify-center">
-                                <Clock className="h-4 w-4 text-blue-600" />
-                              </div>
-                            )}
-                            {item.type === 'book' && item.itemData?.digital && (
-                              <div className="absolute inset-0 bg-green-500/10 backdrop-blur-sm flex items-center justify-center">
-                                <Download className="h-4 w-4 text-green-600" />
-                              </div>
-                            )}
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-medium leading-tight mb-1">
-                              {item.title}
-                            </h4>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <Badge 
-                                variant="secondary" 
-                                className="rounded-full px-2 py-0.5 text-xs bg-muted"
-                              >
-                                {item.type === 'book' 
-                                  ? translate("Книга", "Book")
-                                  : translate("Услуга", "Service")
-                                }
-                              </Badge>
-                              <span>x{item.quantity}</span>
+              {/* Order Summary Neumorphic Card */}
+              <div className="p-1 rounded-xl
+                bg-gradient-to-br from-gray-50/80 via-white/90 to-gray-50/80 
+                dark:from-gray-800/80 dark:via-gray-900/90 dark:to-gray-800/80
+                shadow-[6px_6px_12px_rgba(0,0,0,0.1),-6px_-6px_12px_rgba(255,255,255,0.9)]
+                dark:shadow-[6px_6px_12px_rgba(0,0,0,0.3),-6px_-6px_12px_rgba(30,30,30,0.2)]
+                overflow-hidden">
+                
+                {/* Inner container with gradient and shadow effects */}
+                <div className="bg-gradient-to-br from-gray-50/30 via-white/40 to-gray-50/30 dark:from-gray-900/20 dark:via-gray-900/20 dark:to-gray-900/20 p-5 rounded-xl relative">
+                  {/* Inner shadow effect */}
+                  <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
+                  
+                  {/* Content */}
+                  <div className="relative z-10">
+                    <h2 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">{translate("Вашата поръчка", "Your Order")}</h2>
+                    
+                    <ScrollArea className="h-[250px]">
+                      <div className="space-y-4 pr-4">
+                        {cartItems.map((item) => (
+                          <div key={item.id} className="flex gap-3 pb-3 border-b border-gray-200/40 dark:border-gray-700/40">
+                            <div className="relative h-16 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+                              <Image
+                                src={item.coverImage || item.image || "/placeholder.jpg"}
+                                alt={item.title}
+                                fill
+                                className="object-cover"
+                                sizes="48px"
+                              />
+                              {item.type === 'service' && (
+                                <div className="absolute inset-0 bg-blue-500/10 backdrop-blur-sm flex items-center justify-center">
+                                  <Clock className="h-3 w-3 text-blue-600" />
+                                </div>
+                              )}
+                              {item.type === 'book' && item.itemData?.digital && (
+                                <div className="absolute inset-0 bg-green-500/10 backdrop-blur-sm flex items-center justify-center">
+                                  <Download className="h-3 w-3 text-green-600" />
+                                </div>
+                              )}
                             </div>
-                            <div className="mt-1 font-medium">
-                              {(item.price * item.quantity).toFixed(2)} BGN
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-medium leading-tight text-sm mb-1 text-gray-900 dark:text-white truncate">
+                                {item.title}
+                              </h4>
+                              <div className="flex items-center flex-wrap gap-2 text-xs text-gray-600 dark:text-gray-400">
+                                <Badge 
+                                  variant="secondary" 
+                                  className="rounded-full px-1.5 py-0.5 text-[10px] bg-gray-100/80 dark:bg-gray-800/60 text-gray-700 dark:text-gray-300"
+                                >
+                                  {item.type === 'book' 
+                                    ? translate("Книга", "Book")
+                                    : translate("Услуга", "Service")
+                                  }
+                                </Badge>
+                                <span>x{item.quantity}</span>
+                                <span className="font-medium text-xs text-gray-800 dark:text-gray-200">
+                                  {(item.price * item.quantity).toFixed(2)} лв.
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </ScrollArea>
+                        ))}
+                      </div>
+                    </ScrollArea>
 
-                  <Separator className="my-4" />
+                    <Separator className="my-4 bg-gray-200/70 dark:bg-gray-700/70" />
 
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">
-                        {translate("Междинна сума", "Subtotal")}
-                      </span>
-                      <span>{subtotal.toFixed(2)} BGN</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">
-                        {translate("Доставка", "Shipping")}
-                      </span>
-                      <span>
-                        {shippingCost === 0 
-                          ? translate("Безплатна", "Free")
-                          : `${shippingCost.toFixed(2)} BGN`
-                        }
-                      </span>
-                    </div>
-                    <Separator className="my-2" />
-                    <div className="flex justify-between text-lg font-medium">
-                      <span>{translate("Общо", "Total")}</span>
-                      <span>{totalAmount.toFixed(2)} BGN</span>
+                    <div className="space-y-3">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">
+                          {translate("Междинна сума", "Subtotal")}
+                        </span>
+                        <span className="text-gray-900 dark:text-white">{subtotal.toFixed(2)} лв.</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">
+                          {translate("Доставка", "Shipping")}
+                        </span>
+                        <span className="text-gray-900 dark:text-white">
+                          {shippingCost === 0 
+                            ? translate("Безплатна", "Free")
+                            : `${shippingCost.toFixed(2)} лв.`
+                          }
+                        </span>
+                      </div>
+                      <Separator className="my-2 bg-gray-200/70 dark:bg-gray-700/70" />
+                      <div className="flex justify-between text-lg font-medium">
+                        <span className="text-gray-900 dark:text-white">{translate("Общо", "Total")}</span>
+                        <span className="text-gray-900 dark:text-white">{totalAmount.toFixed(2)} лв.</span>
+                      </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
 
               <Button
-                size="lg"
                 onClick={handleSubmit}
                 disabled={loading}
-                className="w-full rounded-full bg-primary hover:bg-primary/90 text-primary-foreground gap-2 shadow-lg hover:shadow-xl transition-all duration-300"
+                className="w-full relative overflow-hidden group bg-gradient-to-r from-gray-700 to-gray-900 dark:from-gray-800 dark:to-gray-900 text-white hover:from-gray-800 hover:to-gray-950 text-base py-3 h-auto font-medium rounded-xl
+                shadow-[3px_3px_6px_rgba(0,0,0,0.2),-2px_-2px_5px_rgba(255,255,255,0.1)]
+                dark:shadow-[3px_3px_6px_rgba(0,0,0,0.3),-2px_-2px_5px_rgba(60,60,60,0.1)]
+                transition-all duration-300 hover:shadow-[1px_1px_3px_rgba(0,0,0,0.2),-1px_-1px_2px_rgba(255,255,255,0.1)]"
               >
                 {loading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                  <span className="flex items-center justify-center">
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     {translate("Обработка...", "Processing...")}
-                  </>
+                  </span>
                 ) : (
                   <>
                     {translate("Завърши поръчката", "Complete Order")}
-                    <ArrowLeft className="h-4 w-4 rotate-180" />
+                    {/* Button glow effect on hover */}
+                    <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                   </>
                 )}
               </Button>
 
               {orderError && (
-                <div className="p-3 rounded-full bg-destructive/10 text-destructive text-sm text-center">
+                <div className="p-3 rounded-xl bg-red-500/10 text-red-500 text-sm text-center border border-red-500/20">
+                  <AlertCircle className="h-4 w-4 inline-block mr-1.5" />
                   {orderError}
                 </div>
               )}

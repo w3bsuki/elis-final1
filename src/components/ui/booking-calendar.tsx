@@ -343,8 +343,11 @@ export function BookingCalendar({
         return (
           <>
             <div className="space-y-6">
-              <div className="bg-primary/5 p-4 rounded-lg">
-                <h3 className="text-lg font-medium mb-3">
+              <div className="bg-white/90 dark:bg-gray-800/90 p-5 rounded-xl shadow-md border border-blue-100/50 dark:border-blue-800/30">
+                <h3 className="text-lg font-medium mb-3 text-blue-600 dark:text-blue-400 flex items-center gap-2">
+                  <div className="p-1.5 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                    <CalendarClock className="h-4 w-4" />
+                  </div>
                   {translate("Детайли на резервацията", "Booking Details")}
                 </h3>
                 
@@ -409,15 +412,26 @@ export function BookingCalendar({
                 )}
               </div>
               
-              <div className="bg-amber-50 dark:bg-amber-950/20 p-4 rounded-lg border border-amber-200 dark:border-amber-800/30">
+              <div className="bg-gradient-to-br from-amber-50/90 to-amber-100/70 dark:from-amber-950/30 dark:to-amber-900/10 p-5 rounded-xl border border-amber-200/60 dark:border-amber-800/30 shadow-md backdrop-blur-sm">
                 <h3 className="text-sm font-medium text-amber-800 dark:text-amber-400 flex items-center gap-2">
-                  <CalendarClock className="h-4 w-4" />
+                  <div className="p-1.5 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center">
+                    <CalendarClock className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+                  </div>
                   {translate("Информация за консултацията", "Consultation Information")}
                 </h3>
-                <ul className="mt-2 space-y-1 text-sm text-amber-700 dark:text-amber-300/80">
-                  <li>• {translate("Продължителност: 45 минути", "Duration: 45 minutes")}</li>
-                  <li>• {translate("Видео конферентна връзка", "Video conference link")}</li>
-                  <li>• {translate("Имейл с детайли ще бъде изпратен след резервация", "Email with details will be sent after booking")}</li>
+                <ul className="mt-3 space-y-2 text-sm text-amber-700 dark:text-amber-300/80">
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-500 dark:text-amber-400">•</span>
+                    <span>{translate("Продължителност: 45 минути", "Duration: 45 minutes")}</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-500 dark:text-amber-400">•</span>
+                    <span>{translate("Видео конферентна връзка", "Video conference link")}</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-500 dark:text-amber-400">•</span>
+                    <span>{translate("Имейл с детайли ще бъде изпратен след резервация", "Email with details will be sent after booking")}</span>
+                  </li>
                 </ul>
               </div>
             </div>

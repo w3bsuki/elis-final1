@@ -7,6 +7,7 @@ import { useLanguage } from "@/lib/LanguageContext";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { CONTAINER_WIDTH_CLASSES } from "@/lib/constants";
 import { 
   ArrowRight, 
   Mail, 
@@ -66,7 +67,7 @@ export function Footer() {
       {/* Background pattern */}
       <div className="absolute inset-0 bg-[url('/images/pattern-light.svg')] dark:bg-[url('/images/pattern-dark.svg')] opacity-[0.03] bg-repeat bg-[length:24px_24px] pointer-events-none"></div>
       
-      <div className="container mx-auto px-4 relative z-10">
+      <div className={`${CONTAINER_WIDTH_CLASSES} relative z-10`}>
         {/* Footer top section with multiple columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-10 border-b border-gray-200 dark:border-gray-800">
           {/* Column 1: Brand info */}
