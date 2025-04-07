@@ -244,169 +244,331 @@ export default function BooksSection() {
       <div className="absolute right-0 top-8 w-48 h-48 bg-gradient-to-br from-green-400/10 to-teal-500/5 rounded-full blur-3xl -z-10"></div>
       <div className="absolute left-0 bottom-8 w-48 h-48 bg-gradient-to-tr from-green-500/10 to-emerald-400/5 rounded-full blur-3xl -z-10"></div>
       
-      {/* Section header with badge implemented like Testimonials */}
+      {/* Section header with enhanced nested neumorphic design */}
       <div className="text-center mb-10">
-        <div className="inline-flex items-center gap-3 mb-4 px-6 py-3 
-          bg-gradient-to-br from-white/80 to-green-50/60 dark:from-gray-800/80 dark:to-green-900/30
-          border border-green-200/50 dark:border-green-800/30
-          rounded-full 
-          shadow-[-5px_-5px_10px_rgba(255,255,255,0.8),_5px_5px_10px_rgba(0,0,0,0.1)] 
-          dark:shadow-[-2px_-2px_5px_rgba(40,40,40,0.25),_2px_2px_5px_rgba(0,0,0,0.3)]
-          backdrop-blur-sm
-        ">
-          <BookMarked className="w-6 h-6 text-green-600 dark:text-green-400" aria-hidden="true" />
-          <h2 className="text-xl md:text-2xl font-bold font-serif text-black dark:text-white antialiased">
-            {translate("Моите Книги", "My Books")}
-          </h2>
+        {/* Outer neumorphic container for headline */}
+        <div className="inline-block rounded-2xl p-[3px]
+          bg-gradient-to-br from-gray-200/80 via-white/90 to-gray-100/80 
+          dark:from-gray-800/80 dark:via-gray-900/90 dark:to-gray-800/80
+          shadow-[5px_5px_10px_rgba(0,0,0,0.1),-5px_-5px_10px_rgba(255,255,255,0.8)]
+          dark:shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(30,30,30,0.2)]
+          mb-6">
+          
+          {/* Inner container for headline */}
+          <div className="inline-flex items-center gap-3 px-6 py-3
+            bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-xl 
+            border border-green-100/50 dark:border-green-800/50
+            shadow-inner relative">
+            
+            {/* Subtle pattern background */}
+            <div className="absolute inset-0 bg-[url('/images/pattern-light.svg')] dark:bg-[url('/images/pattern-dark.svg')] opacity-[0.03] bg-repeat bg-[length:24px_24px] pointer-events-none rounded-lg"></div>
+            
+            {/* Icon with neumorphic style */}
+            <div className="rounded-full p-2
+              bg-gradient-to-br from-green-50 to-white dark:from-green-900/30 dark:to-gray-800
+              shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
+              dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]
+              border border-green-100/50 dark:border-green-800/30 relative">
+              <BookMarked className="w-5 h-5 text-green-600 dark:text-green-400" aria-hidden="true" />
+            </div>
+            
+            <h2 className="text-xl md:text-2xl font-bold font-serif text-black dark:text-white antialiased relative">
+              {translate("Моите книги", "My Books")}
+            </h2>
+          </div>
         </div>
         
-        <div className="w-24 h-1 bg-gradient-to-r from-green-500 to-teal-400 rounded-full mx-auto mb-4"></div>
+        <div className="w-24 h-1 bg-gradient-to-r from-green-500 to-teal-400 rounded-full mx-auto mb-5"></div>
         
-        <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto text-sm sm:text-base antialiased">
-          {translate(
-            "Разгледайте моята колекция от книги за личностно развитие и емоционално благополучие.",
-            "Browse my collection of books on personal development and emotional well-being."
-          )}
-        </p>
+        {/* Description text in neumorphic container */}
+        <div className="max-w-2xl mx-auto rounded-xl p-[2px]
+            bg-gradient-to-br from-gray-200/60 via-white/70 to-gray-100/60 
+            dark:from-gray-800/60 dark:via-gray-900/70 dark:to-gray-800/60
+            shadow-[3px_3px_6px_rgba(0,0,0,0.05),-3px_-3px_6px_rgba(255,255,255,0.6)]
+            dark:shadow-[3px_3px_6px_rgba(0,0,0,0.2),-3px_-3px_6px_rgba(30,30,30,0.1)]
+            mb-4">
+          
+          <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-lg p-4 relative
+              shadow-inner border border-white/50 dark:border-gray-800/50">
+            <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base antialiased">
+              {translate(
+                "Автор на поредица книги, посветени на личностното развитие, психологията и творческото мислене.",
+                "Author of a series of books dedicated to personal development, psychology, and creative thinking."
+              )}
+            </p>
+          </div>
+        </div>
         
-        {/* Info message with neumorphic badge */}
-        <div className="mt-4 flex justify-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 dark:bg-green-900/30 text-sm text-green-700 dark:text-green-400 border border-green-200/50 dark:border-green-800/30 shadow-sm">
-            <Quote className="w-3.5 h-3.5 text-green-500" />
+        {/* Enhanced instruction text with neumorphic badge */}
+        <div className="mt-5 flex justify-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 
+            rounded-full bg-gradient-to-br from-green-50 to-white dark:from-green-900/20 dark:to-gray-800
+            text-sm text-green-700 dark:text-green-400 
+            border border-green-100/50 dark:border-green-800/30 
+            shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
+            dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]">
+            <BookOpen className="w-3.5 h-3.5 text-green-500" />
             {translate(
-              "Задръжте върху книга, за да видите повече информация",
-              "Hover on a book to see more information"
+              "Задръжте или натиснете върху книга за повече информация",
+              "Hover or tap on a book for more information"
             )}
           </div>
         </div>
       </div>
       
-      {/* Enhanced Book Carousel with nested container styling */}
-      <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 shadow-lg overflow-hidden mb-8">
+      {/* Featured book section with nested neumorphic container */}
+      <div className="mb-12 rounded-2xl p-[3px]
+          bg-gradient-to-br from-gray-200/80 via-white/90 to-gray-100/80 
+          dark:from-gray-800/80 dark:via-gray-900/90 dark:to-gray-800/80
+          shadow-[6px_6px_12px_rgba(0,0,0,0.1),-6px_-6px_12px_rgba(255,255,255,0.9)]
+          dark:shadow-[6px_6px_12px_rgba(0,0,0,0.3),-6px_-6px_12px_rgba(30,30,30,0.2)]
+          overflow-hidden">
+        
         {/* Inner container with gradient and shadow effects */}
-        <div className="bg-gradient-to-br from-gray-50/50 via-white/50 to-gray-50/50 dark:from-gray-900/50 dark:via-gray-900/30 dark:to-gray-900/50 p-4 rounded-lg relative">
+        <div className="bg-gradient-to-br from-gray-50/50 via-white/50 to-gray-50/50 dark:from-gray-900/50 dark:via-gray-900/30 dark:to-gray-900/50 p-6 rounded-xl relative">
           {/* Inner shadow effect */}
           <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
           
-          {/* Carousel Container - inside the nested design */}
-          <div 
-            ref={containerRef}
-            className="relative z-10 overflow-hidden cursor-grab active:cursor-grabbing rounded-xl"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-          >
-            {/* Gradient overlays */}
-            <div className="absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-white/90 via-white/70 to-transparent dark:from-gray-900/90 dark:via-gray-900/70 dark:to-transparent pointer-events-none"></div>
-            <div className="absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-white/90 via-white/70 to-transparent dark:from-gray-900/90 dark:via-gray-900/70 dark:to-transparent pointer-events-none"></div>
+          <div className="relative z-10">
+            {/* Featured tag with enhanced neumorphic style */}
+            <div className="mb-5 flex justify-center">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 
+                rounded-full bg-gradient-to-br from-amber-50 to-white dark:from-amber-900/20 dark:to-gray-800
+                text-sm text-amber-700 dark:text-amber-400 
+                border border-amber-100/50 dark:border-amber-800/30 
+                shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
+                dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]">
+                <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                {translate("Препоръчана книга", "Featured Book")}
+              </div>
+            </div>
             
-            <motion.div 
-              ref={carouselRef}
-              className="flex min-w-full whitespace-nowrap"
-              style={{ x }}
-              drag="x"
-            >
-              {duplicatedBooks.map((book, index) => (
-                <div
-                  key={`${book.id}-${index}`}
-                  className="min-w-[320px] md:min-w-[280px] h-[380px] px-2 inline-block"
-                >
-                  <div className="flip-card-container relative h-full w-full perspective-1000 flip-on-hover">
-                    <div className="flip-card relative w-full h-full transition-transform duration-700 transform-style-3d">
-                      {/* Front Side - Enhanced with neumorphic styling */}
-                      <div className="flip-card-front absolute w-full h-full backface-hidden">
-                        <div className="relative h-full rounded-xl overflow-hidden border border-green-200/50 dark:border-green-800/30 bg-white/95 dark:bg-gray-800/95 shadow-lg hover:shadow-xl transition-shadow">
-                          {/* Image */}
-                          <div className="relative h-2/3 w-full overflow-hidden">
-                            <Image
-                              src={book.coverImage}
-                              alt={book.title}
-                              fill
-                              className="object-cover transition-transform duration-700 group-hover:scale-110"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-                          </div>
-                          
-                          {/* Enhanced Popular Badge with neumorphic style */}
-                          {book.featured && (
-                            <div className="absolute top-4 right-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
-                              Popular
-                            </div>
-                          )}
-                          
-                          {/* Content */}
-                          <div className="absolute bottom-0 w-full p-6 space-y-2">
-                            {/* Icon container with enhanced neumorphic styling */}
-                            {book.featured ? 
-                              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-amber-50 to-white dark:from-amber-900/30 dark:to-amber-800/20 border border-amber-200/50 dark:border-amber-800/30 shadow-sm mb-2">
-                                <Star className="w-4 h-4 fill-amber-500" />
-                              </div>
-                              : 
-                              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-green-50 to-white dark:from-green-900/30 dark:to-green-800/20 border border-green-200/50 dark:border-green-800/30 shadow-sm mb-2">
-                                <BookOpen className="w-4 h-4 text-green-500" />
-                              </div>
-                            }
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white">{book.title}</h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">{book.price} лв.</p>
-                            
-                            <div className="pt-2 text-sm text-green-600 dark:text-green-400 font-medium flex items-center gap-1">
-                              {translate("Научи повече", "Learn more")} <ChevronRight className="h-4 w-4" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Back Side - with enhanced container */}
-                      <div className="flip-card-back absolute w-full h-full backface-hidden rotate-y-180">
-                        <EnhancedFlipCardBack 
-                          book={book}
-                          translate={translate}
-                          onCtaClick={() => window.location.href = `/book/${book.id}`}
-                        />
-                      </div>
-                    </div>
+            {/* Featured book content with nested neumorphic elements */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+              {/* Book cover with enhanced neumorphic frame */}
+              <div className="rounded-xl p-[3px]
+                bg-gradient-to-br from-gray-200/60 via-white/70 to-gray-100/60 
+                dark:from-gray-800/60 dark:via-gray-900/70 dark:to-gray-800/60
+                shadow-[4px_4px_8px_rgba(0,0,0,0.1),-4px_-4px_8px_rgba(255,255,255,0.8)]
+                dark:shadow-[4px_4px_8px_rgba(0,0,0,0.3),-4px_-4px_8px_rgba(30,30,30,0.15)]
+                mx-auto md:mx-0">
+                <div className="aspect-[3/4] bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-lg relative overflow-hidden">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <img 
+                      src={featuredBook.coverImage} 
+                      alt={featuredBook.title}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = "https://via.placeholder.com/300x400/f8f9fa/495057?text=Book+Cover";
+                      }}
+                    />
                   </div>
                 </div>
-              ))}
-            </motion.div>
-          </div>
-          
-          {/* Book categories and quick links - new nested section */}
-          <div className="mt-6 pt-4 border-t border-green-200/30 dark:border-green-800/30 relative z-10">
-            <div className="flex flex-wrap justify-center gap-2">
-              {["All", "Self-help", "Poetry", "Health", "Relationships"].map((category) => (
-                <div 
-                  key={category}
-                  className="px-4 py-2 rounded-full bg-white/80 dark:bg-gray-800/80 border border-green-200/50 dark:border-green-800/30 shadow-sm hover:shadow text-sm text-gray-700 dark:text-gray-300 cursor-pointer transition-all hover:bg-green-50 hover:text-green-700 dark:hover:bg-green-900/20 dark:hover:text-green-400"
-                >
-                  {category}
+              </div>
+              
+              {/* Book details */}
+              <div className="md:col-span-2 flex flex-col space-y-4">
+                {/* Title and description in subtle container */}
+                <div className="p-5 rounded-xl
+                  bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm
+                  shadow-inner border border-gray-100/50 dark:border-gray-800/50">
+                  <h3 className="text-xl font-bold text-black dark:text-white mb-2 antialiased">
+                    {featuredBook.title}
+                  </h3>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm antialiased">
+                    {featuredBook.description}
+                  </p>
                 </div>
-              ))}
+                
+                {/* Book metadata with neumorphic elements */}
+                <div className="grid grid-cols-3 gap-4">
+                  {[
+                    { label: translate("Страници", "Pages"), value: featuredBook.pages, icon: <BookOpen className="w-3.5 h-3.5 text-green-600/80" /> },
+                    { label: translate("Година", "Year"), value: featuredBook.publishDate, icon: <span className="text-xs font-bold text-green-600/80">📅</span> },
+                    { label: translate("Цена", "Price"), value: `${featuredBook.price} лв.`, icon: <span className="text-xs font-bold text-green-600/80">лв</span> }
+                  ].map((item, index) => (
+                    <div key={index} className="rounded-lg p-[2px]
+                      bg-gradient-to-br from-gray-200/60 via-white/70 to-gray-100/60 
+                      dark:from-gray-800/60 dark:via-gray-900/70 dark:to-gray-800/60
+                      shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.6)]
+                      dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]">
+                      <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-lg p-3
+                        shadow-inner border border-white/50 dark:border-gray-700/50
+                        flex flex-col items-center justify-center text-center">
+                        <div className="w-8 h-8 rounded-full 
+                          bg-gradient-to-br from-green-50 to-white dark:from-green-900/30 dark:to-gray-800
+                          flex items-center justify-center mb-1 
+                          shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
+                          dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]
+                          border border-green-100/50 dark:border-green-800/30">
+                          {item.icon}
+                        </div>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">{item.label}</span>
+                        <span className="text-sm font-medium text-gray-900 dark:text-gray-200">{item.value}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                {/* CTA buttons with enhanced neumorphic styling */}
+                <div className="flex flex-wrap gap-4 justify-center md:justify-start mt-2">
+                  <Link 
+                    href={`/book/${featuredBook.id}`} 
+                    className="px-6 py-3 rounded-full 
+                      bg-gradient-to-br from-green-50 to-white dark:from-green-900/20 dark:to-gray-800
+                      text-green-700 dark:text-green-400 font-medium
+                      border border-green-100/50 dark:border-green-800/30 
+                      shadow-[3px_3px_6px_rgba(0,0,0,0.1),-3px_-3px_6px_rgba(255,255,255,0.8)]
+                      dark:shadow-[3px_3px_6px_rgba(0,0,0,0.3),-3px_-3px_6px_rgba(30,30,30,0.15)]
+                      hover:shadow-[1px_1px_3px_rgba(0,0,0,0.1),-1px_-1px_3px_rgba(255,255,255,0.8),inset_1px_1px_3px_rgba(0,0,0,0.1),inset_-1px_-1px_3px_rgba(255,255,255,0.8)]
+                      dark:hover:shadow-[1px_1px_3px_rgba(0,0,0,0.3),-1px_-1px_3px_rgba(30,30,30,0.15),inset_1px_1px_3px_rgba(0,0,0,0.3),inset_-1px_-1px_3px_rgba(30,30,30,0.15)]
+                      transition-all duration-300 flex items-center gap-2"
+                  >
+                    <BookOpen className="w-4 h-4" />
+                    {translate("Прочети повече", "Read More")}
+                  </Link>
+                  
+                  <Link 
+                    href={`/shop/book/${featuredBook.id}`} 
+                    className="px-6 py-3 rounded-full 
+                      bg-gradient-to-r from-green-500 to-teal-500 
+                      text-white font-medium
+                      border border-green-400/50 dark:border-green-600/30 
+                      shadow-[3px_3px_6px_rgba(0,0,0,0.1),-3px_-3px_6px_rgba(255,255,255,0.1)]
+                      dark:shadow-[3px_3px_6px_rgba(0,0,0,0.3),-3px_-3px_6px_rgba(30,30,30,0.1)]
+                      hover:shadow-[1px_1px_3px_rgba(0,0,0,0.1),-1px_-1px_3px_rgba(255,255,255,0.1),inset_1px_1px_3px_rgba(0,0,0,0.1)]
+                      dark:hover:shadow-[1px_1px_3px_rgba(0,0,0,0.3),-1px_-1px_3px_rgba(30,30,30,0.1),inset_1px_1px_3px_rgba(0,0,0,0.3)]
+                      transition-all duration-300 flex items-center gap-2"
+                  >
+                    <ArrowRight className="w-4 h-4" />
+                    {translate("Купи сега", "Buy Now")}
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
       
-      {/* View All Books CTA with enhanced neumorphic styling */}
+      {/* Book carousel section with enhanced neumorphic container */}
+      <div ref={containerRef} className="relative mb-10">
+        {/* Outer neumorphic container */}
+        <div className="rounded-2xl p-[3px]
+            bg-gradient-to-br from-gray-200/80 via-white/90 to-gray-100/80 
+            dark:from-gray-800/80 dark:via-gray-900/90 dark:to-gray-800/80
+            shadow-[6px_6px_12px_rgba(0,0,0,0.1),-6px_-6px_12px_rgba(255,255,255,0.9)]
+            dark:shadow-[6px_6px_12px_rgba(0,0,0,0.3),-6px_-6px_12px_rgba(30,30,30,0.2)]
+            overflow-hidden">
+          
+          {/* Inner container with gradient and shadow effects */}
+          <div className="bg-gradient-to-br from-gray-50/50 via-white/50 to-gray-50/50 dark:from-gray-900/50 dark:via-gray-900/30 dark:to-gray-900/50 p-6 rounded-xl relative">
+            {/* Inner shadow effect */}
+            <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
+            
+            {/* Subtle section header with neumorphic style */}
+            <div className="flex justify-between items-center mb-6 relative z-10">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5
+                rounded-full bg-gradient-to-br from-green-50 to-white dark:from-green-900/20 dark:to-gray-800
+                text-green-700 dark:text-green-400 
+                border border-green-100/50 dark:border-green-800/30 
+                shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
+                dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]">
+                <Bookmark className="w-3.5 h-3.5 text-green-500" />
+                <h3 className="text-sm font-medium antialiased">
+                  {translate("Всички книги", "All Books")}
+                </h3>
+              </div>
+              
+              <div className="inline-flex items-center">
+                <button 
+                  type="button"
+                  onClick={() => setIsPaused(!isPaused)}
+                  className="p-2 rounded-full
+                    bg-gradient-to-br from-green-50 to-white dark:from-green-900/20 dark:to-gray-800
+                    text-green-700 dark:text-green-400 
+                    border border-green-100/50 dark:border-green-800/30 
+                    shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
+                    dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]
+                    hover:shadow-[1px_1px_2px_rgba(0,0,0,0.05),-1px_-1px_2px_rgba(255,255,255,0.8),inset_1px_1px_2px_rgba(0,0,0,0.05),inset_-1px_-1px_2px_rgba(255,255,255,0.8)]
+                    dark:hover:shadow-[1px_1px_2px_rgba(0,0,0,0.2),-1px_-1px_2px_rgba(30,30,30,0.1),inset_1px_1px_2px_rgba(0,0,0,0.2),inset_-1px_-1px_2px_rgba(30,30,30,0.1)]
+                    transition-all duration-300 flex items-center gap-2"
+                  aria-label={isPaused ? translate("Възобнови", "Resume") : translate("Пауза", "Pause")}
+                >
+                  {isPaused ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                  )}
+                </button>
+              </div>
+            </div>
+            
+            {/* Books carousel with enhanced neumorphic cards */}
+            <div className="relative overflow-hidden" ref={carouselRef}>
+              <motion.div
+                className="flex gap-6"
+                style={{ x }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                onDragStart={() => setIsPaused(true)}
+                dragElastic={0.2}
+              >
+                {duplicatedBooks.map((book, index) => (
+                  <div 
+                    key={`${book.id}-${index}`} 
+                    className="w-80 flex-shrink-0
+                      rounded-xl p-[3px]
+                      bg-gradient-to-br from-gray-200/60 via-white/70 to-gray-100/60 
+                      dark:from-gray-800/60 dark:via-gray-900/70 dark:to-gray-800/60
+                      shadow-[4px_4px_8px_rgba(0,0,0,0.1),-4px_-4px_8px_rgba(255,255,255,0.8)]
+                      dark:shadow-[4px_4px_8px_rgba(0,0,0,0.3),-4px_-4px_8px_rgba(30,30,30,0.15)]
+                      hover:shadow-[2px_2px_4px_rgba(0,0,0,0.1),-2px_-2px_4px_rgba(255,255,255,0.8)]
+                      dark:hover:shadow-[2px_2px_4px_rgba(0,0,0,0.3),-2px_-2px_4px_rgba(30,30,30,0.15)]
+                      transition-shadow duration-300"
+                  >
+                    <FlipCard
+                      frontImage={book.coverImage}
+                      frontTitle={book.title}
+                      frontSubtitle={book.price + " лв."}
+                      frontIcon={<BookOpen className="h-4 w-4" />}
+                      triggerMode="hover"
+                      onCtaClick={() => window.location.href = `/shop/book/${book.id}`}
+                      backTitle={book.title}
+                      backDescription={book.description}
+                      backFeatures={book.topics || []}
+                      backCta={translate("Купи сега", "Buy Now")}
+                      className="h-[420px]"
+                    />
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Gradient fade on the left */}
+        <div className="absolute left-0 top-0 w-20 h-full bg-gradient-to-r from-white to-transparent dark:from-gray-950 dark:to-transparent z-20 pointer-events-none"></div>
+        
+        {/* Gradient fade on the right */}
+        <div className="absolute right-0 top-0 w-20 h-full bg-gradient-to-l from-white to-transparent dark:from-gray-950 dark:to-transparent z-20 pointer-events-none"></div>
+      </div>
+      
+      {/* View all books CTA with enhanced neumorphic button */}
       <div className="flex justify-center mb-4">
         <Link 
           href="/books" 
-          className={`
-            px-6 py-3 rounded-full 
-            flex items-center justify-center gap-2 
-            text-green-700 dark:text-green-400 font-medium
+          className="px-6 py-3 rounded-full 
             bg-gradient-to-br from-green-50 to-white dark:from-green-900/20 dark:to-gray-800
-            shadow-[-5px_-5px_10px_rgba(255,255,255,0.8),_5px_5px_10px_rgba(0,0,0,0.15)] 
-            dark:shadow-[-5px_-5px_10px_rgba(40,40,40,0.15),_5px_5px_10px_rgba(0,0,0,0.35)]
-            border border-green-200/50 dark:border-green-800/30
-            transition-all duration-300
-
-            hover:shadow-[-1px_-1px_5px_rgba(255,255,255,0.6),_1px_1px_5px_rgba(0,0,0,0.2),inset_-2px_-2px_5px_rgba(255,255,255,1),inset_2px_2px_4px_rgba(0,0,0,0.15)]
-            dark:hover:shadow-[-1px_-1px_5px_rgba(40,40,40,0.2),_1px_1px_5px_rgba(0,0,0,0.3),inset_-2px_-2px_5px_rgba(40,40,40,0.2),inset_2px_2px_4px_rgba(0,0,0,0.3)]
-            hover:text-green-600 dark:hover:text-green-300
-          `}
+            text-green-700 dark:text-green-400 font-medium
+            border border-green-100/50 dark:border-green-800/30 
+            shadow-[5px_5px_10px_rgba(0,0,0,0.1),-5px_-5px_10px_rgba(255,255,255,0.8)]
+            dark:shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(30,30,30,0.15)]
+            hover:shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8),inset_2px_2px_4px_rgba(0,0,0,0.05),inset_-2px_-2px_4px_rgba(255,255,255,0.8)]
+            dark:hover:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1),inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(30,30,30,0.05)]
+            transition-all duration-300 flex items-center gap-2"
         >
           {translate("Разгледай всички книги", "Browse All Books")}
-          <ArrowRight className="w-4 h-4" />
+          <ChevronRight className="w-4 h-4" />
         </Link>
       </div>
     </div>

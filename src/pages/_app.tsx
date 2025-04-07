@@ -36,6 +36,9 @@ export default function App({ Component, pageProps }: AppProps) {
   const description = "Join Elis Pavlova's transformative journey through creative writing, personal development workshops, and professional consultations. Discover your creative potential today.";
   const [mounted, setMounted] = useState(false);
 
+  // Determine if we're on the homepage to conditionally render the footer
+  const isHomePage = router.pathname === '/';
+
   // Generate structured data
   const personJsonLd = generatePersonJsonLd();
 
@@ -146,7 +149,8 @@ export default function App({ Component, pageProps }: AppProps) {
               {mounted && <main className="flex-grow">
                 <Component {...pageProps} />
               </main>}
-              <Footer />
+              {/* Only render the Footer component when not on the homepage */}
+              {!isHomePage && <Footer />}
               <CartDrawer />
               <div id="database-error-banner-container" />
             </div>

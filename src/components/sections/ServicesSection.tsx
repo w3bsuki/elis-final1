@@ -80,34 +80,69 @@ export default function ServicesSection() {
       <div className="absolute right-0 top-8 w-48 h-48 bg-gradient-to-br from-purple-400/10 to-indigo-500/5 rounded-full blur-3xl -z-10"></div>
       <div className="absolute left-0 bottom-8 w-48 h-48 bg-gradient-to-tr from-purple-500/10 to-violet-400/5 rounded-full blur-3xl -z-10"></div>
       
-      {/* Updated Section header with larger badge headline */}
+      {/* Section header with enhanced nested neumorphic design */}
       <div className="text-center mb-10">
-        <div className="inline-flex items-center gap-3 mb-4 px-6 py-3 
-          bg-gradient-to-br from-white/80 to-purple-50/60 dark:from-gray-800/80 dark:to-purple-900/30
-          border border-purple-200/50 dark:border-purple-800/30
-          rounded-full 
-          shadow-[-5px_-5px_10px_rgba(255,255,255,0.8),_5px_5px_10px_rgba(0,0,0,0.1)] 
-          dark:shadow-[-2px_-2px_5px_rgba(40,40,40,0.25),_2px_2px_5px_rgba(0,0,0,0.3)]
-          backdrop-blur-sm
-        ">
-          <Briefcase className="w-6 h-6 text-purple-600 dark:text-purple-400" aria-hidden="true" />
-          <h2 className="text-xl md:text-2xl font-bold font-serif text-black dark:text-white antialiased">
-            {translate("Професионални услуги", "Professional Services")}
-          </h2>
+        {/* Outer neumorphic container for headline */}
+        <div className="inline-block rounded-2xl p-[3px]
+          bg-gradient-to-br from-gray-200/80 via-white/90 to-gray-100/80 
+          dark:from-gray-800/80 dark:via-gray-900/90 dark:to-gray-800/80
+          shadow-[5px_5px_10px_rgba(0,0,0,0.1),-5px_-5px_10px_rgba(255,255,255,0.8)]
+          dark:shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(30,30,30,0.2)]
+          mb-6">
+          
+          {/* Inner container for headline */}
+          <div className="inline-flex items-center gap-3 px-6 py-3
+            bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-xl 
+            border border-purple-100/50 dark:border-purple-800/50
+            shadow-inner relative">
+            
+            {/* Subtle pattern background */}
+            <div className="absolute inset-0 bg-[url('/images/pattern-light.svg')] dark:bg-[url('/images/pattern-dark.svg')] opacity-[0.03] bg-repeat bg-[length:24px_24px] pointer-events-none rounded-lg"></div>
+            
+            {/* Icon with neumorphic style */}
+            <div className="rounded-full p-2
+              bg-gradient-to-br from-purple-50 to-white dark:from-purple-900/30 dark:to-gray-800
+              shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
+              dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]
+              border border-purple-100/50 dark:border-purple-800/30 relative">
+              <Briefcase className="w-5 h-5 text-purple-600 dark:text-purple-400" aria-hidden="true" />
+            </div>
+            
+            <h2 className="text-xl md:text-2xl font-bold font-serif text-black dark:text-white antialiased relative">
+              {translate("Професионални услуги", "Professional Services")}
+            </h2>
+          </div>
         </div>
         
-        <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-indigo-400 rounded-full mx-auto mb-4"></div>
+        <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-indigo-400 rounded-full mx-auto mb-5"></div>
         
-        <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto text-sm sm:text-base antialiased">
-          {translate(
-            "Предлагам разнообразни услуги, фокусирани върху личностно развитие, творческо писане и професионални умения.",
-            "I offer a variety of services focused on personal development, creative writing, and professional skills."
-          )}
-        </p>
+        {/* Description text in neumorphic container */}
+        <div className="max-w-2xl mx-auto rounded-xl p-[2px]
+            bg-gradient-to-br from-gray-200/60 via-white/70 to-gray-100/60 
+            dark:from-gray-800/60 dark:via-gray-900/70 dark:to-gray-800/60
+            shadow-[3px_3px_6px_rgba(0,0,0,0.05),-3px_-3px_6px_rgba(255,255,255,0.6)]
+            dark:shadow-[3px_3px_6px_rgba(0,0,0,0.2),-3px_-3px_6px_rgba(30,30,30,0.1)]
+            mb-4">
+          
+          <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-lg p-4 relative
+              shadow-inner border border-white/50 dark:border-gray-800/50">
+            <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base antialiased">
+              {translate(
+                "Предлагам разнообразни услуги, фокусирани върху личностно развитие, творческо писане и професионални умения.",
+                "I offer a variety of services focused on personal development, creative writing, and professional skills."
+              )}
+            </p>
+          </div>
+        </div>
         
         {/* Enhanced instruction text with neumorphic badge */}
-        <div className="mt-4 flex justify-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-50 dark:bg-purple-900/30 text-sm text-purple-700 dark:text-purple-400 border border-purple-200/50 dark:border-purple-800/30 shadow-sm">
+        <div className="mt-5 flex justify-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 
+            rounded-full bg-gradient-to-br from-purple-50 to-white dark:from-purple-900/20 dark:to-gray-800
+            text-sm text-purple-700 dark:text-purple-400 
+            border border-purple-100/50 dark:border-purple-800/30 
+            shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
+            dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]">
             <Eye className="w-3.5 h-3.5 text-purple-500" />
             {translate(
               "Задръжте върху услуга, за да видите повече детайли",
@@ -117,10 +152,16 @@ export default function ServicesSection() {
         </div>
       </div>
       
-      {/* Enhanced Services Container with nested container styling */}
-      <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 shadow-lg overflow-hidden mb-8">
+      {/* Enhanced Services Container with nested neumorphic styling */}
+      <div className="mb-10 rounded-2xl p-[3px]
+          bg-gradient-to-br from-gray-200/80 via-white/90 to-gray-100/80 
+          dark:from-gray-800/80 dark:via-gray-900/90 dark:to-gray-800/80
+          shadow-[6px_6px_12px_rgba(0,0,0,0.1),-6px_-6px_12px_rgba(255,255,255,0.9)]
+          dark:shadow-[6px_6px_12px_rgba(0,0,0,0.3),-6px_-6px_12px_rgba(30,30,30,0.2)]
+          overflow-hidden">
+        
         {/* Inner container with gradient and shadow effects */}
-        <div className="bg-gradient-to-br from-purple-50/30 via-white/40 to-purple-50/30 dark:from-purple-900/20 dark:via-gray-900/20 dark:to-purple-900/20 p-6 rounded-lg relative">
+        <div className="bg-gradient-to-br from-purple-50/30 via-white/40 to-purple-50/30 dark:from-purple-900/20 dark:via-gray-900/20 dark:to-purple-900/20 p-6 rounded-xl relative">
           {/* Inner shadow effect */}
           <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
           
@@ -140,12 +181,20 @@ export default function ServicesSection() {
                 }}
               >
                 {/* Service Card with enhanced nested container*/}
-                <div className="h-full relative group">
+                <div className="h-full relative group rounded-xl p-[3px]
+                    bg-gradient-to-br from-gray-200/60 via-white/70 to-gray-100/60 
+                    dark:from-gray-800/60 dark:via-gray-900/70 dark:to-gray-800/60
+                    shadow-[4px_4px_8px_rgba(0,0,0,0.1),-4px_-4px_8px_rgba(255,255,255,0.8)]
+                    dark:shadow-[4px_4px_8px_rgba(0,0,0,0.3),-4px_-4px_8px_rgba(30,30,30,0.15)]
+                    group-hover:shadow-[3px_3px_6px_rgba(0,0,0,0.08),-3px_-3px_6px_rgba(255,255,255,0.7)]
+                    dark:group-hover:shadow-[3px_3px_6px_rgba(0,0,0,0.25),-3px_-3px_6px_rgba(30,30,30,0.12)]
+                    transition-all duration-300">
+                  
                   {/* Group hover glow effect */}
                   <div className="absolute -inset-0.5 bg-gradient-to-br from-purple-400/0 to-primary/0 rounded-xl opacity-0 group-hover:opacity-100 group-hover:from-purple-400/20 group-hover:to-primary/20 blur-md transition-all duration-500"></div>
                   
                   {/* Inner container with glass effect */}
-                  <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-xl border border-purple-100/50 dark:border-purple-800/30 shadow-lg p-0.5 h-full relative overflow-hidden">
+                  <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-lg border border-purple-100/50 dark:border-purple-800/30 shadow-inner h-full relative overflow-hidden">
                     {/* Glass panel effect */}
                     <div className="absolute inset-0 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
                     
@@ -169,8 +218,20 @@ export default function ServicesSection() {
             ))}
           </div>
           
-          {/* Pricing preview - new nested section */}
-          <div className="mt-8 pt-4 border-t border-purple-200/30 dark:border-purple-800/30 relative z-10">
+          {/* Pricing preview with enhanced neumorphic cards */}
+          <div className="mt-8 pt-6 border-t border-purple-200/30 dark:border-purple-800/30 relative z-10">
+            <div className="mb-4 flex justify-center">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5
+                rounded-full bg-gradient-to-br from-purple-50 to-white dark:from-purple-900/20 dark:to-gray-800
+                text-sm text-purple-700 dark:text-purple-400 
+                border border-purple-100/50 dark:border-purple-800/30 
+                shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
+                dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-500"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <span>{translate("Ценова информация", "Pricing Information")}</span>
+              </div>
+            </div>
+            
             <div className="flex flex-wrap justify-center gap-6">
               {[
                 { name: translate("Индивидуална", "Individual"), price: "85", duration: "50 мин." },
@@ -179,13 +240,25 @@ export default function ServicesSection() {
               ].map((option) => (
                 <div 
                   key={option.name}
-                  className="px-5 py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 border border-purple-200/50 dark:border-purple-800/30 shadow-sm"
+                  className="rounded-xl p-[2px]
+                    bg-gradient-to-br from-gray-200/60 via-white/70 to-gray-100/60 
+                    dark:from-gray-800/60 dark:via-gray-900/70 dark:to-gray-800/60
+                    shadow-[3px_3px_6px_rgba(0,0,0,0.08),-3px_-3px_6px_rgba(255,255,255,0.7)]
+                    dark:shadow-[3px_3px_6px_rgba(0,0,0,0.25),-3px_-3px_6px_rgba(30,30,30,0.12)]
+                    hover:shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
+                    dark:hover:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]
+                    transition-all duration-300"
                 >
-                  <div className="flex flex-col items-center">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{option.name}</span>
-                    <div className="flex items-baseline gap-1 mt-1">
-                      <span className="text-xl font-bold text-purple-600 dark:text-purple-400">{option.price}</span>
-                      <span className="text-xs text-gray-500">лв. / {option.duration}</span>
+                  <div className="px-5 py-3 rounded-lg
+                    bg-white/80 dark:bg-gray-800/80
+                    backdrop-blur-sm shadow-inner 
+                    border border-purple-100/50 dark:border-purple-800/30">
+                    <div className="flex flex-col items-center">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{option.name}</span>
+                      <div className="flex items-baseline gap-1 mt-1">
+                        <span className="text-xl font-bold text-purple-600 dark:text-purple-400">{option.price}</span>
+                        <span className="text-xs text-gray-500">лв. / {option.duration}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -199,20 +272,15 @@ export default function ServicesSection() {
       <div className="flex justify-center mb-4">
         <Link 
           href="/services" 
-          className={`
-            px-6 py-3 rounded-full 
-            flex items-center justify-center gap-2 
-            text-purple-700 dark:text-purple-400 font-medium
+          className="px-6 py-3 rounded-full 
             bg-gradient-to-br from-purple-50 to-white dark:from-purple-900/20 dark:to-gray-800
-            shadow-[-5px_-5px_10px_rgba(255,255,255,0.8),_5px_5px_10px_rgba(0,0,0,0.15)] 
-            dark:shadow-[-5px_-5px_10px_rgba(40,40,40,0.15),_5px_5px_10px_rgba(0,0,0,0.35)]
-            border border-purple-200/50 dark:border-purple-800/30
-            transition-all duration-300
-
-            hover:shadow-[-1px_-1px_5px_rgba(255,255,255,0.6),_1px_1px_5px_rgba(0,0,0,0.2),inset_-2px_-2px_5px_rgba(255,255,255,1),inset_2px_2px_4px_rgba(0,0,0,0.15)]
-            dark:hover:shadow-[-1px_-1px_5px_rgba(40,40,40,0.2),_1px_1px_5px_rgba(0,0,0,0.3),inset_-2px_-2px_5px_rgba(40,40,40,0.2),inset_2px_2px_4px_rgba(0,0,0,0.3)]
-            hover:text-purple-600 dark:hover:text-purple-300
-          `}
+            text-purple-700 dark:text-purple-400 font-medium
+            border border-purple-100/50 dark:border-purple-800/30 
+            shadow-[5px_5px_10px_rgba(0,0,0,0.1),-5px_-5px_10px_rgba(255,255,255,0.8)]
+            dark:shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(30,30,30,0.15)]
+            hover:shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8),inset_2px_2px_4px_rgba(0,0,0,0.05),inset_-2px_-2px_4px_rgba(255,255,255,0.8)]
+            dark:hover:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1),inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(30,30,30,0.05)]
+            transition-all duration-300 flex items-center gap-2"
         >
           {translate("Разгледай всички услуги", "View All Services")}
           <ArrowRight className="w-4 h-4" />

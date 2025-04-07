@@ -38,8 +38,8 @@ const Home: NextPage = () => {
       </Head>
       
       <main className="flex min-h-screen flex-col bg-background relative">
-        {/* Hero Section with nested containers (includes Books, Services, Testimonials and Contact) */}
-        <Hero />
+        {/* Hero Section with nested containers (includes Books, Services, Testimonials, Contact, and now Footer) */}
+        <Hero includeFooter={true} />
       </main>
       
       {/* Toast notifications */}
