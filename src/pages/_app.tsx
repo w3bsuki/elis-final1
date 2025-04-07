@@ -19,7 +19,7 @@ import { registerServiceWorker } from '@/lib/registerServiceWorker';
 import { generatePersonJsonLd } from '@/app/metadata';
 
 // Load dynamic components with proper code splitting
-const ErrorFallback = lazy(() => import('@/components/ui/ErrorFallback'));
+const ErrorFallbackUI = lazy(() => import('@/components/ui/error-boundary'));
 
 // Use system font with fallbacks for better performance
 const inter = Inter({ 
@@ -56,7 +56,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <div className="flex min-h-screen flex-col">
           <Header />
           <Suspense fallback={<div className="flex-1 flex items-center justify-center">Loading error handler...</div>}>
-            <ErrorFallback error={error} resetErrorBoundary={resetErrorBoundary} />
+            <ErrorFallbackUI error={error} resetErrorBoundary={resetErrorBoundary} />
           </Suspense>
           <Footer />
         </div>

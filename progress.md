@@ -101,29 +101,31 @@ This document tracks the progress of our website cleanup efforts based on the pl
 
 ## Completed Cleanup Tasks
 
-| Date | Component/File | Type of Change | Description | Impact | Dependencies |
-|------|---------------|----------------|-------------|--------|--------------|
-| April 7, 2024 | AboutAuthor.tsx | Removal | Removed unused AboutAuthor component that wasn't referenced anywhere in the codebase | Reduced bundle size, simplified codebase | None - component was unused |
-| April 7, 2024 | src/pages/index.tsx | Optimization | Removed unnecessary imports that weren't being used (dynamic, Link, Button, ChevronRight, Image, Suspense) | Reduced JS bundle size, cleaner code | None - imports weren't being used |
-| April 7, 2024 | Hero.original-backup.tsx | Removal | Removed backup file of Hero component | Reduced repo size, removed obsolete code | None - was a backup file |
-| April 7, 2024 | HeroLanding.tsx | Removal | Removed unused HeroLanding component | Simplified codebase | None - component was unused |
-| April 7, 2024 | FeaturedBooks.tsx | Removal | Removed unused FeaturedBooks component | Simplified codebase | None - component was unused |
-| April 7, 2024 | FeaturedServices.tsx | Removal | Removed unused FeaturedServices component | Simplified codebase | None - component was unused |
-| April 7, 2024 | BookTimeline.tsx | Removal | Removed unused BookTimeline component | Simplified codebase | None - component was unused |
-| April 7, 2024 | AuthorTimeline.tsx | Removal | Removed unused AuthorTimeline component | Simplified codebase | None - component was unused |
-| April 7, 2024 | AboutUs.tsx | Removal | Removed unused AboutUs component | Simplified codebase | None - component was unused |
-| April 7, 2024 | FlipCard.tsx | Removal | Removed unused capital-F FlipCard component | Simplified codebase, reduced duplication | None - component was unused |
-| April 7, 2024 | flip-card.tsx | Consolidation | Enhanced flip-card.tsx to support both usage patterns (from ui/flip-card.tsx and animata/card/flip-card.tsx) | Improved code reuse, simplified maintenance | Multiple components updated to use the consolidated version |
-| April 7, 2024 | AllBooks.tsx | Update | Updated to use the consolidated FlipCard component | Simplified dependency tree | Now depends on the consolidated flip-card component |
-| April 7, 2024 | Bestsellers.tsx | Update | Updated to use the consolidated FlipCard component | Simplified dependency tree | Now depends on the consolidated flip-card component |
-| April 7, 2024 | DigitalBooks.tsx | Update | Updated to use the consolidated FlipCard component | Simplified dependency tree | Now depends on the consolidated flip-card component |
-| April 7, 2024 | animata/card/flip-card.tsx | Removal | Removed the animata version of flip-card as all components now use the consolidated version | Further reduced code duplication and simplified maintenance | None - all components updated to use the consolidated version |
+| Component/Change | Type | Date | Notes |
+|------------------|------|------|-------|
+| `AboutAuthor.tsx` | Removal | April 7, 2024 | Unused component, simplified codebase |
+| `AboutUs.tsx` | Removal | April 7, 2024 | Unused component, simplified codebase |
+| `Hero.original-backup.tsx` | Removal | April 7, 2024 | Unused backup component, reduced clutter |
+| `HeroLanding.tsx` | Removal | April 7, 2024 | Unused component, simplified codebase |
+| `OldLandingPage.jsx` | Removal | April 7, 2024 | Legacy component, no longer needed |
+| `FeaturedBooks.tsx` | Removal | April 7, 2024 | Unused component, simplified codebase |
+| `ContactForm.tsx` | Removal | April 7, 2024 | Superseded by ContactFormNew.tsx |
+| `AuthorProfile.tsx` | Removal | April 7, 2024 | Unused component, simplified codebase |
+| `RecentPosts.tsx` | Removal | April 7, 2024 | Unused component, simplified codebase |
+| `AuthorCTA.tsx` | Removal | April 7, 2024 | Unused component, simplified codebase |
+| `FlipCard.tsx` | Removal | April 7, 2024 | Unused component, simplified codebase |
+| `flip-card.tsx` | Enhancement | April 7, 2024 | Enhanced to support multiple usage patterns with `simpleMode` flag, improving code reuse |
+| `AllBooks.tsx` | Update | April 7, 2024 | Updated to use consolidated FlipCard component, simplified dependency tree |
+| `Bestsellers.tsx` | Update | April 7, 2024 | Updated to use consolidated FlipCard component, simplified dependency tree |
+| `DigitalBooks.tsx` | Update | April 7, 2024 | Updated to use consolidated FlipCard component, simplified dependency tree |
+| `animata/card/flip-card.tsx` | Removal | April 7, 2024 | Removed as all components have been updated to use the consolidated version, reducing code duplication |
+| `ErrorFallback.tsx` & `error-fallback.tsx` | Consolidation | April 8, 2024 | Consolidated into `error-boundary.tsx` with enhanced functionality, dark mode support, and improved error details display |
 
 ## In Progress
 
-| Component/File | Type of Change | Started On | Target Completion | Notes |
-|----------------|----------------|------------|-------------------|-------|
-| Hero components structure | Consolidation | April 7, 2024 | April 8, 2024 | Analyzing duplicate Hero components and content |
+| Component/Change | Type | Start Date | Target Completion | Notes |
+|------------------|------|------------|-------------------|-------|
+| Hero components | Consolidation | April 7, 2024 | April 10, 2024 | Analyzing duplicate hero components for consolidation |
 
 ## Detailed Notes
 
