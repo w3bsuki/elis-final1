@@ -167,24 +167,30 @@ export function Contact() {
   ];
   
   return (
-    <div className="relative">
-      {/* Section header */}
-      <div className="text-center mb-12">
-        <Badge 
-          variant="outline" 
-          className="mb-4 px-4 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-700/50 inline-flex items-center gap-1.5"
-        >
-          <Mail className="h-4 w-4" />
-          <span>{translate("Връзка с автора", "Connect with Author")}</span>
-        </Badge>
+    <div className="relative z-0">
+      {/* Blue-tinted decorative background element */}
+      <div className="absolute right-0 top-8 w-48 h-48 bg-gradient-to-br from-blue-400/10 to-indigo-500/5 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute left-0 bottom-8 w-48 h-48 bg-gradient-to-tr from-blue-500/10 to-sky-400/5 rounded-full blur-3xl -z-10"></div>
+      
+      {/* Updated Section header with badge headline */}
+      <div className="text-center mb-10">
+        <div className="inline-flex items-center gap-3 mb-4 px-6 py-3 
+          bg-gradient-to-br from-white/80 to-blue-50/60 dark:from-gray-800/80 dark:to-blue-900/30
+          border border-blue-200/50 dark:border-blue-800/30
+          rounded-full 
+          shadow-[-5px_-5px_10px_rgba(255,255,255,0.8),_5px_5px_10px_rgba(0,0,0,0.1)] 
+          dark:shadow-[-2px_-2px_5px_rgba(40,40,40,0.25),_2px_2px_5px_rgba(0,0,0,0.3)]
+          backdrop-blur-sm
+        ">
+          <Mail className="w-6 h-6 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+          <h2 className="text-xl md:text-2xl font-bold font-serif text-black dark:text-white antialiased">
+            {translate("Връзка с автора", "Connect with Author")}
+          </h2>
+        </div>
         
-        <h2 className="text-2xl md:text-3xl font-bold mb-3 font-serif">
-          {translate("Свържете се с мен", "Get in Touch")}
-        </h2>
+        <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-400 rounded-full mx-auto mb-4"></div>
         
-        <div className="w-16 h-1 bg-blue-500/40 rounded-full mx-auto mb-3"></div>
-        
-        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-sm sm:text-base">
+        <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto text-sm sm:text-base antialiased">
           {translate(
             "Имате въпрос, предложение или искате да организирате събитие? Моля, свържете се с мен или запазете консултация.",
             "Have a question, suggestion, or want to organize an event? Please reach out or book a consultation."
@@ -195,12 +201,12 @@ export function Contact() {
       {/* Tabs for Contact/Booking */}
       <div className="max-w-4xl mx-auto mb-8">
         <Tabs defaultValue="booking" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto">
-            <TabsTrigger value="booking" className="text-base gap-2 py-3">
+          <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto bg-blue-50/70 dark:bg-gray-800/70 border border-blue-200/50 dark:border-blue-800/20 p-1 rounded-full shadow-inner">
+            <TabsTrigger value="booking" className="text-base gap-2 py-3 rounded-full data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 data-[state=active]:text-blue-600 dark:data-[state=active]:text-blue-400">
               <CalendarClock className="h-4 w-4" />
               {translate("Резервирай", "Book")}
             </TabsTrigger>
-            <TabsTrigger value="contact" className="text-base gap-2 py-3">
+            <TabsTrigger value="contact" className="text-base gap-2 py-3 rounded-full data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 data-[state=active]:text-blue-600 dark:data-[state=active]:text-blue-400">
               <MessageSquare className="h-4 w-4" />
               {translate("Контакт", "Contact")}
             </TabsTrigger>
@@ -230,17 +236,18 @@ export function Contact() {
               {/* Left Column - Newsletter */}
               <div className="flex flex-col gap-8">
                 {/* Newsletter Card - Use the new NewsletterSignup component */}
-                <div className="flex flex-col gap-4 p-6 rounded-xl border border-gray-200 dark:border-gray-700/50 shadow-lg">
+                <div className="flex flex-col gap-4 p-6 rounded-xl border border-blue-200/50 dark:border-blue-700/30 shadow-lg 
+                  bg-gradient-to-br from-white/90 to-blue-50/50 dark:from-gray-800/90 dark:to-blue-900/10">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="bg-blue-500/90 rounded-full p-2.5">
+                    <div className="bg-blue-500/90 rounded-full p-2.5 shadow-md">
                       <BookOpen className="h-5 w-5 text-white" />
                     </div>
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white antialiased">
                       {translate("Абонирайте се за новини", "Subscribe to Newsletter")}
                     </h3>
                   </div>
                   
-                  <p className="text-gray-600 dark:text-gray-300 text-sm">
+                  <p className="text-gray-600 dark:text-gray-300 text-sm antialiased">
                     {translate(
                       "Получавайте известия за нови книги, събития и специални оферти директно във вашата пощенска кутия.",
                       "Get notified about new books, events, and special offers directly to your inbox."
@@ -255,32 +262,33 @@ export function Contact() {
                 </div>
                 
                 {/* Contact Information */}
-                <div className="p-6 rounded-xl border border-gray-200 dark:border-gray-700/50 shadow-lg">
-                  <h3 className="text-lg font-bold mb-4">
+                <div className="p-6 rounded-xl border border-blue-200/50 dark:border-blue-700/30 shadow-lg
+                  bg-gradient-to-br from-white/90 to-blue-50/50 dark:from-gray-800/90 dark:to-blue-900/10">
+                  <h3 className="text-lg font-bold mb-4 antialiased">
                     {translate("Информация за контакт", "Contact Information")}
                   </h3>
                   
                   <div className="space-y-4">
                     <div className="flex items-start gap-3">
-                      <div className="mt-1 bg-primary/10 p-2 rounded-full">
-                        <Mail className="h-4 w-4 text-primary" />
+                      <div className="mt-1 bg-blue-100 dark:bg-blue-800/40 p-2 rounded-full shadow-sm">
+                        <Mail className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                       </div>
                       <div>
-                        <h4 className="font-medium text-gray-900 dark:text-white text-sm">
+                        <h4 className="font-medium text-gray-900 dark:text-white text-sm antialiased">
                           {translate("Имейл", "Email")}
                         </h4>
-                        <a href="mailto:contact@elis-author.com" className="text-gray-600 dark:text-gray-300 hover:text-primary text-sm">
+                        <a href="mailto:contact@elis-author.com" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors">
                           contact@elis-author.com
                         </a>
                       </div>
                     </div>
                     
                     <div className="flex items-start gap-3">
-                      <div className="mt-1 bg-primary/10 p-2 rounded-full">
-                        <MapPin className="h-4 w-4 text-primary" />
+                      <div className="mt-1 bg-blue-100 dark:bg-blue-800/40 p-2 rounded-full shadow-sm">
+                        <MapPin className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                       </div>
                       <div>
-                        <h4 className="font-medium text-gray-900 dark:text-white text-sm">
+                        <h4 className="font-medium text-gray-900 dark:text-white text-sm antialiased">
                           {translate("Локация", "Location")}
                         </h4>
                         <p className="text-gray-600 dark:text-gray-300 text-sm">
@@ -290,11 +298,11 @@ export function Contact() {
                     </div>
                     
                     <div className="flex items-start gap-3">
-                      <div className="mt-1 bg-primary/10 p-2 rounded-full">
-                        <Calendar className="h-4 w-4 text-primary" />
+                      <div className="mt-1 bg-blue-100 dark:bg-blue-800/40 p-2 rounded-full shadow-sm">
+                        <Calendar className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                       </div>
                       <div>
-                        <h4 className="font-medium text-gray-900 dark:text-white text-sm">
+                        <h4 className="font-medium text-gray-900 dark:text-white text-sm antialiased">
                           {translate("Работно време", "Working Hours")}
                         </h4>
                         <p className="text-gray-600 dark:text-gray-300 text-sm">
@@ -306,7 +314,7 @@ export function Contact() {
                   
                   {/* Social Media Links */}
                   <div className="mt-6">
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-3 text-sm">
+                    <h4 className="font-medium text-gray-900 dark:text-white mb-3 text-sm antialiased">
                       {translate("Последвайте ме", "Follow Me")}
                     </h4>
                     
@@ -318,7 +326,7 @@ export function Contact() {
                           target="_blank" 
                           rel="noopener noreferrer"
                           className={cn(
-                            "w-8 h-8 rounded-full flex items-center justify-center text-white transition-all duration-300",
+                            "w-10 h-10 rounded-full flex items-center justify-center text-white transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1",
                             link.color
                           )}
                           aria-label={link.name}
@@ -333,20 +341,21 @@ export function Contact() {
               
               {/* Right Column - Contact Form */}
               <div>
-                <div className="p-6 rounded-xl border border-gray-200 dark:border-gray-700/50 shadow-lg">
-                  <h3 className="text-lg font-bold mb-4">
+                <div className="p-6 rounded-xl border border-blue-200/50 dark:border-blue-700/30 shadow-lg
+                  bg-gradient-to-br from-white/90 to-blue-50/50 dark:from-gray-800/90 dark:to-blue-900/10">
+                  <h3 className="text-lg font-bold mb-4 antialiased">
                     {translate("Изпратете съобщение", "Send a Message")}
                   </h3>
                   
                   {contactStatus === "success" ? (
                     <div className="text-center py-8">
-                      <div className="mx-auto w-14 h-14 mb-4 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                        <CheckCircle className="h-7 w-7 text-green-600 dark:text-green-400" />
+                      <div className="mx-auto w-16 h-16 mb-4 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center shadow-inner">
+                        <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
                       </div>
-                      <h4 className="text-lg font-bold text-green-600 dark:text-green-400 mb-2">
+                      <h4 className="text-lg font-bold text-green-600 dark:text-green-400 mb-2 antialiased">
                         {translate("Съобщението е изпратено!", "Message Sent Successfully!")}
                       </h4>
-                      <p className="text-gray-600 dark:text-gray-300 text-sm">
+                      <p className="text-gray-600 dark:text-gray-300 text-sm antialiased">
                         {translate(
                           "Благодаря за съобщението! Ще се свържа с вас възможно най-скоро.",
                           "Thanks for reaching out! I'll get back to you as soon as possible."
@@ -363,11 +372,13 @@ export function Contact() {
                             onChange={handleContactInputChange}
                             placeholder={translate("Вашето име", "Your name")}
                             className={cn(
-                              "pl-10 h-10 border-2",
-                              formErrors.name ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""
+                              "pl-10 h-11 border-2 rounded-lg shadow-sm bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm",
+                              formErrors.name 
+                                ? "border-red-500 focus:border-red-500 focus:ring-red-500" 
+                                : "border-blue-200/60 dark:border-blue-800/30 focus:border-blue-400"
                             )}
                           />
-                          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500/70">
                             <User className="h-4 w-4" />
                           </div>
                         </div>
@@ -385,11 +396,13 @@ export function Contact() {
                             onChange={handleContactInputChange}
                             placeholder={translate("Вашият имейл", "Your email")}
                             className={cn(
-                              "pl-10 h-10 border-2",
-                              formErrors.email ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""
+                              "pl-10 h-11 border-2 rounded-lg shadow-sm bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm",
+                              formErrors.email 
+                                ? "border-red-500 focus:border-red-500 focus:ring-red-500" 
+                                : "border-blue-200/60 dark:border-blue-800/30 focus:border-blue-400"
                             )}
                           />
-                          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500/70">
                             <Mail className="h-4 w-4" />
                           </div>
                         </div>
@@ -405,9 +418,9 @@ export function Contact() {
                             value={contactForm.subject}
                             onChange={handleContactInputChange}
                             placeholder={translate("Тема (незадължително)", "Subject (optional)")}
-                            className="pl-10 h-10 border-2"
+                            className="pl-10 h-11 border-2 border-blue-200/60 dark:border-blue-800/30 focus:border-blue-400 rounded-lg shadow-sm bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm"
                           />
-                          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500/70">
                             <Sparkles className="h-4 w-4" />
                           </div>
                         </div>
@@ -421,11 +434,13 @@ export function Contact() {
                             onChange={handleContactInputChange}
                             placeholder={translate("Вашето съобщение", "Your message")}
                             className={cn(
-                              "pl-10 pt-8 border-2 h-32",
-                              formErrors.message ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""
+                              "pl-10 pt-8 border-2 h-32 rounded-lg shadow-sm bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm",
+                              formErrors.message 
+                                ? "border-red-500 focus:border-red-500 focus:ring-red-500" 
+                                : "border-blue-200/60 dark:border-blue-800/30 focus:border-blue-400"
                             )}
                           />
-                          <div className="absolute left-3 top-8 text-gray-400">
+                          <div className="absolute left-3 top-8 text-blue-500/70">
                             <MessageSquare className="h-4 w-4" />
                           </div>
                         </div>
@@ -437,8 +452,16 @@ export function Contact() {
                       <Button
                         type="submit"
                         disabled={contactStatus === "loading"}
-                        size="md"
-                        className="w-full rounded-md"
+                        className={`
+                          w-full py-6 rounded-lg
+                          bg-gradient-to-br from-blue-500 to-indigo-600
+                          hover:from-blue-600 hover:to-indigo-700
+                          text-white font-medium
+                          transition-all duration-300
+                          shadow-md hover:shadow-lg
+                          flex items-center justify-center gap-2
+                          h-11
+                        `}
                       >
                         {contactStatus === "loading" ? (
                           <span className="flex items-center">

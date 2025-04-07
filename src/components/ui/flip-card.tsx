@@ -101,36 +101,52 @@ export function FlipCard({
         
         {/* Back Side */}
         <div className="flip-card-back absolute w-full h-full backface-hidden rotate-y-180">
-          <div className="h-full flex flex-col rounded-xl overflow-hidden border border-primary/10 bg-white/95 dark:bg-gray-800/95 shadow-xl p-6">
-            <h3 className="text-xl font-bold text-foreground mb-2">{backTitle}</h3>
-            <p className="text-sm text-muted-foreground mb-4">{backDescription}</p>
+          <div className="h-full flex flex-col rounded-xl overflow-hidden border border-green-200/50 dark:border-green-800/30 bg-gradient-to-br from-green-50/80 to-white/90 dark:from-gray-800/90 dark:to-gray-900/80 shadow-xl p-4">
+            <h3 className="text-lg font-bold text-green-700 dark:text-green-400 mb-1.5 line-clamp-1">{backTitle}</h3>
+            
+            {/* Description - using more space */}
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-2 line-clamp-6 flex-grow-0">{backDescription}</p>
             
             {backFeatures.length > 0 && (
-              <div className="flex-1 overflow-auto">
-                <h4 className="text-sm font-semibold mb-2">Includes:</h4>
-                <ul className="space-y-2">
+              <div className="mb-2">
+                <h4 className="text-xs font-semibold text-green-600 dark:text-green-400 mb-1">Details:</h4>
+                <ul className="grid grid-cols-2 gap-x-2 gap-y-1.5">
                   {backFeatures.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-2 text-sm">
-                      <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
-                        <ChevronRight className="h-3 w-3 text-primary" />
+                    <li key={index} className="flex items-start gap-1 text-xs col-span-1">
+                      <div className="h-3.5 w-3.5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mt-0.5 flex-shrink-0">
+                        <ChevronRight className="h-2 w-2 text-green-600 dark:text-green-400" />
                       </div>
-                      <span>{feature}</span>
+                      <span className="text-gray-700 dark:text-gray-300">{feature}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             )}
             
+            {/* Additional information section - new */}
+            <div className="flex flex-col mb-2">
+              <h4 className="text-xs font-semibold text-green-600 dark:text-green-400 mb-1">Summary:</h4>
+              <p className="text-xs text-gray-600 dark:text-gray-300 mb-1.5">
+                This book provides valuable insights on personal growth and well-being, with practical techniques you can apply to your daily life.
+              </p>
+              <div className="flex items-center text-xs text-green-600 dark:text-green-400 mt-1">
+                <span className="flex items-center">
+                  <span className="text-amber-500">★★★★</span><span className="text-gray-300">★</span>
+                  <span className="ml-1 text-gray-600 dark:text-gray-400">4.0/5 rating</span>
+                </span>
+                <span className="mx-2">•</span>
+                <span className="text-gray-600 dark:text-gray-400">16 reviews</span>
+              </div>
+            </div>
+            
             {backCta && (
-              <div className="mt-auto pt-4">
+              <div className="mt-auto pt-1">
                 <Button 
                   onClick={(e) => {
                     e.stopPropagation();
                     onCtaClick?.();
                   }}
-                  className="w-full"
-                  variant="premium"
-                  animation="glow"
+                  className="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white border-0 py-1.5 h-auto text-sm"
                 >
                   {backCta}
                 </Button>

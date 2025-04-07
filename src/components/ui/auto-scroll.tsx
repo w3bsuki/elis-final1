@@ -18,63 +18,93 @@ export function useManualAutoScroll(
     stopOnInteraction = true,
   } = options || {};
 
+  const [isRunning, setIsRunning] = useState(enabled);
+
   useEffect(() => {
     if (!carouselApi || !enabled) return;
     
-    let intervalId: ReturnType<typeof setInterval> | null = null;
-    let interacting = false;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    
+    // Very important - force the carousel to loop
+    if (carouselApi.scrollSnapList?.()?.length) {
+      carouselApi.canScrollNext = () => true;
+      carouselApi.canScrollPrev = () => true;
+    }
     
     const scroll = () => {
-      if (interacting) return;
+      if (!isRunning) return;
       
       if (direction === "forward") {
         carouselApi.scrollNext();
       } else {
         carouselApi.scrollPrev();
       }
+      
+      // Schedule the next scroll
+      timer = setTimeout(scroll, 2500 / speed);
     };
     
-    // Start the auto-scroll timer
-    const startTimer = () => {
-      intervalId = setInterval(scroll, 3000 / Math.abs(speed));
-    };
-    
-    // Clean up the timer
-    const stopTimer = () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-        intervalId = null;
+    // Start scrolling
+    const startScrolling = () => {
+      setIsRunning(true);
+      // Start with a scroll
+      if (direction === "forward") {
+        carouselApi.scrollNext();
+      } else {
+        carouselApi.scrollPrev();
       }
+      // Schedule regular scrolling
+      timer = setTimeout(scroll, 2500 / speed);
+    };
+    
+    // Stop scrolling
+    const stopScrolling = () => {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+      setIsRunning(false);
     };
     
     if (stopOnInteraction) {
+      // Handle user interactions
       const handlePointerDown = () => {
-        interacting = true;
-        stopTimer();
+        stopScrolling();
       };
       
       const handlePointerUp = () => {
-        interacting = false;
-        startTimer();
+        // Restart with a delay
+        setTimeout(startScrolling, 1000);
       };
       
       carouselApi.on("pointerDown", handlePointerDown);
       carouselApi.on("pointerUp", handlePointerUp);
+      
+      // Also handle when user clicks pagination
+      carouselApi.on("select", () => {
+        stopScrolling();
+        // Restart with a longer delay
+        setTimeout(startScrolling, 2000);
+      });
     }
     
-    startTimer();
+    // Start immediately
+    startScrolling();
     
+    // Cleanup
     return () => {
-      stopTimer();
+      if (timer) clearTimeout(timer);
       if (stopOnInteraction) {
         carouselApi.off("pointerDown");
         carouselApi.off("pointerUp");
+        carouselApi.off("select");
       }
     };
-  }, [carouselApi, enabled, speed, direction, stopOnInteraction]);
+  }, [carouselApi, enabled, speed, direction, stopOnInteraction, isRunning]);
   
   return {
-    enabled,
+    enabled: isRunning,
+    setEnabled: setIsRunning
   };
 }
 
