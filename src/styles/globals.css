@@ -336,6 +336,21 @@
   
   .flip-card-back {
     transform: rotateY(180deg);
+    height: 100%;
+    overflow: visible;
+  }
+
+  .flip-card-back > div {
+    height: 100%;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .flip-card-back p {
+    overflow: visible;
+    white-space: normal;
+    display: block;
   }
   
   /* Button hover effects */
