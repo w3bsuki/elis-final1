@@ -20,6 +20,11 @@ import { SocialLinks } from "./header/SocialLinks";
 import { ShopButton } from "./header/ShopButton";
 import { BookType, ServiceType } from "./header/types";
 
+// Header props interface
+interface HeaderProps {
+  containedMode?: boolean;
+}
+
 // Sample data - would typically come from API or CMS
 const books: BookType[] = [
   {
@@ -98,7 +103,7 @@ function useSafeLanguage() {
   return { language };
 }
 
-export default function Header() {
+export default function Header({ containedMode }: HeaderProps) {
   // Replace direct useLanguage with safe version
   const { language } = useSafeLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean | string>(false);
@@ -179,7 +184,7 @@ export default function Header() {
   return (
     <motion.div 
       id="header-wrapper" 
-      className="w-full fixed top-0 left-0 right-0 header-fixed-wrapper z-[100]"
+      className="w-full"
       initial="hidden"
       animate="visible"
       variants={headerVariants}
@@ -190,74 +195,76 @@ export default function Header() {
         ref={headerRef}
         className={cn(
           "w-full transition-all duration-300",
-          isScrolled 
-            ? "bg-white/40 dark:bg-gray-950/40 backdrop-blur-lg shadow-md"
-            : "bg-transparent"
+          !containedMode && isScrolled 
+            ? "bg-background/80 backdrop-blur-md border-b border-border/50 shadow-sm"
+            : "bg-transparent border-b border-transparent"
         )}
         style={{ overflow: 'visible' }}
       >
-        <div className={CONTAINER_WIDTH_CLASSES} style={{ overflow: 'visible' }}>
-          <div className="relative w-full mx-auto mb-3" style={{ overflow: 'visible' }}>
-            <HeaderContainer style={{ overflow: 'visible' }}>
-              <div className={cn(
-                "flex w-full items-center justify-between transition-all duration-200 relative",
-                isScrolled ? "h-14" : "h-16"
-              )}
-              style={{ overflow: 'visible' }}
-              >
-                {/* Left: Logo & Controls */}
-                <motion.div 
-                  className="flex items-center gap-4"
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.1 }}
-                >
-                  <Logo isScrolled={isScrolled} />
-                  <div className="hidden lg:flex items-center gap-2 pl-4 text-gray-700 dark:text-gray-300">
-                    <ThemeToggle />
-                    <LanguageSwitcher />
-                  </div>
-                </motion.div>
-
-                {/* Middle: Desktop Navigation */}
-                <motion.div 
-                  className="hidden lg:flex flex-1 justify-center"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.2 }}
-                  style={{ overflow: 'visible' }}
-                >
-                  <DesktopNavigation 
-                    books={books} 
-                    services={services} 
-                    onBookClick={handleBookClick}
-                    onServiceClick={handleServiceClick}
-                  />
-                </motion.div>
-
-                {/* Right: Controls & Mobile Menu */}
-                <motion.div 
-                  className="flex items-center gap-2"
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.1 }}
-                >
-                  <div className="hidden sm:block text-gray-700 dark:text-gray-300">
-                    <SocialLinks />
-                  </div>
-                  <ShopButton />
-                  <MobileNavigation 
-                    isMenuOpen={isMenuOpen}
-                    setIsMenuOpen={setIsMenuOpen}
-                    headerHeight={headerHeight}
-                    books={books}
-                    services={services}
-                    onBookClick={handleBookClick}
-                    onServiceClick={handleServiceClick}
-                  />
-                </motion.div>
+        <div className={cn(
+          CONTAINER_WIDTH_CLASSES, 
+          containedMode ? "px-2" : "px-8"
+        )} style={{ overflow: 'visible' }}>
+          <div className={cn(
+            "flex w-full items-center justify-between relative gap-6",
+            containedMode ? "py-3 px-3" : (isScrolled ? "py-3 px-4 h-14" : "py-3 px-4 h-16")
+          )}
+          style={{ overflow: 'visible' }}
+          >
+            {/* Left side */}
+            <motion.div 
+              className="flex items-center gap-3"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+            >
+              <Logo isScrolled={isScrolled} />
+              <div className="hidden lg:flex items-center gap-2">
+                <ThemeToggle />
+                <LanguageSwitcher />
               </div>
-            </HeaderContainer>
+            </motion.div>
+
+            {/* Middle */}
+            <motion.div 
+              className="hidden lg:flex flex-1 justify-center"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
+              style={{ overflow: 'visible' }}
+            >
+              <DesktopNavigation 
+                books={books} 
+                services={services} 
+                onBookClick={handleBookClick}
+                onServiceClick={handleServiceClick}
+              />
+            </motion.div>
+
+            {/* Right side */}
+            <motion.div 
+              className="flex items-center gap-3"
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+            >
+              <div className="hidden sm:flex items-center gap-3"> 
+                <SocialLinks />
+                <ShopButton />
+              </div>
+              <div className="sm:hidden"> 
+                 <ShopButton /> 
+              </div>
+              <MobileNavigation 
+                isMenuOpen={isMenuOpen}
+                setIsMenuOpen={setIsMenuOpen}
+                headerHeight={headerHeight}
+                books={books}
+                services={services}
+                onBookClick={handleBookClick}
+                onServiceClick={handleServiceClick}
+              />
+            </motion.div>
           </div>
         </div>
       </header>
@@ -272,29 +279,6 @@ export default function Header() {
           />
         )}
       </AnimatePresence>
-    </motion.div>
-  );
-}
-
-// Header Container Component for better organization
-function HeaderContainer({ children, style }: { children: React.ReactNode, style?: React.CSSProperties }) {
-  return (
-    <motion.div 
-      className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 shadow-lg p-0.5 overflow-hidden"
-      initial={{ opacity: 0, scale: 0.98 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.4 }}
-      style={style}
-    >
-      <div className="bg-gradient-to-br from-gray-100/60 via-white/60 to-gray-100/60 dark:from-gray-900/60 dark:via-gray-950/60 dark:to-gray-900/60 rounded-lg relative overflow-hidden" style={{ overflow: 'visible' }}>
-        {/* Top decorative bar */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/40 via-primary/10 to-amber-500/40"></div>
-        
-        {/* Inner shadow effect */}
-        <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg shadow-inner pointer-events-none"></div>
-        
-        {children}
-      </div>
     </motion.div>
   );
 } 

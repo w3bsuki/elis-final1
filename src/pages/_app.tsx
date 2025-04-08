@@ -145,11 +145,13 @@ export default function App({ Component, pageProps }: AppProps) {
               playfair.variable, 
               "min-h-screen flex flex-col antialiased bg-white dark:bg-gray-900 text-black dark:text-white relative"
             )}>
-              <Header />
+              {/* NEVER render Header for home page, only for other pages */}
+              {!isHomePage && !(Component as any).renderHeaderManually && <Header />}
+              
               {mounted && <main className="flex-grow">
                 <Component {...pageProps} />
               </main>}
-              {/* Only render the Footer component when not on the homepage */}
+              
               {!isHomePage && <Footer />}
               <CartDrawer />
               <div id="database-error-banner-container" />

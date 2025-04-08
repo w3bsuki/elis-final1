@@ -28,7 +28,7 @@
 
     --border: 220 13% 91%; /* slate-100 */
     --input: 220 13% 91%; /* slate-100 */
-    --ring: 158 64% 42%; /* emerald-600 */
+    --ring: 220 13% 91%; /* Changed from primary green to border/slate */
 
     /* Keep Amber & Navy for potential accents/specific uses */
     --amber: 38 92% 50%;
@@ -66,7 +66,7 @@
  
     --border: 221 30% 21%; /* slate-800 */
     --input: 221 30% 21%; /* slate-800 */
-    --ring: 158 58% 53%; /* emerald-500 */
+    --ring: 221 30% 21%; /* Changed from primary green to border/slate */
 
     /* Keep Amber & Navy - adjust dark mode if needed, e.g., lighter amber */
     --amber: 38 92% 55%; /* amber-400 - Example: slightly lighter */
@@ -110,24 +110,8 @@
     /* font-weight: 500; */
     /* margin-bottom: 0.5rem; */
   }
-  a {
-    color: hsl(var(--primary));
-  }
-  a:hover {
-    text-decoration: underline;
-  }
-  button {
-    border-radius: 0.375rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    background-color: hsl(var(--primary));
-    color: white;
-  }
-  button:hover {
-    background-color: hsl(var(--primary) / 0.9);
-  }
+  /* REMOVED global 'a' styles */
+  /* REMOVED global 'button' styles */
 }
 
 /* Custom font variables */
@@ -446,6 +430,14 @@
   left: 0;
   right: 0;
   z-index: 50;
+}
+
+/* Override for contained headers */
+.contained-header #header-wrapper {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
 }
 
 /* Hero section positioning */

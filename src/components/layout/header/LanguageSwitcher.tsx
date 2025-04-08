@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { LanguagesIcon } from "lucide-react";
-import { useLanguage } from "@/lib/LanguageContext";
 import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -11,25 +10,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { useSafeLanguage } from "@/hooks/useSafeLanguage";
 
-// Custom hook that safely uses language context
-function useSafeLanguage() {
-  const [language, setLanguage] = useState('bg'); // Default to Bulgarian
-  const [setLanguageFunc, setSetLanguageFunc] = useState<((lang: string) => void) | null>(null);
-  
-  useEffect(() => {
-    try {
-      const context = useLanguage();
-      setLanguage(context.language);
-      setSetLanguageFunc(() => context.setLanguage);
-    } catch (e) {
-      console.warn("Language context not available in LanguageSwitcher", e);
-      // Keep using default language
-    }
-  }, []);
-  
-  return { language, setLanguage: setLanguageFunc };
-}
+const nestedGlassStyle = cn(
+  "border border-border/70", 
+  "shadow-inner", 
+  "bg-clip-padding backdrop-filter backdrop-blur-sm bg-background/75", 
+  "text-foreground", 
+  "transition-all duration-200 ease-in-out", 
+  "hover:bg-background/85 hover:shadow-sm hover:border-border", 
+  "active:bg-background/95 active:scale-[0.98] active:shadow-inner",
+  "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 dark:focus-visible:ring-offset-background"
+);
 
 export default function LanguageSwitcher() {
   const { language, setLanguage } = useSafeLanguage();
@@ -47,12 +39,10 @@ export default function LanguageSwitcher() {
           <Button 
             variant="ghost" 
             size="sm"
-            className="bg-background hover:bg-muted text-foreground hover:text-foreground rounded-lg h-10 px-3 focus:ring-0 focus:outline-none focus:ring-offset-0"
+            className={cn(nestedGlassStyle, "rounded-lg px-2 h-10 w-10", "flex items-center justify-center")}
           >
             <LanguagesIcon className="h-5 w-5" />
-            <span className="ml-2 text-sm font-medium">
-              {language === 'en' ? 'EN' : 'BG'}
-            </span>
+            <span className="sr-only">Change language</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="z-[150]">

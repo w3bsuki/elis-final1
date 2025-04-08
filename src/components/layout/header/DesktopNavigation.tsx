@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -9,33 +9,28 @@ import { BookOpen, UserRound, Sparkles, Mail, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useLanguage } from "@/lib/LanguageContext";
-import { NavLink } from "./NavLink";
 import { NavigationProps } from "./types";
+import { NavItem } from './NavItem';
+import { useSafeLanguage } from "@/hooks/useSafeLanguage";
 
-// Custom hook that safely uses language context
-function useSafeLanguage() {
-  const [language, setLanguage] = useState('bg'); // Default to Bulgarian
-  
-  useEffect(() => {
-    try {
-      const context = useLanguage();
-      setLanguage(context.language);
-    } catch (e) {
-      console.warn("Language context not available in DesktopNavigation", e);
-      // Keep using default language
-    }
-  }, []);
-  
-  return { language };
-}
+// Define the shared style here as well (or import if moved to shared utils)
+const nestedGlassStyleBase = cn(
+  "border border-border/70", 
+  "shadow-inner", 
+  "bg-clip-padding backdrop-filter backdrop-blur-sm bg-background/75", 
+  "text-foreground", 
+  "transition-all duration-200 ease-in-out", 
+  "hover:bg-background/85 hover:shadow-sm hover:border-border", 
+  "active:bg-background/95 active:scale-[0.98] active:shadow-inner",
+  "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 dark:focus-visible:ring-offset-background"
+);
 
 export function DesktopNavigation({ books, services, onBookClick, onServiceClick }: NavigationProps) {
   const { language } = useSafeLanguage();
   const pathname = usePathname();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const navRef = useRef<HTMLUListElement>(null);
   
-  // Translations for navigation items
   const navTranslations = {
     about: language === 'en' ? 'About' : 'За Мен',
     books: language === 'en' ? 'Books' : 'Книги',
@@ -44,59 +39,73 @@ export function DesktopNavigation({ books, services, onBookClick, onServiceClick
     contact: language === 'en' ? 'Contact' : 'Контакти',
   };
 
-  // Function to translate based on language
   const translate = (bgText: string, enText: string) => language === 'en' ? enText : bgText;
 
-  // Framer-motion animation variants
   const itemVariants = {
     hidden: { opacity: 0, y: -5 },
     visible: { opacity: 1, y: 0 }
   };
   
-  // Common navigation link styles 
-  const navLinkStyles = "flex items-center text-sm font-medium transition-all duration-200 rounded-lg bg-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-primary dark:hover:bg-gray-800 dark:hover:text-primary-foreground px-4 py-2";
-  const activeStyles = "bg-gray-100 text-primary dark:bg-gray-800 dark:text-primary-foreground";
+  // Define desktop-specific NavItem styles using the nested look
+  // Apply the base nested style but potentially adjust padding/active state for nav links
+  const desktopBaseStyles = cn(nestedGlassStyleBase, "flex items-center text-sm font-medium rounded-lg px-4 py-2");
+  // For NavItems, maybe the active state is just slightly more opaque background?
+  const desktopActiveStyles = "bg-background/90 shadow-inner font-semibold border-primary/20"; 
+  // Inactive inherits from base + hover state defined in nestedGlassStyleBase
+  const desktopInactiveStyles = ""; // No override needed, hover/active taken care of by base
 
-  // Toggle dropdown visibility
-  const toggleDropdown = (name: string) => {
-    setActiveDropdown(prev => prev === name ? null : name);
-  };
-
-  // Create a click handler to stop propagation
-  const handleButtonClick = (name: string, e: React.MouseEvent) => {
+  const handleDropdownClick = (name: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setActiveDropdown(prev => prev === name ? null : name);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setActiveDropdown(null);
+      }
+    };
+
+    if (activeDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [activeDropdown]);
+
   return (
-    <nav className="hidden lg:flex items-center justify-center z-[9999]" style={{ overflow: 'visible' }}>
-      <ul className="flex items-center gap-1">
-        {/* About Link */}
+    <nav 
+      aria-label="Main Navigation"
+      className="hidden lg:flex items-center justify-center z-[9999] w-full" 
+      style={{ overflow: 'visible' }}
+    >
+      <ul className="flex items-center justify-center gap-4" ref={navRef}>
+        {/* About Link using NavItem with nested style */}
         <li>
-          <NavLink 
+          <NavItem 
             href="/about" 
-            className={navLinkStyles}
-            activeClassName={activeStyles}
-          >
-            <UserRound className="mr-1.5 h-4 w-4" />
-            {navTranslations.about}
-          </NavLink>
+            label={navTranslations.about}
+            icon={UserRound}
+            baseClassName={desktopBaseStyles}
+            activeClassName={desktopActiveStyles}
+          />
         </li>
 
-        {/* Books Dropdown */}
+        {/* Books Dropdown using NavItem with nested style */}
         <li className="relative">
-          <button
-            onClick={(e) => handleButtonClick('books', e)}
-            className={cn(
-              navLinkStyles, 
-              pathname.startsWith("/shop") && activeStyles,
-              activeDropdown === 'books' && "bg-gray-100 text-primary dark:bg-gray-800 dark:text-primary-foreground"
-            )}
-          >
-            <BookOpen className="mr-1.5 h-4 w-4" />
-            {navTranslations.books}
-          </button>
+          <NavItem
+            label={navTranslations.books}
+            icon={BookOpen}
+            onClick={(e) => handleDropdownClick('books', e)}
+            isActive={(pathname && pathname.startsWith("/shop")) || activeDropdown === 'books'}
+            baseClassName={desktopBaseStyles}
+            activeClassName={desktopActiveStyles}
+          />
           
           {activeDropdown === 'books' && (
             <div 
@@ -151,7 +160,7 @@ export function DesktopNavigation({ books, services, onBookClick, onServiceClick
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="w-full justify-center h-8" 
+                    className="w-full justify-center rounded-lg transition-all duration-200 hover:bg-primary/10 hover:text-primary active:bg-primary/20"
                     asChild
                   >
                     <Link href="/shop">
@@ -165,19 +174,16 @@ export function DesktopNavigation({ books, services, onBookClick, onServiceClick
           )}
         </li>
 
-        {/* Services Dropdown */}
+        {/* Services Dropdown using NavItem with nested style */}
         <li className="relative">
-          <button
-            onClick={(e) => handleButtonClick('services', e)}
-            className={cn(
-              navLinkStyles, 
-              pathname.startsWith("/services") && activeStyles,
-              activeDropdown === 'services' && "bg-gray-100 text-primary dark:bg-gray-800 dark:text-primary-foreground"
-            )}
-          >
-            <Sparkles className="mr-1.5 h-4 w-4" />
-            {navTranslations.services}
-          </button>
+          <NavItem
+            label={navTranslations.services}
+            icon={Sparkles}
+            onClick={(e) => handleDropdownClick('services', e)}
+            isActive={(pathname && pathname.startsWith("/services")) || activeDropdown === 'services'}
+            baseClassName={desktopBaseStyles}
+            activeClassName={desktopActiveStyles}
+          />
           
           {activeDropdown === 'services' && (
             <div 
@@ -229,7 +235,7 @@ export function DesktopNavigation({ books, services, onBookClick, onServiceClick
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="w-full justify-center h-8" 
+                    className="w-full justify-center rounded-lg transition-all duration-200 hover:bg-primary/10 hover:text-primary active:bg-primary/20"
                     asChild
                   >
                     <Link href="/services">
@@ -243,28 +249,26 @@ export function DesktopNavigation({ books, services, onBookClick, onServiceClick
           )}
         </li>
 
-        {/* Blog Link */}
+        {/* Blog Link using NavItem with nested style */}
         <li>
-          <NavLink 
+          <NavItem 
             href="/blog" 
-            className={navLinkStyles}
-            activeClassName={activeStyles}
-          >
-            <Mail className="mr-1.5 h-4 w-4" /> 
-            {navTranslations.blog}
-          </NavLink>
+            label={navTranslations.blog}
+            icon={Mail}
+            baseClassName={desktopBaseStyles}
+            activeClassName={desktopActiveStyles}
+          />
         </li>
 
-        {/* Contact Link */}
+        {/* Contact Link using NavItem with nested style */}
         <li>
-          <NavLink 
+          <NavItem 
             href="/contact" 
-            className={navLinkStyles}
-            activeClassName={activeStyles}
-          >
-            <Mail className="mr-1.5 h-4 w-4" />
-            {navTranslations.contact}
-          </NavLink>
+            label={navTranslations.contact}
+            icon={Mail}
+            baseClassName={desktopBaseStyles}
+            activeClassName={desktopActiveStyles}
+          />
         </li>
       </ul>
     </nav>

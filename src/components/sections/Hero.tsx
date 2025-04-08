@@ -13,10 +13,12 @@ import ServicesSection from "./ServicesSection";
 import Testimonials from "./Testimonials";
 import { Contact } from "./Contact";
 import { Footer } from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
 
 // Component props type
 interface HeroProps {
   includeFooter?: boolean;
+  noContainer?: boolean;
 }
 
 // Special version of the footer for inside the container - Moved above the Hero component to avoid circular dependency
@@ -253,100 +255,66 @@ function FooterInContainer() {
   );
 }
 
-// Export Hero as both default and named export to ensure compatibility
-const Hero = ({ includeFooter = false }: HeroProps) => {
+export default function Hero({ includeFooter = false, noContainer = false }: HeroProps) {
   const { language } = useLanguage();
+  const translate = (bg: string, en: string) => language === 'bg' ? bg : en;
   
-  // Section connector component for visual connectors between sections
-  const SectionConnector = ({ fromColor, toColor }: { fromColor: string; toColor: string }) => (
-    <div className="absolute left-1/2 -top-6 transform -translate-x-1/2 w-0.5 h-6 bg-gradient-to-b from-{fromColor}/30 to-{toColor}/30"></div>
-  );
+  // If noContainer is true, render only HeroSection without the container
+  if (noContainer) {
+    return <HeroSection includeFooter={includeFooter} className="pt-0" />;
+  }
   
+  // Otherwise, render with our own container (for backward compatibility)
   return (
-    <section 
-      id="hero" 
-      className="w-full min-h-screen bg-white dark:bg-gray-950 overflow-hidden relative hero-below-header z-0"
-      style={{ 
-        marginTop: '80px', // Match header height
-        scrollMarginTop: '80px' // For anchor navigation
-      }}
-    >
-      {/* Background decorations */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-amber-500/10 rounded-full blur-3xl"></div>
+    <>
+      {/* Header with refined nested look - Inside the container */}
+      <div className="relative w-full mb-6 rounded-xl bg-gradient-to-b from-white via-gray-50/95 to-gray-100/90 dark:from-gray-800/95 dark:via-gray-850/95 dark:to-gray-900/90 p-4 shadow-[0_4px_16px_rgba(0,0,0,0.1),0_1px_3px_rgba(0,0,0,0.05)] border border-gray-200/80 dark:border-gray-700/60 backdrop-blur-md contained-header overflow-hidden">
+        {/* Subtle inner shadow overlay */}
+        <div className="absolute inset-0 shadow-[inset_0_0_10px_rgba(0,0,0,0.04)] pointer-events-none rounded-xl"></div>
         
-        {/* Decorative elements */}
-        <div className="absolute top-20 left-10 rotate-12 opacity-20 dark:opacity-10">
-          <Feather className="h-12 w-12 text-primary" />
-        </div>
-        <div className="absolute bottom-20 right-10 -rotate-12 opacity-20 dark:opacity-10">
-          <Sparkle className="h-12 w-12 text-amber-500" />
+        {/* Subtle pattern background */}
+        <div className="absolute inset-0 bg-[url('/images/pattern-light.svg')] dark:bg-[url('/images/pattern-dark.svg')] opacity-[0.03] bg-repeat bg-[length:24px_24px] pointer-events-none rounded-lg"></div>
+        
+        {/* Subtle highlight at the top */}
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/80 dark:bg-white/15"></div>
+        
+        {/* Subtle glow effect */}
+        <div className="absolute inset-0 rounded-xl bg-gradient-radial from-transparent via-transparent to-gray-100/30 dark:to-primary/5 pointer-events-none"></div>
+        
+        <div className="flex justify-center w-full mx-auto relative z-10">
+          <Header containedMode={true} />
         </div>
       </div>
       
-      {/* Single main container for all sections */}
-      <div className={CONTAINER_WIDTH_CLASSES}>
-        <div className="w-full max-w-[1800px] mx-auto bg-white/40 dark:bg-gray-900/40 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-800 shadow-xl overflow-hidden">
-          <div className="bg-gradient-to-br from-gray-100/50 via-white/50 to-gray-100/50 dark:from-gray-900/50 dark:via-gray-950/50 dark:to-gray-900/50 p-3 sm:p-4 md:p-5 relative">
-            {/* Glass panel effect with inner shadow */}
-            <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
-            
-            {/* Main content wrapper */}
-            <div className="relative z-0 space-y-16">
-              {/* Hero Intro Section */}
-              <div id="intro">
-                <HeroSection />
-              </div>
-              
-              {/* Books Section with divider */}
-              <div id="books" className="relative pt-6">
-                <div className="absolute left-1/2 top-0 transform -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-green-500/30 to-transparent"></div>
-                <BooksSection />
-              </div>
-              
-              {/* Services Section with divider */}
-              <div id="services" className="relative pt-6">
-                <div className="absolute left-1/2 top-0 transform -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent"></div>
-                <ServicesSection />
-              </div>
-              
-              {/* Testimonials Section with divider */}
-              <div id="testimonials" className="relative pt-6">
-                <div className="absolute left-1/2 top-0 transform -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
-                <Testimonials />
-              </div>
-              
-              {/* Contact Section with divider */}
-              <div id="contact" className="relative pt-6">
-                <div className="absolute left-1/2 top-0 transform -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
-                <Contact />
-              </div>
-              
-              {/* Footer Section - Conditionally rendered inside the container */}
-              {includeFooter && (
-                <div id="footer" className="relative pt-14 mt-16 pb-4">
-                  {/* Footer divider with gradient */}
-                  <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-gray-400/40 to-transparent"></div>
-                  {/* Custom styled footer for inside the container */}
-                  <FooterInContainer />
-                </div>
-              )}
+      {/* Hero content */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-gray-50 to-gray-100 p-4 sm:p-5 md:p-6 shadow-[inset_-10px_-10px_16px_rgba(255,255,255,0.9),inset_10px_10px_16px_rgba(0,0,0,0.08),_6px_6px_16px_rgba(0,0,0,0.07)]">
+        {/* Animated gradient orb - top right */}
+        <div className="absolute top-0 right-0 h-72 w-72 bg-gradient-radial from-green-100/40 to-transparent rounded-full blur-3xl transform translate-x-1/4 -translate-y-1/4 pointer-events-none animate-pulse-slow"></div>
+        
+        {/* Animated gradient orb - bottom left */}
+        <div className="absolute bottom-0 left-0 h-72 w-72 bg-gradient-radial from-blue-100/30 to-transparent rounded-full blur-3xl transform -translate-x-1/4 translate-y-1/4 pointer-events-none animate-pulse-slow animation-delay-2000"></div>
+        
+        {/* Small floating particles */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-1/4 right-1/3 h-3 w-3 rounded-full bg-primary/40 animate-float"></div>
+          <div className="absolute top-2/3 right-1/4 h-2 w-2 rounded-full bg-green-400/30 animate-float animation-delay-1000"></div>
+          <div className="absolute top-1/2 left-1/4 h-4 w-4 rounded-full bg-blue-300/20 animate-float animation-delay-2000"></div>
+        </div>
+        
+        {/* Subtle diagonal lines pattern */}
+        <div className="absolute inset-0 bg-[url('/images/diagonal-lines.svg')] opacity-[0.03] bg-repeat pointer-events-none"></div>
+        
+        {/* Decorative ribbon */}
+        <div className="absolute -top-1 -right-1 w-24 h-24 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 right-0 pt-1 pr-4 rotate-45 transform origin-bottom-left">
+            <div className="h-6 w-28 bg-gradient-to-r from-green-400 to-green-500 shadow-sm flex items-center justify-center">
+              <span className="text-[10px] font-medium tracking-tight text-white uppercase">New</span>
             </div>
           </div>
         </div>
-          
-        {/* Background wave decoration */}
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-white dark:bg-gray-950 overflow-hidden pointer-events-none">
-          <svg className="absolute bottom-0 w-full h-48" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path className="fill-white dark:fill-gray-950" d="M0,96L60,85.3C120,75,240,53,360,53.3C480,53,600,75,720,80C840,85,960,75,1080,64C1200,53,1320,43,1380,37.3L1440,32L1440,120L1380,120C1320,120,1200,120,1080,120C960,120,840,120,720,120C600,120,480,120,360,120C240,120,120,120,60,120L0,120Z"></path>
-          </svg>
-        </div>
+        
+        <HeroSection includeFooter={includeFooter} className="pt-0 relative z-10 bg-gradient-to-r from-transparent via-white/50 to-transparent p-3 sm:p-4 rounded-2xl backdrop-blur-sm" />
       </div>
-    </section>
+    </>
   );
-};
-
-// Export the component both ways
-export { Hero };
-export default Hero; 
+} 

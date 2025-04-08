@@ -82,6 +82,15 @@ module.exports = {
           '0%': { backgroundPosition: '100%' },
           '100%': { backgroundPosition: '0%' },
         },
+        'pulse-slow': {
+          '0%, 100%': { opacity: 0.4 },
+          '50%': { opacity: 0.8 },
+        },
+        'float': {
+          '0%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' },
+          '100%': { transform: 'translateY(0px)' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -90,6 +99,8 @@ module.exports = {
         "glow": "glow 2s infinite",
         "shine": "shine 3s ease infinite",
         "text-shimmer": "text-shimmer 2.5s ease-out infinite alternate",
+        "pulse-slow": "pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "float": "float 3s ease-in-out infinite",
       },
       typography: (theme) => ({
         DEFAULT: {

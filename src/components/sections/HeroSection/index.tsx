@@ -13,6 +13,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useTranslation } from "@/lib/hooks";
 import { CONTAINER_WIDTH_CLASSES } from "@/lib/constants";
+import Header from "@/components/layout/Header";
+// Import other sections
+import BooksSection from "../BooksSection";
+import ServicesSection from "../ServicesSection";
+import Testimonials from "../Testimonials";
+import { Contact } from "../Contact";
+import { Footer } from "@/components/layout/Footer";
 
 // Animations - memoized to avoid rerenders
 const ANIMATIONS = {
@@ -33,7 +40,7 @@ const ANIMATIONS = {
   }
 };
 
-export function HeroSection({ className }: HeroSectionProps) {
+export function HeroSection({ className, includeFooter = false }: HeroSectionProps & { includeFooter?: boolean }) {
   const { language } = useLanguage();
   const ref = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
@@ -136,8 +143,8 @@ export function HeroSection({ className }: HeroSectionProps) {
     consultationLabel: language === 'en' ? "Schedule Consultation" : "Запазете Консултация",
     transformHeading: language === 'en' ? "Transform Your Life" : "Трансформирай Живота Си",
     aboutText: language === 'en'
-      ? "I am Elis - a certified psychologist and author of books, articles, and stories for children and adults. With multiple certifications from various fields, I am a specialist with rich professional experience. Over the years, I have successfully overcome many challenges. These difficulties made me stronger and more conscious, and now I am ready to help anyone seeking support and guidance to change their life for the better."
-      : "Аз съм Елис - дипломиран психолог и автор на книги, статии, приказки за деца и възрастни. С множество сертификати от различни сфери, аз съм специалист с богат професионален опит. През годините съм преборила успешно множество предизвикателства. Тези трудности ме направиха по-силна и по-осъзната, и сега съм готова да помогна на всеки, който търси подкрепа и насоки, за да промени живота си към по-добро."
+      ? "Certified psychologist and author helping you create a conscious, dream life filled with love and harmony."
+      : "Дипломиран психолог и автор, помагащ ви да създадете осъзнат, мечтан живот, изпълнен с любов и хармония."
   }), [language]);
   
   // Handle dialog accessibility and keyboard navigation
@@ -167,299 +174,363 @@ export function HeroSection({ className }: HeroSectionProps) {
   }, [shouldReduceMotion]);
   
   return (
-    <div className="relative bg-gradient-to-br from-white to-gray-100 py-10 sm:py-12">
-      {/* Main container - using optimal width from constants */}
-      <div className={CONTAINER_WIDTH_CLASSES}>
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white to-gray-100 p-4 sm:p-5 md:p-6 shadow-[inset_-12px_-12px_20px_rgba(255,255,255,0.9),inset_12px_12px_20px_rgba(0,0,0,0.08),_8px_8px_20px_rgba(0,0,0,0.07)]">
-          {/* Main Hero - Enhanced Neumorphic Style with improved accessibility */}
-          <div className="mb-6 sm:mb-8 max-w-[1440px] mx-auto">
-            {/* Outer Neumorphic Container */}
-            <div className="w-full rounded-2xl p-[2px]
-                bg-gradient-to-br from-gray-200/80 via-white/90 to-gray-100/80 
-                dark:from-gray-800/80 dark:via-gray-900/90 dark:to-gray-800/80
-                shadow-[6px_6px_12px_rgba(0,0,0,0.1),-6px_-6px_12px_rgba(255,255,255,0.9)]
-                dark:shadow-[6px_6px_12px_rgba(0,0,0,0.3),-6px_-6px_12px_rgba(30,30,30,0.2)]">
-              
-              {/* Inner Neumorphic Container */}
-              <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 relative min-h-[calc(100vh-200px)] sm:min-h-[calc(100vh-220px)] flex flex-col justify-center shadow-inner border border-white/50 dark:border-gray-800/50 text-center">
-                
-                {/* Subtle pattern background */}
-                <div 
-                  className="absolute inset-0 bg-[url('/images/pattern-light.svg')] dark:bg-[url('/images/pattern-dark.svg')] opacity-[0.02] bg-repeat bg-[length:24px_24px] pointer-events-none rounded-lg"
-                  aria-hidden="true"
-                ></div>
-                
-                {/* Avatar & Badge - centered layout with improved accessibility */}
-                <div className="flex flex-col items-center gap-2 mb-4 sm:mb-5 relative">
-                  <div className="relative">
-                    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                      <DialogTrigger 
-                        className="cursor-pointer relative z-10 transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 rounded-full group"
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            setDialogOpen(true);
-                          }
-                        }}
-                        aria-label={ui.welcomeMessage}
-                      >
-                        <div className="absolute -inset-1 bg-gradient-to-br from-gray-200/20 to-gray-100/10 rounded-full opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
-                        <Avatar 
-                          className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 border-2 border-white dark:border-gray-700 bg-white dark:bg-gray-800 relative 
-                            shadow-[0_4px_8px_rgba(0,0,0,0.1)]" 
-                        >
-                          <AvatarImage src={profile.imageSrc} alt={profile.altText} />
-                          <AvatarFallback className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium text-lg sm:text-xl lg:text-2xl">
-                            {profile.name.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                      </DialogTrigger>
-                      <DialogContent 
-                        className="sm:max-w-[550px] max-h-[80vh] overflow-y-auto bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-green-200/60 dark:border-green-800/30 shadow-xl"
-                        onEscapeKeyDown={() => setDialogOpen(false)}
-                      >
-                        <DialogHeader>
-                          <DialogTitle className="flex items-center gap-3 font-serif text-xl">
-                            <div className="rounded-full p-1.5 bg-gray-100 dark:bg-gray-800" aria-hidden="true">
-                              <Heart className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                            </div>
-                            {ui.welcomeMessage}
-                          </DialogTitle>
-                        </DialogHeader>
-                        <div className="flex items-center gap-3 border-b pb-4 mb-4 border-gray-200 dark:border-gray-700/30">
-                          <Avatar className="h-16 w-16 border-2 border-white dark:border-gray-700">
-                            <AvatarImage src={profile.imageSrc} alt={profile.altText} />
-                          </Avatar>
-                          <Avatar className="h-16 w-16 border-2 border-white dark:border-gray-700">
-                            <AvatarImage src={profile.imageSrc} alt={profile.altText} />
-                            <AvatarFallback className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
-                              {profile.name.charAt(0)}
-                            </AvatarFallback>
-                          </Avatar>
-                        </div>
-                        <DialogHeader>
-                          <DialogTitle className="flex items-center gap-3 font-serif text-xl">
-                            <div className="rounded-full p-1.5 bg-gray-100 dark:bg-gray-800" aria-hidden="true">
-                              <Heart className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                            </div>
-                            {ui.welcomeMessage}
-                          </DialogTitle>
-                        </DialogHeader>
-                        <div className="flex items-center gap-3 border-b pb-4 mb-4 border-gray-200 dark:border-gray-700/30">
-                          <Avatar className="h-16 w-16 border-2 border-white dark:border-gray-700 shadow-sm">
-                            <AvatarImage src={profile.imageSrc} alt={profile.altText} />
-                            <AvatarFallback className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
-                              {profile.name.charAt(0)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="text-left">
-                            <p className="font-bold">{profile.name}</p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">{profile.title}</p>
-                          </div>
-                        </div>
-                        <DialogDescription className="text-gray-700 dark:text-gray-300 leading-relaxed space-y-4 text-left">
-                          {language === 'en' ? (
-                            <>
-                              <p>Welcome to my online space for creating your reality of dreams, happiness and love! I welcome you with love and I'm glad you found me! I am Elis Dzhelilova and I am here to help and support you in overcoming your difficulties in creating a conscious, dreamy life filled with love and harmony. I feel that being part of this process is happiness and calling for me. Here you will be heard, understood and supported.</p>
-                              <p>For me, love is the meaning of everything I do! I believe that each of us deserves and can create their dream life! And I will be happy to be part of this process.</p>
-                            </>
-                          ) : (
-                            <>
-                              <p>Добре дошли в моето онлайн пространство за сътворяване на своята реалност на своите мечти, щастие и любов! Приветствам те с любов и се радвам, че ме откри! Аз съм Елис Джелилова и съм тук, за да ти помогна и подкрепя в преодоляването на твоите трудности сътворяването на осъзнат, мечтан живот, изпълнен с любов и хармония. Усещам, че да бъда част, от този процес за мен е щастие и призвание. Тук ще бъдеш изслушан, разбран и подкрепен.</p>
-                              <p>За мен любовта е смисълът на всичко, което правя! Вярвам, че всеки един от нас заслужава и може да създаде своя живот мечта! А аз ще се радвам да бъда част от този процес.</p>
-                            </>
-                          )}
-                        </DialogDescription>
-                        <div className="flex justify-end mt-2">
-                          <Button 
-                            onClick={() => setDialogOpen(false)}
-                            className="bg-gray-800 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-full text-white"
-                          >
-                            {language === 'en' ? "Close" : "Затвори"}
-                          </Button>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                  <Badge variant="outline" className="px-3 py-1 sm:px-4 sm:py-1.5 rounded-full border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm
-                    shadow-[0_2px_5px_rgba(0,0,0,0.08)] text-xs sm:text-sm">
-                    <Heart className="w-4 h-4 mr-1.5 text-gray-500 dark:text-gray-400" aria-hidden="true" />
-                    <span className="font-medium">{profile.title}</span>
-                  </Badge>
+    <div className={cn("", className)}>
+      {/* Main Hero content */}
+      <div className="mb-6 sm:mb-8 max-w-[1440px] mx-auto">
+        {/* Outer Neumorphic Container - Green accent */}
+        <div className="w-full rounded-2xl p-[2px]
+            bg-gradient-to-br from-green-100/80 via-white/90 to-green-50/80 
+            dark:from-green-900/30 dark:via-gray-900/90 dark:to-gray-800/80
+            shadow-[5px_5px_10px_rgba(0,0,0,0.08),-5px_-5px_10px_rgba(255,255,255,0.8)]
+            dark:shadow-[5px_5px_10px_rgba(0,0,0,0.25),-5px_-5px_10px_rgba(40,40,40,0.15)]">
+          
+          {/* Inner Neumorphic Container with green accent */}
+          <div className="bg-gradient-to-br from-white/90 via-white/80 to-green-50/50 dark:from-gray-900/90 dark:via-gray-900/80 dark:to-green-900/10 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 relative min-h-[calc(60vh-80px)] sm:min-h-[calc(60vh-100px)] flex flex-col justify-start shadow-inner border border-green-100/50 dark:border-green-900/30 text-center pt-8">
+            {/* Subtle pattern background */}
+            <div 
+              className="absolute inset-0 bg-[url('/images/pattern-light.svg')] dark:bg-[url('/images/pattern-dark.svg')] opacity-[0.02] bg-repeat bg-[length:24px_24px] pointer-events-none rounded-lg"
+              aria-hidden="true"
+            ></div>
+            
+            {/* Green accent orbs */}
+            <div className="absolute top-1/3 right-10 h-40 w-40 bg-green-200/20 dark:bg-green-900/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div className="absolute bottom-1/3 left-10 h-40 w-40 bg-green-100/20 dark:bg-green-900/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            {/* Main hero content - Restructured for better consistency */}
+            <motion.div
+              variants={ANIMATIONS.container}
+              initial="hidden"
+              animate="visible"
+              className="space-y-6 sm:space-y-8 max-w-4xl mx-auto"
+              aria-live="polite"
+            >
+              {/* Avatar */}
+              <motion.div variants={shouldReduceMotion ? {} : ANIMATIONS.item} className="mb-4 sm:mb-6">
+                <div className="relative w-max mx-auto">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-green-400 to-green-500 rounded-full blur opacity-70 animate-pulse-slow"></div>
+                  <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-2 border-white dark:border-gray-800 relative">
+                    <AvatarImage src="/images/author-avatar.jpg" alt={profile.altText} />
+                    <AvatarFallback>{profile.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
                 </div>
+              </motion.div>
               
-                {/* Main content with animations - improved accessibility */}
-                <motion.div
-                  variants={ANIMATIONS.container}
-                  initial="hidden"
-                  animate="visible"
-                  className="space-y-5 sm:space-y-6 md:space-y-8 max-w-5xl mx-auto"
-                  aria-live="polite"
-                >
-                  <motion.h1 
-                    variants={shouldReduceMotion ? {} : ANIMATIONS.item}
-                    className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-serif !leading-[1.15] text-gray-900 dark:text-white tracking-tight mb-3"
+              {/* Badge */}
+              <motion.div variants={shouldReduceMotion ? {} : ANIMATIONS.item} className="mb-5 sm:mb-7">
+                <Badge variant="outline" className="px-3 py-1 sm:px-4 sm:py-1.5 rounded-full border-green-200 dark:border-green-900/40 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm
+                  shadow-[0_2px_5px_rgba(22,163,74,0.15)] text-xs sm:text-sm">
+                  <Heart className="w-4 h-4 mr-1.5 text-green-500 dark:text-green-400" aria-hidden="true" />
+                  <span className="font-medium text-green-700 dark:text-green-300">{profile.title}</span>
+                </Badge>
+              </motion.div>
+              
+              {/* Heading */}
+              <motion.h1 
+                variants={shouldReduceMotion ? {} : ANIMATIONS.item}
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-serif !leading-[1.15] text-gray-900 dark:text-white tracking-tight"
+              >
+                {ui.transformHeading}
+              </motion.h1>
+            
+              {/* Subheading */}
+              <motion.p 
+                variants={shouldReduceMotion ? {} : ANIMATIONS.item}
+                className="text-sm sm:text-base lg:text-lg text-gray-700 dark:text-gray-300 mx-auto max-w-2xl 
+                  px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-4 rounded-xl 
+                  bg-gradient-to-br from-white via-white to-green-50/50 dark:from-gray-800/80 dark:via-gray-800/80 dark:to-green-900/20
+                  backdrop-blur-sm 
+                  shadow-inner border border-green-100/50 dark:border-green-900/30 
+                  leading-relaxed"
+              >
+                {ui.aboutText}
+              </motion.p>
+            
+              {/* Expertise Areas Cards - Green accents */}
+              <motion.div 
+                variants={shouldReduceMotion ? {} : ANIMATIONS.item}
+                className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6" // Adjusted to always show 3 columns on sm+
+                role="navigation"
+                aria-label={language === 'en' ? "Areas of expertise" : "Области на експертиза"}
+              >
+                {expertiseAreas.map((area, index) => (
+                  <Link 
+                    key={index}
+                    href={area.url}
+                    className="bg-white/90 dark:bg-gray-800/90 
+                      backdrop-blur-sm rounded-xl p-6 sm:p-7
+                      shadow-[0_10px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.01)]
+                      dark:shadow-[0_10px_30px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.05)]
+                      border border-gray-100 dark:border-gray-800 
+                      hover:bg-gradient-to-br hover:from-green-50 hover:to-white
+                      dark:hover:from-gray-800 dark:hover:to-gray-700
+                      hover:shadow-[0_14px_40px_rgba(0,0,0,0.12),0_0_0_1px_rgba(0,0,0,0.02)]
+                      dark:hover:shadow-[0_14px_40px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.07)]
+                      transition-all duration-300 group no-underline
+                      focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                    onKeyDown={(e) => handleCardKeyDown(e, area.url)}
+                    aria-label={`${area.title}: ${area.description}`}
                   >
-                    {ui.transformHeading}
-                  </motion.h1>
-                
-                  <motion.p 
-                    variants={shouldReduceMotion ? {} : ANIMATIONS.item}
-                    className="text-sm sm:text-base lg:text-lg text-gray-700 dark:text-gray-300 mx-auto max-w-2xl 
-                      px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-4 rounded-xl 
-                      bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm 
-                      shadow-inner border border-gray-100/50 dark:border-gray-700/30 
-                      leading-relaxed"
-                  >
-                    {ui.aboutText}
-                  </motion.p>
-                
-                  {/* Expertise Areas Cards */}
-                  <motion.div 
-                    variants={shouldReduceMotion ? {} : ANIMATIONS.item}
-                    className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-4 sm:mt-6"
-                    role="navigation"
-                    aria-label={language === 'en' ? "Areas of expertise" : "Области на експертиза"}
-                  >
-                    {expertiseAreas.map((area, index) => (
-                      <Link 
-                        key={index}
-                        href={area.url}
-                        className="bg-gradient-to-br from-gray-50/80 via-white/90 to-gray-50/80 
-                          dark:from-gray-800/80 dark:via-gray-900/90 dark:to-gray-800/80 
-                          backdrop-blur-sm rounded-xl p-4 sm:p-5 
-                          shadow-[4px_4px_8px_rgba(0,0,0,0.05),-4px_-4px_8px_rgba(255,255,255,0.8)]
-                          dark:shadow-[4px_4px_8px_rgba(0,0,0,0.15),-4px_-4px_8px_rgba(30,30,30,0.1)]
-                          border border-gray-100 dark:border-gray-800 
-                          hover:shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8),inset_2px_2px_4px_rgba(0,0,0,0.05),inset_-2px_-2px_4px_rgba(255,255,255,0.8)]
-                          dark:hover:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1),inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(30,30,30,0.05)]
-                          transition-all duration-300 group no-underline
-                          focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                        onKeyDown={(e) => handleCardKeyDown(e, area.url)}
-                        aria-label={`${area.title}: ${area.description}`}
+                    <div className="flex flex-col items-center text-center">
+                      {/* Much larger icon with green gradient styling */}
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 mb-4 sm:mb-5 
+                          bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20
+                          rounded-full flex items-center justify-center
+                          shadow-[0_6px_12px_rgba(0,0,0,0.06),0_0_0_1px_rgba(0,0,0,0.02)]
+                          dark:shadow-[0_6px_12px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.05)]
+                          group-hover:shadow-[0_8px_16px_rgba(22,163,74,0.15),0_0_0_1px_rgba(22,163,74,0.05)]
+                          dark:group-hover:shadow-[0_8px_16px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.08)]
+                          group-hover:scale-110 transition-all duration-300" 
                       >
-                        <div className="flex flex-col items-center text-center">
-                          <span className="text-xl sm:text-2xl mb-1.5 sm:mb-2 
-                            bg-white dark:bg-gray-800 rounded-full p-3 sm:p-4
-                            shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8)]
-                            dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)]
-                            group-hover:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),inset_-2px_-2px_4px_rgba(255,255,255,0.8)]
-                            dark:group-hover:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.2),inset_-2px_-2px_4px_rgba(30,30,30,0.1)]
-                            transition-all duration-300" 
-                            aria-hidden="true">{area.icon}</span>
-                          <h3 className="font-medium text-gray-900 dark:text-gray-100 text-xs sm:text-sm md:text-base group-hover:underline group-hover:decoration-1 group-hover:underline-offset-2 transition-all">{area.title}</h3>
-                          <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5 sm:mt-1">{area.description}</p>
-                        </div>
-                      </Link>
-                    ))}
-                  </motion.div>
+                        <span className="text-3xl sm:text-4xl" aria-hidden="true">{area.icon}</span>
+                      </div>
+                      
+                      {/* Larger text with improved contrast and green accent on hover */}
+                      <h3 className="font-bold text-gray-900 dark:text-white text-lg sm:text-xl mb-2 
+                          group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">{area.title}</h3>
+                      <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed">{area.description}</p>
+                    </div>
+                  </Link>
+                ))}
+              </motion.div>
+            
+              {/* Call to action button - Green gradient theme */}
+              <motion.div variants={shouldReduceMotion ? {} : ANIMATIONS.item} className="flex justify-center">
+                <Button 
+                  variant="ghost" 
+                  size="lg" 
+                  className={cn(
+                    "rounded-full",
+                    "px-8 py-6", // Increased padding
+                    "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700", // Green gradient background
+                    "text-white font-bold text-base sm:text-lg", // Larger, bolder text
+                    "flex items-center gap-3", // Increased gap
+                    "transition-all duration-300",
+                    // Enhanced shadow for depth
+                    "shadow-[0_4px_14px_rgba(22,163,74,0.3),0_1px_3px_rgba(22,163,74,0.2)]",
+                    "hover:shadow-[0_6px_20px_rgba(22,163,74,0.4),0_1px_3px_rgba(22,163,74,0.2)]",
+                    "hover:translate-y-[-2px]", // Subtle rise effect on hover
+                    "active:translate-y-[1px] active:shadow-[0_2px_10px_rgba(22,163,74,0.25)]" // Press effect
+                  )}
+                  asChild
+                  aria-label={ui.consultationLabel}
+                >
+                  <Link 
+                    href="/contact?booking=true"
+                    className="flex items-center justify-center gap-2 sm:gap-3" 
+                  >
+                    <SendIcon className="size-5 sm:size-6" aria-hidden="true" />
+                    <span>{ui.consultationLabel}</span>
+                  </Link>
+                </Button>
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Featured Content Section - Enhanced styling */}
+      <div className="mt-16 mb-12">
+        <div className="text-center mb-10">
+          <span className="inline-block px-3 py-1 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-sm font-medium rounded-full mb-3">
+            {language === 'en' ? "Explore" : "Разгледайте"}
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 relative inline-block">
+            <span className="relative z-10">{ui.featuredContent}</span>
+            <span className="absolute -bottom-1 left-0 right-0 h-3 bg-green-100/50 dark:bg-green-900/20 -rotate-1 z-0"></span>
+          </h2>
+          <div className="h-1 w-20 bg-gradient-to-r from-green-400 to-green-500 mx-auto rounded-full"></div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Featured Book */}
+          <div className="rounded-2xl p-[3px] h-full
+              bg-gradient-to-br from-green-100/80 via-white/90 to-green-50/80 
+              dark:from-green-900/20 dark:via-gray-900/90 dark:to-gray-800/80 
+              shadow-[6px_6px_12px_rgba(0,0,0,0.1),-6px_-6px_12px_rgba(255,255,255,0.9)]
+              dark:shadow-[6px_6px_12px_rgba(0,0,0,0.3),-6px_-6px_12px_rgba(30,30,30,0.2)]
+              overflow-hidden">
+            
+            {/* Book content with improved layout */}
+            <div className="bg-gradient-to-br from-white via-white to-green-50/70 dark:from-gray-900/50 dark:via-gray-900/30 dark:to-green-900/10 p-6 sm:p-7 rounded-lg relative h-full flex flex-col">
+              <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
+              
+              {/* New book badge - Green color */}
+              <div className="absolute top-4 right-4 z-10">
+                <Badge className="bg-green-500 hover:bg-green-600 px-3 py-1.5 text-white shadow-sm text-sm font-medium">
+                  {ui.newBadge}
+                </Badge>
+              </div>
+              
+              <div className="relative z-10 flex flex-col flex-1">
+                {/* Book title - Larger and better spacing */}
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 
+                    bg-gradient-to-r from-green-700 to-green-500 dark:from-green-400 dark:to-green-300 
+                    bg-clip-text text-transparent">
+                  {featuredBook.title}
+                </h3>
                 
-                  {/* Call to action button */}
-                  <motion.div variants={shouldReduceMotion ? {} : ANIMATIONS.item} className="flex justify-center mt-4 sm:mt-6">
-                    <Link 
-                      href="/contact?booking=true"
-                      className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full 
-                        flex items-center justify-center gap-1.5 sm:gap-2
-                        text-gray-700 dark:text-gray-300 font-medium
-                        bg-gray-50 dark:bg-gray-800
-                        shadow-[5px_5px_10px_rgba(0,0,0,0.1),-5px_-5px_10px_rgba(255,255,255,0.8)] 
-                        dark:shadow-[5px_5px_10px_rgba(0,0,0,0.3),-5px_-5px_10px_rgba(30,30,30,0.15)]
-                        text-sm sm:text-base
-                        transition-all duration-300
-                        focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
-                        hover:shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8),inset_2px_2px_4px_rgba(0,0,0,0.05),inset_-2px_-2px_4px_rgba(255,255,255,0.8)]
-                        dark:hover:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1),inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(30,30,30,0.05)]
-                        hover:text-gray-900 dark:hover:text-gray-100"
-                      aria-label={ui.consultationLabel}
+                {/* Book metadata - Added visual structure */}
+                <div className="flex items-center mb-4 text-sm space-x-4">
+                  <div className="flex items-center text-gray-600 dark:text-gray-400">
+                    <BookOpen className="h-4 w-4 mr-1.5 text-green-500 dark:text-green-400" />
+                    <span>{featuredBook.pages} {ui.pages}</span>
+                  </div>
+                  <div className="flex items-center text-gray-600 dark:text-gray-400">
+                    <span className="text-xs">📅</span>
+                    <span className="ml-1">{ui.published}: {featuredBook.publishDate}</span>
+                  </div>
+                </div>
+                
+                {/* Book description - Better typography */}
+                <p className="text-gray-700 dark:text-gray-300 mb-6 flex-grow leading-relaxed text-base">
+                  {featuredBook.description}
+                </p>
+                
+                {/* Action area - Better structured with clearer hierarchy */}
+                <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100 dark:border-gray-800">
+                  <span className="text-lg font-bold text-green-600 dark:text-green-400">{featuredBook.price} лв.</span>
+                  
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="rounded-full border-green-200 dark:border-green-800 bg-white dark:bg-gray-800 hover:bg-green-50 dark:hover:bg-green-900/20 text-green-600 dark:text-green-400 shadow-sm transition-all duration-200"
+                      asChild
                     >
-                      <SendIcon className="size-4 sm:size-5" aria-hidden="true" />
-                      <span>{ui.consultationLabel}</span>
+                      <Link 
+                        href={`/shop/book/${featuredBook.id}/preview`}
+                        className="flex items-center" 
+                      >
+                        {featuredBook.buttonText} <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+                    
+                    <Button 
+                      variant="default" 
+                      size="sm" 
+                      className="rounded-full bg-green-600 hover:bg-green-700 text-white shadow transition-all duration-200 hover:scale-[1.02] hover:brightness-110 active:scale-[0.98] active:brightness-95"
+                      asChild
+                    >
+                      <Link href={`/shop/book/${featuredBook.id}`}>
+                        {featuredBook.buyText}
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Free eBook */}
+          <div className="rounded-2xl p-[3px] h-full
+              bg-gradient-to-br from-green-100/80 via-white/90 to-green-50/80 
+              dark:from-green-900/20 dark:via-gray-900/90 dark:to-gray-800/80 
+              shadow-[6px_6px_12px_rgba(0,0,0,0.1),-6px_-6px_12px_rgba(255,255,255,0.9)]
+              dark:shadow-[6px_6px_12px_rgba(0,0,0,0.3),-6px_-6px_12px_rgba(30,30,30,0.2)]
+              overflow-hidden">
+            <div className="bg-gradient-to-br from-white via-white to-green-50/70 dark:from-gray-900/50 dark:via-gray-900/30 dark:to-green-900/10 p-6 rounded-lg relative h-full flex flex-col">
+              <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
+              
+              <div className="relative z-10 flex flex-col flex-1">
+                <h3 className="text-xl font-bold text-green-700 dark:text-green-300 mb-3">{freeEbook.title}</h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">{freeEbook.description}</p>
+                
+                <div className="mt-auto">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="rounded-full border-green-200 dark:border-green-800 bg-white dark:bg-gray-800 hover:bg-green-50 dark:hover:bg-green-900/20 text-green-600 dark:text-green-400 shadow-sm transition-all duration-200"
+                    asChild
+                  >
+                    <Link 
+                      href="/subscribe"
+                      className="flex items-center" 
+                    >
+                      {freeEbook.buttonText} <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
-                  </motion.div>
-                </motion.div>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Service offers */}
+          <div className="rounded-2xl p-[3px] h-full
+              bg-gradient-to-br from-green-100/80 via-white/90 to-green-50/80 
+              dark:from-green-900/20 dark:via-gray-900/90 dark:to-gray-800/80 
+              shadow-[6px_6px_12px_rgba(0,0,0,0.1),-6px_-6px_12px_rgba(255,255,255,0.9)]
+              dark:shadow-[6px_6px_12px_rgba(0,0,0,0.3),-6px_-6px_12px_rgba(30,30,30,0.2)]
+              overflow-hidden">
+            <div className="bg-gradient-to-br from-white via-white to-green-50/70 dark:from-gray-900/50 dark:via-gray-900/30 dark:to-green-900/10 p-6 rounded-lg relative h-full flex flex-col">
+              <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
+              
+              <div className="relative z-10 flex flex-col flex-1">
+                <h3 className="text-xl font-bold text-green-700 dark:text-green-300 mb-4">{ui.servicesHeader}</h3>
+                <div className="space-y-3 flex-grow">
+                  {quickServices.map(service => (
+                    <Link 
+                      key={service.id}
+                      href={`/services#${service.id}`}
+                      className="flex items-center p-3 bg-white dark:bg-gray-700/80 rounded-lg border border-green-100/50 dark:border-green-800/30
+                        hover:bg-green-50/80 dark:hover:bg-green-900/10 transition-colors duration-200
+                        group no-underline"
+                    >
+                      <div className="mr-3 p-2 bg-green-50 dark:bg-green-800/30 rounded-full
+                        group-hover:bg-green-100 dark:group-hover:bg-green-800/50 transition-colors duration-200">
+                        {/* Use green color for icons */}
+                        {service.icon === 'Heart' && <Heart className="h-5 w-5 text-green-500 dark:text-green-400" />}
+                        {service.icon === 'UserRound' && <span className="text-green-500 dark:text-green-400">👤</span>}
+                        {service.icon === 'Palette' && <span className="text-green-500 dark:text-green-400">🎨</span>}
+                      </div>
+                      <span className="text-gray-800 dark:text-gray-200 group-hover:text-green-700 dark:group-hover:text-green-300 transition-colors duration-200">{service.title}</span>
+                    </Link>
+                  ))}
+                </div>
+                
+                <div className="mt-4 pt-3 border-t border-green-100/50 dark:border-green-900/30">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full rounded-full border-green-200 dark:border-green-800 bg-white dark:bg-gray-800 hover:bg-green-50 dark:hover:bg-green-900/20 text-green-600 dark:text-green-400 shadow-sm transition-all duration-200"
+                    asChild
+                  >
+                    <Link href="/services">
+                      {language === 'en' ? "View All Services" : "Всички услуги"} <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
       
-      {/* Featured Content Section - also using consistent width */}
-      <div className={CONTAINER_WIDTH_CLASSES}>
-        <div className="mt-16 mb-12 max-w-[1440px] mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-5">{ui.featuredContent}</h2>
-          <div className="h-1 w-20 bg-gradient-to-r from-blue-400 to-violet-500 mx-auto rounded-full mb-10"></div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Featured Book with enhanced neumorphic container */}
-            <div className="rounded-2xl p-[3px] 
-                bg-gradient-to-br from-gray-200/80 via-white/90 to-gray-100/80 
-                dark:from-gray-800/80 dark:via-gray-900/90 dark:to-gray-800/80 
-                shadow-[6px_6px_12px_rgba(0,0,0,0.1),-6px_-6px_12px_rgba(255,255,255,0.9)]
-                dark:shadow-[6px_6px_12px_rgba(0,0,0,0.3),-6px_-6px_12px_rgba(30,30,30,0.2)]
-                overflow-hidden w-full">
-              
-              {/* Book content */}
-              <div className="bg-gradient-to-br from-gray-50/50 via-white/50 to-gray-50/50 dark:from-gray-900/50 dark:via-gray-900/30 dark:to-gray-900/50 p-6 rounded-lg relative">
-                <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
-                
-                {/* New book badge */}
-                <div className="absolute top-4 right-4 z-10">
-                  <Badge className="bg-amber-500 hover:bg-amber-600 px-3 py-1.5 text-white shadow-sm">
-                    {ui.newBadge}
-                  </Badge>
-                </div>
-                
-                <div className="relative z-10">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                    {featuredBook.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    {featuredBook.description}
-                  </p>
-                  
-                  <div className="flex justify-between items-center">
-                    <span className="text-lg font-bold text-gray-800 dark:text-gray-200">{featuredBook.price} лв.</span>
-                    <Link 
-                      href={`/shop/book/${featuredBook.id}`}
-                      className="bg-gray-800 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 text-white px-4 py-2 rounded-full transition-colors"
-                    >
-                      {featuredBook.buyText}
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Free eBook and other items */}
-            <div className="space-y-4">
-              <div className="rounded-xl p-6 bg-white dark:bg-gray-800 shadow-lg">
-                <h3 className="text-xl font-semibold mb-3">{freeEbook.title}</h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">{freeEbook.description}</p>
-                <Link href="/subscribe" className="inline-flex items-center text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
-                  {freeEbook.buttonText} <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </div>
-            </div>
-            
-            {/* Service offers */}
-            <div className="rounded-xl p-6 bg-white dark:bg-gray-800 shadow-lg">
-              <h3 className="text-xl font-semibold mb-4">{ui.servicesHeader}</h3>
-              <div className="space-y-3">
-                {quickServices.map(service => (
-                  <div key={service.id} className="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                    <div className="mr-3 p-2 bg-gray-100 dark:bg-gray-600 rounded-full">
-                      {service.icon === 'Heart' && <Heart className="h-5 w-5 text-gray-600 dark:text-gray-300" />}
-                      {service.icon === 'UserRound' && <span className="text-gray-600 dark:text-gray-300">👤</span>}
-                      {service.icon === 'Palette' && <span className="text-gray-600 dark:text-gray-300">🎨</span>}
-                    </div>
-                    <span>{service.title}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* Books Section */}
+      <div className="mt-16 mb-12">
+        <BooksSection />
       </div>
+      
+      {/* Services Section */}
+      <div className="mt-16 mb-12">
+        <ServicesSection />
+      </div>
+      
+      {/* Testimonials Section */}
+      <div className="mt-16 mb-12">
+        <Testimonials />
+      </div>
+      
+      {/* Contact Section */}
+      <div className="mt-16 mb-12">
+        <Contact />
+      </div>
+      
+      {/* Footer Section - inside the same container */}
+      {includeFooter && (
+        <div className="mt-16">
+          <Footer />
+        </div>
+      )}
     </div>
   );
 } 

@@ -21,34 +21,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { useLanguage } from "@/lib/LanguageContext";
 import { NavigationProps } from "./types";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { SocialLinks } from "./SocialLinks"; // Assuming SocialLinks is in the same dir
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-
-// Custom hook that safely uses language context
-function useSafeLanguage() {
-  const [language, setLanguage] = useState('bg'); // Default to Bulgarian
-  const [setLanguageFunction, setSetLanguageFunction] = useState<(lang: string) => void>(() => {
-    // Default implementation that just updates local state
-    return (lang: string) => setLanguage(lang);
-  });
-  
-  useEffect(() => {
-    try {
-      const context = useLanguage();
-      setLanguage(context.language);
-      setSetLanguageFunction(() => context.setLanguage);
-    } catch (e) {
-      console.warn("Language context not available in MobileNavigation", e);
-      // Keep using default values
-    }
-  }, []);
-  
-  return { language, setLanguage: setLanguageFunction };
-}
+import { SocialLinks } from "./SocialLinks";
+import { NavItem } from './NavItem';
+import { useSafeLanguage } from "@/hooks/useSafeLanguage";
 
 interface MobileNavigationProps extends NavigationProps {
   isMenuOpen: boolean | string;
@@ -85,7 +63,9 @@ export function MobileNavigation({
   };
 
   const toggleLanguage = () => {
-    setLanguage(language === 'en' ? 'bg' : 'en');
+    if (setLanguage) {
+        setLanguage(language === 'en' ? 'bg' : 'en');
+    }
   };
 
   const menuVariants = {
@@ -103,36 +83,6 @@ export function MobileNavigation({
     hidden: { opacity: 0, x: 20 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" } }
   };
-
-  const renderMenuItem = (item: any) => (
-    <motion.div key={item.href || item.id} variants={itemVariants}>
-      {item.href ? (
-        <Link 
-          href={item.href} 
-          className={cn(
-            "flex w-full items-center gap-3 border-b border-gray-200 dark:border-gray-700 px-6 py-4 text-left transition-all duration-200",
-            pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
-              ? "bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-foreground font-medium" 
-              : "text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-primary dark:hover:text-primary-foreground"
-          )}
-        >
-          <item.icon className="h-5 w-5 flex-shrink-0" />
-          <span className="flex-1 text-base">{item.label}</span>
-        </Link>
-      ) : (
-        <motion.button
-          whileTap={{ scale: 0.98 }}
-          type="button"
-          className="flex w-full items-center gap-3 border-b border-gray-200 dark:border-gray-700 px-6 py-4 text-left transition-all duration-200 text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-primary dark:hover:text-primary-foreground"
-          onClick={() => setIsMenuOpen(item.id)}
-        >
-          <item.icon className="h-5 w-5 flex-shrink-0" />
-          <span className="flex-1 text-base">{item.label}</span>
-          <ChevronRight className="h-4 w-4 text-gray-400" />
-        </motion.button>
-      )}
-    </motion.div>
-  );
 
   return (
     <>
@@ -157,6 +107,7 @@ export function MobileNavigation({
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
+            aria-label="Main Navigation"
             style={mobileMenuStyle}
             className="fixed inset-x-0 bottom-0 z-40 flex flex-col bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 lg:hidden overflow-y-auto rounded-t-xl"
             variants={menuVariants}
@@ -164,17 +115,32 @@ export function MobileNavigation({
             animate="visible"
             exit="exit"
           >
-            {/* Main Menu View */}
             {isMenuOpen === true && (
-              <motion.div variants={listVariants} initial="hidden" animate="visible">
-                {navItems.map(renderMenuItem)}
+              <motion.div 
+                variants={listVariants} 
+                initial="hidden" 
+                animate="visible"
+                className="border-b border-gray-200 dark:border-gray-700"
+              >
+                {navItems.map((item) => (
+                  <motion.div key={item.href || item.id} variants={itemVariants} className="border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+                    <NavItem
+                      href={item.href}
+                      label={item.label}
+                      icon={item.icon}
+                      onClick={item.href ? undefined : () => setIsMenuOpen(item.id!)}
+                    >
+                      {!item.href && <ChevronRight className="h-4 w-4 text-gray-400" />}
+                    </NavItem>
+                  </motion.div>
+                ))}
                 
-                {/* Language & Theme Toggles */}
-                <motion.div variants={itemVariants} className="border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center">
+                <motion.div variants={itemVariants} className="px-6 py-4 flex justify-between items-center">
                   <Button 
                     variant="ghost" 
+                    size="sm"
                     onClick={toggleLanguage}
-                    className="flex items-center gap-2 text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-primary-foreground hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors pointer-events-auto"
+                    className="flex items-center gap-2 text-gray-800 dark:text-gray-200 rounded-lg transition-all duration-200 hover:bg-primary/10 hover:text-primary active:bg-primary/20"
                   >
                     <Globe className="h-5 w-5" />
                     <span className="text-base">
@@ -184,7 +150,6 @@ export function MobileNavigation({
                   <ThemeToggle />
                 </motion.div>
                 
-                {/* Social Links */}
                 <motion.div 
                   variants={itemVariants} 
                   className="p-6 flex justify-center"
@@ -201,8 +166,9 @@ export function MobileNavigation({
                 <div className="flex items-center justify-between px-6 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 sticky top-0">
                   <Button 
                     variant="ghost" 
+                    size="sm"
                     onClick={() => setIsMenuOpen(true)} 
-                    className="p-0 h-auto text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-foreground hover:bg-transparent"
+                    className="text-gray-700 dark:text-gray-300 rounded-lg transition-all duration-200 hover:bg-primary/10 hover:text-primary active:bg-primary/20"
                   >
                     <ChevronLeft className="mr-1 h-4 w-4" />
                     {translate("Назад", "Back")}
@@ -216,7 +182,7 @@ export function MobileNavigation({
                     <Link
                       href={book.href}
                       onClick={() => onBookClick(book)}
-                      className="group flex w-full items-center gap-4 border-b border-gray-200 dark:border-gray-700 px-6 py-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200"
+                      className="group flex w-full items-center gap-4 border-b border-gray-200 dark:border-gray-700 px-4 py-3 text-left hover:bg-primary/10 dark:hover:bg-primary/20 transition-all duration-200"
                     >
                       <div className="relative w-12 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-800">
                         <Image
@@ -248,7 +214,7 @@ export function MobileNavigation({
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="w-full justify-center text-primary hover:text-primary dark:text-primary-foreground dark:hover:text-primary-foreground hover:bg-primary/10 dark:hover:bg-primary/20"
+                    className="w-full justify-center text-primary hover:text-primary dark:text-primary-foreground dark:hover:text-primary-foreground rounded-lg transition-all duration-200 hover:bg-primary/10 active:bg-primary/20"
                     asChild
                   >
                     <Link href="/shop">
@@ -266,8 +232,9 @@ export function MobileNavigation({
                 <div className="flex items-center justify-between px-6 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 sticky top-0">
                   <Button 
                     variant="ghost" 
+                    size="sm"
                     onClick={() => setIsMenuOpen(true)} 
-                    className="p-0 h-auto text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-foreground hover:bg-transparent"
+                    className="text-gray-700 dark:text-gray-300 rounded-lg transition-all duration-200 hover:bg-primary/10 hover:text-primary active:bg-primary/20"
                   >
                     <ChevronLeft className="mr-1 h-4 w-4" />
                     {translate("Назад", "Back")}
@@ -281,7 +248,7 @@ export function MobileNavigation({
                     <motion.button
                       whileTap={{ scale: 0.98 }}
                       onClick={(e) => onServiceClick(service, e)}
-                      className="group flex w-full items-center gap-4 border-b border-gray-200 dark:border-gray-700 px-6 py-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200"
+                      className="group flex w-full items-center gap-4 border-b border-gray-200 dark:border-gray-700 px-4 py-3 text-left hover:bg-primary/10 dark:hover:bg-primary/20 transition-all duration-200"
                     >
                       <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-800">
                         <Image
@@ -313,7 +280,7 @@ export function MobileNavigation({
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="w-full justify-center text-primary hover:text-primary dark:text-primary-foreground dark:hover:text-primary-foreground hover:bg-primary/10 dark:hover:bg-primary/20"
+                    className="w-full justify-center text-primary hover:text-primary dark:text-primary-foreground dark:hover:text-primary-foreground rounded-lg transition-all duration-200 hover:bg-primary/10 active:bg-primary/20"
                     asChild
                   >
                     <Link href="/services">
