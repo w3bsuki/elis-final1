@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
-import { Feather, Sparkle } from "lucide-react";
+import React, { useEffect, useRef } from "react";
+import { useTranslation } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
-import { useLanguage } from "@/lib/LanguageContext";
 import { CONTAINER_WIDTH_CLASSES, CONTENT_WIDTH_CLASSES } from "@/lib/constants";
-
-// Import the extracted section components
-import { HeroSection, FeaturedContent } from "./HeroSection";
+import { useLanguage } from "@/lib/LanguageContext";
+import { HeroSection } from "./HeroSection";
+import { FeaturedContent } from "./FeaturedContent";
 import BooksSection from "./BooksSection";
 import ServicesSection from "./ServicesSection";
 import Testimonials from "./Testimonials";
@@ -16,7 +15,7 @@ import { Footer } from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 
 // Component props type
-interface HeroProps {
+export interface HeroProps {
   includeFooter?: boolean;
   noContainer?: boolean;
 }

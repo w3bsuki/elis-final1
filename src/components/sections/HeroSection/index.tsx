@@ -187,7 +187,7 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
             dark:shadow-[5px_5px_10px_rgba(0,0,0,0.25),-5px_-5px_10px_rgba(40,40,40,0.15)]">
           
           {/* Inner Neumorphic Container with green accent */}
-          <div className="bg-gradient-to-br from-white/90 via-white/80 to-green-50/50 dark:from-gray-900/90 dark:via-gray-900/80 dark:to-green-900/10 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 relative min-h-[calc(60vh-80px)] sm:min-h-[calc(60vh-100px)] flex flex-col justify-start shadow-inner border border-green-100/50 dark:border-green-900/30 text-center pt-8">
+          <div className="bg-gradient-to-br from-white/90 via-white/80 to-green-50/50 dark:from-gray-900/90 dark:via-gray-900/80 dark:to-green-900/10 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 relative min-h-[calc(60vh-80px)] sm:min-h-[calc(60vh-100px)] flex flex-col justify-start shadow-inner border border-green-100/50 dark:border-green-900/30 pt-8">
             {/* Subtle pattern background */}
             <div 
               className="absolute inset-0 bg-[url('/images/pattern-light.svg')] dark:bg-[url('/images/pattern-dark.svg')] opacity-[0.02] bg-repeat bg-[length:24px_24px] pointer-events-none rounded-lg"
@@ -198,134 +198,178 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
             <div className="absolute top-1/3 right-10 h-40 w-40 bg-green-200/20 dark:bg-green-900/10 rounded-full blur-3xl pointer-events-none"></div>
             <div className="absolute bottom-1/3 left-10 h-40 w-40 bg-green-100/20 dark:bg-green-900/10 rounded-full blur-3xl pointer-events-none"></div>
             
-            {/* Main hero content - Restructured for better consistency */}
-            <motion.div
-              variants={ANIMATIONS.container}
-              initial="hidden"
-              animate="visible"
-              className="space-y-6 sm:space-y-8 max-w-4xl mx-auto"
-              aria-live="polite"
-            >
-              {/* Avatar */}
-              <motion.div variants={shouldReduceMotion ? {} : ANIMATIONS.item} className="mb-4 sm:mb-6">
-                <div className="relative w-max mx-auto">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-green-400 to-green-500 rounded-full blur opacity-70 animate-pulse-slow"></div>
-                  <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-2 border-white dark:border-gray-800 relative">
-                    <AvatarImage src="/images/author-avatar.jpg" alt={profile.altText} />
-                    <AvatarFallback>{profile.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                </div>
-              </motion.div>
-              
-              {/* Badge */}
-              <motion.div variants={shouldReduceMotion ? {} : ANIMATIONS.item} className="mb-5 sm:mb-7">
-                <Badge variant="outline" className="px-3 py-1 sm:px-4 sm:py-1.5 rounded-full border-green-200 dark:border-green-900/40 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm
-                  shadow-[0_2px_5px_rgba(22,163,74,0.15)] text-xs sm:text-sm">
-                  <Heart className="w-4 h-4 mr-1.5 text-green-500 dark:text-green-400" aria-hidden="true" />
-                  <span className="font-medium text-green-700 dark:text-green-300">{profile.title}</span>
-                </Badge>
-              </motion.div>
-              
-              {/* Heading */}
-              <motion.h1 
-                variants={shouldReduceMotion ? {} : ANIMATIONS.item}
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-serif !leading-[1.15] text-gray-900 dark:text-white tracking-tight"
+            {/* Two-column layout for hero content */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center h-full">
+              {/* Left column: Author info */}
+              <motion.div
+                variants={ANIMATIONS.container}
+                initial="hidden"
+                animate="visible"
+                className="space-y-6 md:space-y-8 text-center md:text-left"
+                aria-live="polite"
               >
-                {ui.transformHeading}
-              </motion.h1>
-            
-              {/* Subheading */}
-              <motion.p 
-                variants={shouldReduceMotion ? {} : ANIMATIONS.item}
-                className="text-sm sm:text-base lg:text-lg text-gray-700 dark:text-gray-300 mx-auto max-w-2xl 
-                  px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-4 rounded-xl 
-                  bg-gradient-to-br from-white via-white to-green-50/50 dark:from-gray-800/80 dark:via-gray-800/80 dark:to-green-900/20
-                  backdrop-blur-sm 
-                  shadow-inner border border-green-100/50 dark:border-green-900/30 
-                  leading-relaxed"
-              >
-                {ui.aboutText}
-              </motion.p>
-            
-              {/* Expertise Areas Cards - Green accents */}
-              <motion.div 
-                variants={shouldReduceMotion ? {} : ANIMATIONS.item}
-                className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6" // Adjusted to always show 3 columns on sm+
-                role="navigation"
-                aria-label={language === 'en' ? "Areas of expertise" : "Области на експертиза"}
-              >
-                {expertiseAreas.map((area, index) => (
-                  <Link 
-                    key={index}
-                    href={area.url}
-                    className="bg-white/90 dark:bg-gray-800/90 
-                      backdrop-blur-sm rounded-xl p-6 sm:p-7
-                      shadow-[0_10px_30px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.01)]
-                      dark:shadow-[0_10px_30px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.05)]
-                      border border-gray-100 dark:border-gray-800 
-                      hover:bg-gradient-to-br hover:from-green-50 hover:to-white
-                      dark:hover:from-gray-800 dark:hover:to-gray-700
-                      hover:shadow-[0_14px_40px_rgba(0,0,0,0.12),0_0_0_1px_rgba(0,0,0,0.02)]
-                      dark:hover:shadow-[0_14px_40px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.07)]
-                      transition-all duration-300 group no-underline
-                      focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                    onKeyDown={(e) => handleCardKeyDown(e, area.url)}
-                    aria-label={`${area.title}: ${area.description}`}
-                  >
-                    <div className="flex flex-col items-center text-center">
-                      {/* Much larger icon with green gradient styling */}
-                      <div className="w-16 h-16 sm:w-20 sm:h-20 mb-4 sm:mb-5 
-                          bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20
-                          rounded-full flex items-center justify-center
-                          shadow-[0_6px_12px_rgba(0,0,0,0.06),0_0_0_1px_rgba(0,0,0,0.02)]
-                          dark:shadow-[0_6px_12px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.05)]
-                          group-hover:shadow-[0_8px_16px_rgba(22,163,74,0.15),0_0_0_1px_rgba(22,163,74,0.05)]
-                          dark:group-hover:shadow-[0_8px_16px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.08)]
-                          group-hover:scale-110 transition-all duration-300" 
-                      >
-                        <span className="text-3xl sm:text-4xl" aria-hidden="true">{area.icon}</span>
-                      </div>
-                      
-                      {/* Larger text with improved contrast and green accent on hover */}
-                      <h3 className="font-bold text-gray-900 dark:text-white text-lg sm:text-xl mb-2 
-                          group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">{area.title}</h3>
-                      <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed">{area.description}</p>
-                    </div>
-                  </Link>
-                ))}
-              </motion.div>
-            
-              {/* Call to action button - Green gradient theme */}
-              <motion.div variants={shouldReduceMotion ? {} : ANIMATIONS.item} className="flex justify-center">
-                <Button 
-                  variant="ghost" 
-                  size="lg" 
-                  className={cn(
-                    "rounded-full",
-                    "px-8 py-6", // Increased padding
-                    "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700", // Green gradient background
-                    "text-white font-bold text-base sm:text-lg", // Larger, bolder text
-                    "flex items-center gap-3", // Increased gap
-                    "transition-all duration-300",
-                    // Enhanced shadow for depth
-                    "shadow-[0_4px_14px_rgba(22,163,74,0.3),0_1px_3px_rgba(22,163,74,0.2)]",
-                    "hover:shadow-[0_6px_20px_rgba(22,163,74,0.4),0_1px_3px_rgba(22,163,74,0.2)]",
-                    "hover:translate-y-[-2px]", // Subtle rise effect on hover
-                    "active:translate-y-[1px] active:shadow-[0_2px_10px_rgba(22,163,74,0.25)]" // Press effect
-                  )}
-                  asChild
-                  aria-label={ui.consultationLabel}
+                {/* Avatar */}
+                <motion.div variants={shouldReduceMotion ? {} : ANIMATIONS.item} className="mb-4 sm:mb-6 mx-auto md:mx-0 w-max">
+                  <div className="relative">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-green-400 to-green-500 rounded-full blur opacity-70 animate-pulse-slow"></div>
+                    <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-2 border-white dark:border-gray-800 relative">
+                      <AvatarImage src="/images/author-avatar.jpg" alt={profile.altText} />
+                      <AvatarFallback>{profile.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                  </div>
+                </motion.div>
+                
+                {/* Badge */}
+                <motion.div variants={shouldReduceMotion ? {} : ANIMATIONS.item} className="mb-5 sm:mb-7 inline-flex md:justify-start justify-center w-full">
+                  <Badge variant="outline" className="px-3 py-1 sm:px-4 sm:py-1.5 rounded-full border-green-200 dark:border-green-900/40 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm
+                    shadow-[0_2px_5px_rgba(22,163,74,0.15)] text-xs sm:text-sm">
+                    <Heart className="w-4 h-4 mr-1.5 text-green-500 dark:text-green-400" aria-hidden="true" />
+                    <span className="font-medium text-green-700 dark:text-green-300">{profile.title}</span>
+                  </Badge>
+                </motion.div>
+                
+                {/* Author name */}
+                <motion.h1 
+                  variants={shouldReduceMotion ? {} : ANIMATIONS.item}
+                  className="text-3xl sm:text-4xl md:text-5xl font-bold font-serif !leading-[1.15] text-gray-900 dark:text-white tracking-tight"
                 >
-                  <Link 
-                    href="/contact?booking=true"
-                    className="flex items-center justify-center gap-2 sm:gap-3" 
+                  {profile.name}
+                </motion.h1>
+                
+                {/* Heading */}
+                <motion.h2 
+                  variants={shouldReduceMotion ? {} : ANIMATIONS.item}
+                  className="text-xl sm:text-2xl md:text-3xl font-bold font-serif !leading-[1.2] bg-gradient-to-r from-green-700 to-green-500 dark:from-green-400 dark:to-green-300 bg-clip-text text-transparent"
+                >
+                  {ui.transformHeading}
+                </motion.h2>
+              
+                {/* Subheading */}
+                <motion.p 
+                  variants={shouldReduceMotion ? {} : ANIMATIONS.item}
+                  className="text-sm sm:text-base lg:text-lg text-gray-700 dark:text-gray-300 mx-auto md:mx-0 max-w-md
+                    px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-4 rounded-xl 
+                    bg-gradient-to-br from-white via-white to-green-50/50 dark:from-gray-800/80 dark:via-gray-800/80 dark:to-green-900/20
+                    backdrop-blur-sm 
+                    shadow-inner border border-green-100/50 dark:border-green-900/30 
+                    leading-relaxed"
+                >
+                  {ui.aboutText}
+                </motion.p>
+              
+                {/* Call to action button - Green gradient theme */}
+                <motion.div variants={shouldReduceMotion ? {} : ANIMATIONS.item} className="flex justify-center md:justify-start">
+                  <Button 
+                    variant="ghost" 
+                    size="lg" 
+                    className={cn(
+                      "rounded-full",
+                      "px-6 py-5", 
+                      "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700", 
+                      "text-white font-bold text-base", 
+                      "flex items-center gap-2", 
+                      "transition-all duration-300",
+                      "shadow-[0_4px_14px_rgba(22,163,74,0.3),0_1px_3px_rgba(22,163,74,0.2)]",
+                      "hover:shadow-[0_6px_20px_rgba(22,163,74,0.4),0_1px_3px_rgba(22,163,74,0.2)]",
+                      "hover:translate-y-[-2px]", 
+                      "active:translate-y-[1px] active:shadow-[0_2px_10px_rgba(22,163,74,0.25)]"
+                    )}
+                    asChild
+                    aria-label={ui.consultationLabel}
                   >
-                    <SendIcon className="size-5 sm:size-6" aria-hidden="true" />
-                    <span>{ui.consultationLabel}</span>
-                  </Link>
-                </Button>
+                    <Link 
+                      href="/contact?booking=true"
+                      className="flex items-center justify-center gap-2" 
+                    >
+                      <SendIcon className="size-5" aria-hidden="true" />
+                      <span>{ui.consultationLabel}</span>
+                    </Link>
+                  </Button>
+                </motion.div>
               </motion.div>
-            </motion.div>
+              
+              {/* Right column: Featured Book */}
+              <motion.div
+                variants={ANIMATIONS.container}
+                initial="hidden"
+                animate="visible"
+                className="flex flex-col items-center justify-center h-full space-y-6"
+              >
+                {/* New book badge */}
+                <motion.div variants={shouldReduceMotion ? {} : ANIMATIONS.item} className="self-end mb-2">
+                  <Badge className="bg-green-500 hover:bg-green-600 px-3 py-1.5 text-white shadow-sm text-sm font-medium">
+                    {ui.newBadge}
+                  </Badge>
+                </motion.div>
+                
+                {/* Book component */}
+                <motion.div 
+                  variants={shouldReduceMotion ? {} : ANIMATIONS.item}
+                  className="transform hover:scale-105 transition-transform duration-300"
+                >
+                  <Book color="#4ade80" texture={true} depth={8} width={260}>
+                    <div className="p-6 text-center">
+                      <h3 className="text-xl font-bold text-black">{featuredBook.title}</h3>
+                      <p className="mt-2 text-sm text-gray-700">{language === 'en' ? "New Release" : "Ново издание"}</p>
+                    </div>
+                  </Book>
+                </motion.div>
+                
+                {/* Book metadata */}
+                <motion.div variants={shouldReduceMotion ? {} : ANIMATIONS.item} className="text-center space-y-3 max-w-md">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white 
+                    bg-gradient-to-r from-green-700 to-green-500 dark:from-green-400 dark:to-green-300 
+                    bg-clip-text text-transparent">
+                    {featuredBook.title}
+                  </h3>
+                  
+                  <div className="flex items-center justify-center space-x-4 text-sm">
+                    <div className="flex items-center text-gray-600 dark:text-gray-400">
+                      <BookOpen className="h-4 w-4 mr-1.5 text-green-500 dark:text-green-400" />
+                      <span>{featuredBook.pages} {ui.pages}</span>
+                    </div>
+                    <div className="flex items-center text-gray-600 dark:text-gray-400">
+                      <span className="text-xs">📅</span>
+                      <span className="ml-1">{ui.published}: {featuredBook.publishDate}</span>
+                    </div>
+                  </div>
+                  
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-base">
+                    {featuredBook.description}
+                  </p>
+                  
+                  {/* Book actions */}
+                  <div className="flex items-center justify-center gap-4 pt-3">
+                    <span className="text-lg font-bold text-green-600 dark:text-green-400">{featuredBook.price} лв.</span>
+                    
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="rounded-full border-green-200 dark:border-green-800 bg-white dark:bg-gray-800 hover:bg-green-50 dark:hover:bg-green-900/20 text-green-600 dark:text-green-400 shadow-sm transition-all duration-200"
+                      asChild
+                    >
+                      <Link 
+                        href={`/shop/book/${featuredBook.id}/preview`}
+                        className="flex items-center" 
+                      >
+                        {featuredBook.buttonText} <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+                    
+                    <Button 
+                      variant="default" 
+                      size="sm" 
+                      className="rounded-full bg-green-600 hover:bg-green-700 text-white shadow transition-all duration-200 hover:scale-[1.02] hover:brightness-110 active:scale-[0.98] active:brightness-95"
+                      asChild
+                    >
+                      <Link href={`/shop/book/${featuredBook.id}`}>
+                        {featuredBook.buyText}
+                      </Link>
+                    </Button>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>
