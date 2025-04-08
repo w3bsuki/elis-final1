@@ -263,8 +263,13 @@ export default function Hero({ includeFooter = false, noContainer = false }: Her
   if (noContainer) {
     return (
       <>
-        <HeroSection includeFooter={includeFooter} className="pt-0" />
+        <HeroSection includeFooter={false} className="pt-0" />
         <FeaturedContent />
+        {includeFooter && (
+          <div className="mt-16">
+            <Footer />
+          </div>
+        )}
       </>
     );
   }
@@ -318,11 +323,38 @@ export default function Hero({ includeFooter = false, noContainer = false }: Her
           </div>
         </div>
         
-        <HeroSection includeFooter={includeFooter} className="pt-0 relative z-10 bg-gradient-to-r from-transparent via-white/50 to-transparent p-3 sm:p-4 rounded-2xl backdrop-blur-sm" />
+        <HeroSection includeFooter={false} className="pt-0 relative z-10 bg-gradient-to-r from-transparent via-white/50 to-transparent p-3 sm:p-4 rounded-2xl backdrop-blur-sm" />
       </div>
       
-      {/* Featured Content section */}
+      {/* Featured Content section - as a standalone section */}
       <FeaturedContent />
+      
+      {/* Books Section */}
+      <div className="mt-16 mb-12">
+        <BooksSection />
+      </div>
+      
+      {/* Services Section */}
+      <div className="mt-16 mb-12">
+        <ServicesSection />
+      </div>
+      
+      {/* Testimonials Section */}
+      <div className="mt-16 mb-12">
+        <Testimonials />
+      </div>
+      
+      {/* Contact Section */}
+      <div className="mt-16 mb-12">
+        <Contact />
+      </div>
+      
+      {/* Footer Section */}
+      {includeFooter && (
+        <div className="mt-16">
+          <Footer />
+        </div>
+      )}
     </>
   );
 } 

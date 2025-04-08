@@ -329,33 +329,6 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
           </div>
         </div>
       </div>
-      
-      {/* Books Section */}
-      <div className="mt-16 mb-12">
-        <BooksSection />
-      </div>
-      
-      {/* Services Section */}
-      <div className="mt-16 mb-12">
-        <ServicesSection />
-      </div>
-      
-      {/* Testimonials Section */}
-      <div className="mt-16 mb-12">
-        <Testimonials />
-      </div>
-      
-      {/* Contact Section */}
-      <div className="mt-16 mb-12">
-        <Contact />
-      </div>
-      
-      {/* Footer Section - inside the same container */}
-      {includeFooter && (
-        <div className="mt-16">
-          <Footer />
-        </div>
-      )}
     </div>
   );
 }
