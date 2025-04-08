@@ -7,7 +7,7 @@ import { useLanguage } from "@/lib/LanguageContext";
 import { CONTAINER_WIDTH_CLASSES, CONTENT_WIDTH_CLASSES } from "@/lib/constants";
 
 // Import the extracted section components
-import { HeroSection } from "./HeroSection";
+import { HeroSection, FeaturedContent } from "./HeroSection";
 import BooksSection from "./BooksSection";
 import ServicesSection from "./ServicesSection";
 import Testimonials from "./Testimonials";
@@ -261,7 +261,12 @@ export default function Hero({ includeFooter = false, noContainer = false }: Her
   
   // If noContainer is true, render only HeroSection without the container
   if (noContainer) {
-    return <HeroSection includeFooter={includeFooter} className="pt-0" />;
+    return (
+      <>
+        <HeroSection includeFooter={includeFooter} className="pt-0" />
+        <FeaturedContent />
+      </>
+    );
   }
   
   // Otherwise, render with our own container (for backward compatibility)
@@ -315,6 +320,9 @@ export default function Hero({ includeFooter = false, noContainer = false }: Her
         
         <HeroSection includeFooter={includeFooter} className="pt-0 relative z-10 bg-gradient-to-r from-transparent via-white/50 to-transparent p-3 sm:p-4 rounded-2xl backdrop-blur-sm" />
       </div>
+      
+      {/* Featured Content section */}
+      <FeaturedContent />
     </>
   );
 } 

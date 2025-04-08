@@ -20,6 +20,8 @@ import ServicesSection from "../ServicesSection";
 import Testimonials from "../Testimonials";
 import { Contact } from "../Contact";
 import { Footer } from "@/components/layout/Footer";
+// Import Book component
+import { Book } from "@/components/ui/book";
 
 // Animations - memoized to avoid rerenders
 const ANIMATIONS = {
@@ -328,8 +330,93 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
         </div>
       </div>
       
-      {/* Featured Content Section - Enhanced styling */}
+      {/* Books Section */}
       <div className="mt-16 mb-12">
+        <BooksSection />
+      </div>
+      
+      {/* Services Section */}
+      <div className="mt-16 mb-12">
+        <ServicesSection />
+      </div>
+      
+      {/* Testimonials Section */}
+      <div className="mt-16 mb-12">
+        <Testimonials />
+      </div>
+      
+      {/* Contact Section */}
+      <div className="mt-16 mb-12">
+        <Contact />
+      </div>
+      
+      {/* Footer Section - inside the same container */}
+      {includeFooter && (
+        <div className="mt-16">
+          <Footer />
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Create a separate FeaturedContent component outside of the HeroSection
+export function FeaturedContent() {
+  const { language } = useLanguage();
+  
+  // Reuse the same hooks and data from HeroSection
+  const featuredBook = useMemo(() => ({
+    id: "1",
+    title: language === 'en' ? "Mindful Eating" : "Осъзнато хранене",
+    description: language === 'en' 
+      ? "Learn how to develop a healthier relationship with food and transform the way you eat."
+      : "Научете как да развиете по-здравословна връзка с храната и да трансформирате начина, по който се храните.",
+    price: "20.00",
+    pages: 240,
+    publishDate: "2023",
+    buttonText: language === 'en' ? "Read excerpt" : "Прочети откъс",
+    buyText: language === 'en' ? "Buy Now" : "Купи"
+  }), [language]);
+  
+  // Quick service previews
+  const quickServices = useMemo(() => [
+    {
+      id: "individual",
+      title: language === 'en' ? "Individual Therapy" : "Индивидуална терапия",
+      icon: "UserRound"
+    },
+    {
+      id: "art",
+      title: language === 'en' ? "Art Therapy" : "Арт терапия",
+      icon: "Palette" 
+    },
+    {
+      id: "couples",
+      title: language === 'en' ? "Couples Therapy" : "Терапия за двойки",
+      icon: "Heart"
+    }
+  ], [language]);
+  
+  const freeEbook = useMemo(() => ({
+    title: language === 'en' ? "Get Your Free eBook" : "Получете безплатна електронна книга",
+    description: language === 'en' 
+      ? "\"5 Techniques for Stress Management\" - delivered to your inbox"
+      : "\"5 Техники за Справяне със Стреса\" - директно във вашата пощенска кутия",
+    buttonText: language === 'en' ? "Subscribe Now" : "Абонирайте се сега"
+  }), [language]);
+  
+  // UI text translations
+  const ui = useMemo(() => ({
+    newBadge: language === 'en' ? "New" : "Ново",
+    pages: language === 'en' ? "pages" : "стр.",
+    published: language === 'en' ? "Published" : "Издадена",
+    featuredContent: language === 'en' ? "Featured Content" : "Препоръчано съдържание",
+    servicesHeader: language === 'en' ? "Services Offered" : "Предлагани услуги",
+  }), [language]);
+  
+  return (
+    <section className="mt-16 mb-12 pt-8 pb-8">
+      <div className={cn(CONTAINER_WIDTH_CLASSES, "px-4 mx-auto")}>
         <div className="text-center mb-10">
           <span className="inline-block px-3 py-1 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-sm font-medium rounded-full mb-3">
             {language === 'en' ? "Explore" : "Разгледайте"}
@@ -342,7 +429,7 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Featured Book */}
+          {/* Featured Book - Now using Book component */}
           <div className="rounded-2xl p-[3px] h-full
               bg-gradient-to-br from-green-100/80 via-white/90 to-green-50/80 
               dark:from-green-900/20 dark:via-gray-900/90 dark:to-gray-800/80 
@@ -362,6 +449,15 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
               </div>
               
               <div className="relative z-10 flex flex-col flex-1">
+                {/* Display the Book component */}
+                <div className="flex justify-center mb-6">
+                  <Book color="#4ade80" texture={true} depth={6} width={220}>
+                    <div className="p-4 text-center text-black dark:text-white">
+                      <h4 className="font-bold">{featuredBook.title}</h4>
+                    </div>
+                  </Book>
+                </div>
+                
                 {/* Book title - Larger and better spacing */}
                 <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 
                     bg-gradient-to-r from-green-700 to-green-500 dark:from-green-400 dark:to-green-300 
@@ -504,33 +600,6 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
           </div>
         </div>
       </div>
-      
-      {/* Books Section */}
-      <div className="mt-16 mb-12">
-        <BooksSection />
-      </div>
-      
-      {/* Services Section */}
-      <div className="mt-16 mb-12">
-        <ServicesSection />
-      </div>
-      
-      {/* Testimonials Section */}
-      <div className="mt-16 mb-12">
-        <Testimonials />
-      </div>
-      
-      {/* Contact Section */}
-      <div className="mt-16 mb-12">
-        <Contact />
-      </div>
-      
-      {/* Footer Section - inside the same container */}
-      {includeFooter && (
-        <div className="mt-16">
-          <Footer />
-        </div>
-      )}
-    </div>
+    </section>
   );
 } 
