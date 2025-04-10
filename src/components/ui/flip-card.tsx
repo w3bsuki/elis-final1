@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, ArrowRight } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,9 @@ interface FlipCardProps extends React.HTMLAttributes<HTMLDivElement> {
   // Other properties
   frontSubtitle?: string;
   frontIcon?: React.ReactNode;
+  frontFooter?: string;
   backTitle?: string;
+  backQuote?: string;
   subtitle?: string;
   backFeatures?: string[];
   backCta?: string;
@@ -45,7 +47,9 @@ export function FlipCard({
   // Other properties
   frontSubtitle,
   frontIcon,
+  frontFooter,
   backTitle,
+  backQuote,
   subtitle,
   backFeatures = [],
   backCta,
@@ -138,29 +142,31 @@ export function FlipCard({
         triggerMode === "hover" ? rotateClasses[0] : "",
         isFlipped ? rotateClasses[1] : ""
       )}>
-        {/* Front Side */}
+        {/* Front Side - Improved design */}
         <div className="flip-card-front absolute w-full h-full backface-hidden">
-          <div className="relative h-full rounded-xl overflow-hidden border border-primary/10 bg-white/95 dark:bg-gray-800/95 shadow-lg hover:shadow-xl transition-shadow">
-            {/* Image */}
+          <div className="relative h-full rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+            {/* Image with overlay gradient */}
             <div className="relative h-2/3 w-full overflow-hidden">
               {typeof finalImage === 'string' && finalImage ? (
-                <Image
-                  src={finalImage}
-                  alt={finalFrontTitle}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                />
+                <div className="h-full w-full relative">
+                  <Image
+                    src={finalImage}
+                    alt={finalFrontTitle}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                </div>
               ) : (
                 <div className="bg-gray-200 dark:bg-gray-700 h-full w-full flex items-center justify-center">
                   <span className="text-gray-500 dark:text-gray-400">No Image</span>
                 </div>
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
             </div>
             
-            {/* Popular Badge */}
+            {/* Popular Badge - repositioned to top center */}
             {popular && (
-              <div className="absolute top-4 right-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
+              <div className="absolute top-3 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-lg">
                 Popular
               </div>
             )}
@@ -168,38 +174,52 @@ export function FlipCard({
             {/* Content */}
             <div className="absolute bottom-0 w-full p-6 space-y-2">
               {frontIcon && (
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-2">
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary mb-2">
                   {frontIcon}
                 </div>
               )}
-              <h3 className="text-xl font-bold text-foreground">{finalFrontTitle}</h3>
+              <h3 className="text-2xl font-bold text-white drop-shadow-md leading-tight">{finalFrontTitle}</h3>
+              
               {frontSubtitle && (
-                <p className="text-sm text-muted-foreground">{frontSubtitle}</p>
+                <p className="text-sm text-gray-200 mb-1">{frontSubtitle}</p>
               )}
               
-              <div className="pt-2 text-sm text-primary font-medium flex items-center gap-1">
-                Learn more <ChevronRight className="h-4 w-4" />
+              {frontFooter && (
+                <p className="text-sm font-medium text-green-400 mt-1 pt-1">{frontFooter}</p>
+              )}
+              
+              <div className="pt-2 text-sm text-white/90 font-medium flex items-center gap-1">
+                Flip for details <ArrowRight className="h-3.5 w-3.5" />
               </div>
             </div>
           </div>
         </div>
         
-        {/* Back Side */}
+        {/* Back Side - Improved design */}
         <div className="flip-card-back absolute w-full h-full backface-hidden rotate-y-180">
-          <div className="h-full flex flex-col rounded-xl overflow-hidden border border-green-200/50 dark:border-green-800/30 bg-gradient-to-br from-green-50/80 to-white/90 dark:from-gray-800/90 dark:to-gray-900/80 shadow-xl p-4">
-            <h3 className="text-lg font-bold text-green-700 dark:text-green-400 mb-1.5 line-clamp-1">{finalBackTitle}</h3>
+          <div className="h-full flex flex-col rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl p-5">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 leading-tight">{finalBackTitle}</h3>
             
             {/* Description - using more space */}
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-2 line-clamp-6 flex-grow-0">{finalBackDescription}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">{finalBackDescription}</p>
+            
+            {/* Quote if available */}
+            {backQuote && (
+              <div className="mb-4 flex items-start p-3 bg-gray-50 dark:bg-gray-900/50 rounded-md border-l-4 border-green-500">
+                <p className="text-sm italic text-gray-600 dark:text-gray-300">
+                  "{backQuote}"
+                </p>
+              </div>
+            )}
             
             {backFeatures && backFeatures.length > 0 && (
-              <div className="mb-2">
-                <h4 className="text-xs font-semibold text-green-600 dark:text-green-400 mb-1">Details:</h4>
+              <div className="mb-4">
+                <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Features:</h4>
                 <ul className="grid grid-cols-2 gap-x-2 gap-y-1.5">
                   {backFeatures.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-1 text-xs col-span-1">
-                      <div className="h-3.5 w-3.5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mt-0.5 flex-shrink-0">
-                        <ChevronRight className="h-2 w-2 text-green-600 dark:text-green-400" />
+                    <li key={index} className="flex items-start gap-1.5 text-sm">
+                      <div className="h-4 w-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mt-0.5 flex-shrink-0">
+                        <ChevronRight className="h-2.5 w-2.5 text-green-600 dark:text-green-400" />
                       </div>
                       <span className="text-gray-700 dark:text-gray-300">{feature}</span>
                     </li>
@@ -209,13 +229,13 @@ export function FlipCard({
             )}
             
             {backCta && (
-              <div className="mt-auto pt-1">
+              <div className="mt-auto pt-2">
                 <Button 
                   onClick={(e) => {
                     e.stopPropagation();
                     onCtaClick?.();
                   }}
-                  className="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white border-0 py-1.5 h-auto text-sm"
+                  className="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white border-0 py-2.5 h-auto"
                 >
                   {backCta}
                 </Button>
