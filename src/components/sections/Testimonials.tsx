@@ -31,7 +31,7 @@ const testimonials = [
     role: "Автор",
     avatar: "/images/avatar/avatar.jpg",
     content:
-      "Много красива и нежна книга за истинско вдохновение и силата да докоснеш душата си! Подходяща, когато се чувстваш в криза и имаш нужда от подкрепа на ангелите.",
+      "Много красива и нежна книга за истинско вдохновение и силата да докоснеш душата си! Подходяща, когато се чувстваш в криза и имаш нужда от подкрепа на ангелите. Препоръчвам я от сърце на всеки, който търси светлина в трудни моменти.",
     source: "Instagram",
     book: "Ангелски послания"
   },
@@ -40,7 +40,7 @@ const testimonials = [
     role: "Психолог",
     avatar: "/images/avatar/avatar.jpg",
     content:
-      "От професионална гледна точка, подходът на ЕЛИС към осъзнатото хранене е солиден и базиран на доказателства, но представен по достъпен начин. Препоръчвам тази книга на всичките си клиенти, които се борят с хранителни навици.",
+      "От професионална гледна точка, подходът на ЕЛИС към осъзнатото хранене е солиден и базиран на доказателства, но представен по достъпен начин. Препоръчвам тази книга на всичките си клиенти, които се борят с хранителни навици. Тя променя начина, по който мислим за храната и тялото.",
     source: "LinkedIn",
     book: "Осъзнато хранене"
   },
@@ -49,8 +49,8 @@ const testimonials = [
     role: "Лекар",
     avatar: "/images/avatar/avatar.jpg",
     content:
-      "Като лекар, оценявам дълбоко как ЕЛИС интегрира научни принципи с духовни практики в 'Осъзнато хранене'. Тази книга запълва важна празнина в литературата за здравословен начин на живот. Проникновена и променяща живота.",
-    source: "Amazon Reviews",
+      "Като лекар, оценявам дълбоко как ЕЛИС интегрира научни принципи с духовни практики в 'Осъзнато хранене'. Тази книга запълва важна празнина в литературата за здравословен начин на живот. Проникновена и променяща живота книга, която всеки мой пациент трябва да прочете.",
+    source: "Ozone.bg",
     book: "Осъзнато хранене"
   },
   {
@@ -58,7 +58,7 @@ const testimonials = [
     role: "Коуч",
     avatar: "/images/avatar/avatar.jpg",
     content:
-      "Оооо, прекрасно е, Елис. Много свеж дизайн, идеята е чудесна. На празните места мога да си дописвам моите усещания.",
+      "Оооо, прекрасно е, Елис. Много свеж дизайн, идеята е чудесна. На празните места мога да си дописвам моите усещания. Това е точно каквото търсех - книга, която ме вдъхновява и същевременно ми дава пространство за собствени мисли и желания.",
     source: "Facebook",
     book: "Дневник на душата"
   },
@@ -67,7 +67,7 @@ const testimonials = [
     role: "Гримьор",
     avatar: "/images/avatar/avatar.jpg",
     content:
-      "Много ми харесаха стиховете, докоснаха ме. Личи си, че си ги писала 'от сърце и душа'.",
+      "Много ми харесаха стиховете, докоснаха ме. Личи си, че си ги писала 'от сърце и душа'. Всяка страница ме кара да се замисля за собствения ми живот и усещам как думите ти резонират с моите собствени търсения. Благодаря за тази красива книга!",
     source: "Email",
     book: "Послания от душата"
   },
@@ -76,7 +76,7 @@ const testimonials = [
     role: "Психолог",
     avatar: "/images/avatar/avatar.jpg",
     content:
-      "Елис, здравей. Прочетох книгата. Много съм впечатлена! Поздравявам те! Наистина мисля, че ТРЯБВА да издадеш тази книга. Кога успяваш с две малки деца да пишеш книги?",
+      "Елис, здравей. Прочетох книгата. Много съм впечатлена! Поздравявам те! Наистина мисля, че ТРЯБВА да издадеш тази книга. Кога успяваш с две малки деца да пишеш книги? Твоят подход към темата е толкова освежаващ и иновативен.",
     source: "Messenger",
     book: "Пътят към себе си"
   },
@@ -85,20 +85,29 @@ const testimonials = [
 // Memoized testimonial card component to reduce re-renders
 const TestimonialCard = memo(({ testimonial, getSourceColor }) => {
   return (
-    <Card className="h-[320px] p-6 select-none rounded-xl 
-      border border-gray-200/60 dark:border-gray-800/60 
-      bg-gradient-to-br from-white/90 to-blue-50/30 dark:from-gray-900/90 dark:to-blue-950/30
+    <Card className="h-[320px] p-[3px] select-none rounded-xl 
+      bg-gradient-to-br from-white/90 via-blue-100/20 to-white/90 dark:from-gray-900/90 dark:via-blue-900/20 dark:to-gray-900/90
       backdrop-blur-sm 
       shadow-[-5px_-5px_15px_rgba(255,255,255,0.8),_5px_5px_15px_rgba(0,0,0,0.08)] 
       dark:shadow-[-5px_-5px_15px_rgba(20,20,30,0.1),_5px_5px_15px_rgba(0,0,0,0.2)]
       transition-all duration-300 
       hover:shadow-[-2px_-2px_10px_rgba(255,255,255,0.6),_2px_2px_10px_rgba(0,0,0,0.1),_0_8px_20px_rgba(0,0,0,0.05)] 
       dark:hover:shadow-[-2px_-2px_10px_rgba(20,20,30,0.15),_2px_2px_10px_rgba(0,0,0,0.3),_0_8px_20px_rgba(0,0,0,0.15)]
-      hover:-translate-y-1"
+      hover:border-blue-300 dark:hover:border-blue-700
+      relative overflow-hidden"
     >
-      <div className="flex h-full flex-col">
+      {/* Inner card with nested styling */}
+      <div className="h-full w-full flex flex-col bg-white/90 dark:bg-gray-900/90 rounded-lg p-5 
+        border border-blue-100/30 dark:border-blue-900/30
+        hover:border-blue-300/50 dark:hover:border-blue-700/50
+        shadow-[inset_1px_1px_2px_rgba(0,0,0,0.01),inset_-1px_-1px_2px_rgba(255,255,255,0.25)]
+        dark:shadow-[inset_1px_1px_2px_rgba(0,0,0,0.05),inset_-1px_-1px_2px_rgba(255,255,255,0.05)]">
+        
+        {/* Add subtle decorative element */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-blue-100/40 to-transparent dark:from-blue-900/20 rounded-bl-3xl -z-1" />
+        
         <div className="flex justify-between items-start">
-          <div className="mb-6 flex gap-4">
+          <div className="mb-5 flex gap-4">
             <div className="relative">
               <Avatar className="size-16 rounded-full 
                 border-2 border-primary/20 
@@ -129,8 +138,8 @@ const TestimonialCard = memo(({ testimonial, getSourceColor }) => {
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 {testimonial.role}
               </p>
-              <div className="flex gap-1 mt-1 
-                p-1 rounded-lg 
+              <div className="inline-flex gap-1 mt-1 
+                p-1 rounded-full 
                 bg-gradient-to-br from-amber-50 to-amber-100/30 dark:from-amber-900/20 dark:to-amber-950/10
                 shadow-[inset_1px_1px_2px_rgba(0,0,0,0.05),_inset_-1px_-1px_2px_rgba(255,255,255,0.8)] 
                 dark:shadow-[inset_1px_1px_2px_rgba(0,0,0,0.2),_inset_-1px_-1px_2px_rgba(255,255,255,0.05)]"
@@ -143,30 +152,33 @@ const TestimonialCard = memo(({ testimonial, getSourceColor }) => {
           </div>
         </div>
         
-        <div className="relative flex-1 flex items-start">
-          <Quote className="text-primary/10 absolute -top-1 -left-1 size-8" />
-          <p className="pl-4 text-gray-700 dark:text-gray-300 relative z-10 line-clamp-5
-            py-3 px-4 rounded-xl
-            bg-gradient-to-br from-white/80 to-blue-50/30 dark:from-gray-800/80 dark:to-blue-950/20
-            shadow-[inset_2px_2px_5px_rgba(0,0,0,0.03),_inset_-2px_-2px_5px_rgba(255,255,255,0.7)] 
-            dark:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),_inset_-2px_-2px_5px_rgba(255,255,255,0.05)]
-            backdrop-blur-sm
-          ">
-            {testimonial.content}
-          </p>
+        {/* Use flex-1 and min-h-0 to ensure content doesn't push the badge out */}
+        <div className="flex-1 min-h-0 flex items-start mb-3">
+          <div className="bg-gradient-to-br from-white/90 to-blue-50/30 dark:from-gray-800/90 dark:to-blue-950/20
+            py-3 px-4 rounded-xl w-full overflow-hidden
+            shadow-[inset_2px_2px_4px_rgba(0,0,0,0.02),_inset_-2px_-2px_4px_rgba(255,255,255,0.5)] 
+            dark:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05),_inset_-2px_-2px_4px_rgba(255,255,255,0.03)]
+            relative"
+          >
+            <p className="text-gray-700 dark:text-gray-300 relative z-10 text-sm italic leading-relaxed line-clamp-4">
+              "{testimonial.content}"
+            </p>
+          </div>
         </div>
         
-        <div className="mt-2">
-          <Badge variant="outline" className="text-xs gap-1 items-center inline-flex 
-            border-primary/20 
-            py-1.5 px-3
-            bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800/50
-            shadow-[-2px_-2px_5px_rgba(255,255,255,0.7),_2px_2px_5px_rgba(0,0,0,0.08)] 
-            dark:shadow-[-2px_-2px_5px_rgba(20,20,30,0.1),_2px_2px_5px_rgba(0,0,0,0.2)]"
+        {/* Fix badge position at bottom, completely independent of content */}
+        <div className="flex justify-center mt-auto">
+          <div className="inline-flex items-center gap-2 
+            px-5 py-2 rounded-full 
+            bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-500 dark:to-blue-600
+            text-sm font-medium text-white
+            border border-blue-400/30 dark:border-blue-400/20
+            shadow-lg hover:shadow-xl
+            transition-all duration-300"
           >
-            <BookOpen className="size-3" />
+            <BookOpen className="size-4" />
             {testimonial.book}
-          </Badge>
+          </div>
         </div>
       </div>
     </Card>
@@ -198,18 +210,12 @@ export const Testimonials = () => {
     }),
   );
 
-  // Function to truncate text
-  const truncateText = (text: string) => {
-    if (text.length <= CHAR_LIMIT) return text;
-    return text.slice(0, CHAR_LIMIT) + "...";
-  };
-
   // Memoize source color function to prevent recalculations
   const getSourceColor = useMemo(() => (source: string) => {
     switch(source) {
       case "Instagram": return "bg-gradient-to-r from-pink-500 to-purple-500 text-white";
       case "LinkedIn": return "bg-blue-600 text-white";
-      case "Amazon Reviews": return "bg-amber-500 text-white";
+      case "Ozone.bg": return "bg-amber-500 text-white";
       case "Facebook": return "bg-blue-700 text-white";
       case "Email": return "bg-green-600 text-white";
       case "Messenger": return "bg-gradient-to-r from-blue-500 to-blue-600 text-white";
@@ -273,10 +279,20 @@ export const Testimonials = () => {
                   {/* Title with text color changed to black - smaller */}
                   <div className="flex flex-col items-start">
                     <h2 className="text-xl md:text-2xl font-bold font-serif antialiased relative
-                      text-gray-900 dark:text-white">
+                      text-gray-900 dark:text-white
+                      flex items-center gap-2">
                       {translate("Какво казват читателите", "What Readers Say")}
+                      {/* Add second icon */}
+                      <div className="rounded-full p-2
+                        bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800
+                        shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8),inset_1px_1px_1px_rgba(255,255,255,0.8),inset_-1px_-1px_1px_rgba(0,0,0,0.05)]
+                        dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1),inset_1px_1px_1px_rgba(50,50,50,0.1),inset_-1px_-1px_1px_rgba(0,0,0,0.1)]
+                        border border-blue-100/50 dark:border-blue-800/30 relative">
+                        <Quote className="w-5 h-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+                      </div>
                     </h2>
-                    <div className="h-0.5 w-3/4 mx-auto bg-gradient-to-r from-gray-500 to-gray-400 dark:from-gray-400 dark:to-gray-300 rounded-full mt-1"></div>
+                    {/* Remove underline by commenting it out */}
+                    {/* <div className="h-0.5 w-3/4 mx-auto bg-gradient-to-r from-gray-500 to-gray-400 dark:from-gray-400 dark:to-gray-300 rounded-full mt-1"></div> */}
                   </div>
                 </div>
               </div>
@@ -325,7 +341,7 @@ export const Testimonials = () => {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
-                      className="transform transition-all duration-300 hover:translate-y-[-8px]"
+                      className="transform transition-all duration-300"
                     >
                       <TestimonialCard 
                         testimonial={testimonial} 
@@ -343,16 +359,14 @@ export const Testimonials = () => {
             <div className="flex justify-center">
               <Link 
                 href="/testimonials" 
-                className="px-5 py-2 rounded-full 
-                  bg-gradient-to-br from-gray-800 to-black dark:from-gray-900 dark:to-black
+                className="inline-flex items-center gap-2 
+                  px-6 py-2.5 rounded-full 
+                  bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-500 dark:to-blue-600
                   text-white font-medium 
-                  border border-gray-700 dark:border-gray-800 
-                  shadow-[2px_2px_4px_rgba(0,0,0,0.1),-2px_-2px_4px_rgba(255,255,255,0.8)]
-                  dark:shadow-[2px_2px_4px_rgba(0,0,0,0.3),-2px_-2px_4px_rgba(30,30,30,0.15)]
-                  hover:shadow-[1px_1px_2px_rgba(0,0,0,0.05),-1px_-1px_2px_rgba(255,255,255,0.8),inset_1px_1px_2px_rgba(0,0,0,0.05),inset_-1px_-1px_2px_rgba(255,255,255,0.8)]
-                  dark:hover:shadow-[1px_1px_2px_rgba(0,0,0,0.2),-1px_-1px_2px_rgba(30,30,30,0.1),inset_1px_1px_2px_rgba(0,0,0,0.1),inset_-1px_-1px_2px_rgba(30,30,30,0.05)]
-                  transition-all duration-300 flex items-center gap-1.5"
-                >
+                  border border-blue-400/30 dark:border-blue-400/20
+                  shadow-lg hover:shadow-xl
+                  transition-all duration-300"
+              >
                 {translate("Вижте всички отзиви", "View All Testimonials")}
                 <ChevronRight className="w-4 h-4" />
               </Link>

@@ -204,12 +204,11 @@ export function ServicesGrid() {
               return (
                 <motion.div 
                   key={service.id} 
-                  className="snap-start flex-shrink-0 w-[320px] bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 flex flex-col"
+                  className="snap-start flex-shrink-0 w-[320px] bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-600 flex flex-col transition-all duration-300"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 0.5, delay: index * 0.05 }}
-                  whileHover={{ y: -5 }}
                 >
                   {/* Service Header */}
                   <div className="relative h-44 bg-gray-100 dark:bg-gray-700 overflow-hidden">
@@ -347,12 +346,11 @@ export function ServicesGrid() {
             
             {/* Add View All card at the end */}
             <motion.div 
-              className="snap-start flex-shrink-0 w-[320px] bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 flex flex-col"
+              className="snap-start flex-shrink-0 w-[320px] bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-600 flex flex-col transition-all duration-300"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              whileHover={{ y: -5 }}
             >
               <div className="flex items-center justify-center h-full p-8">
                 <div className="text-center space-y-4">
@@ -399,7 +397,7 @@ export function ServicesGrid() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          whileHover={{ scale: 1.05 }}
+          className="transition-all duration-300 hover:scale-[1.02]"
         >
           <Button
             variant="outline"

@@ -161,8 +161,8 @@ export function Contact() {
   return (
     <div className="relative z-0 py-12 pb-6 overflow-hidden">
       {/* Decorative background elements */}
-      <div className="absolute -top-1/2 -right-1/4 w-3/4 h-1/2 rounded-full bg-blue-200/30 dark:bg-blue-900/10 blur-3xl -z-10"></div>
-      <div className="absolute -bottom-1/2 -left-1/4 w-1/2 h-1/2 rounded-full bg-indigo-200/20 dark:bg-indigo-900/10 blur-3xl -z-10"></div>
+      <div className="absolute -top-1/2 -right-1/4 w-3/4 h-1/2 rounded-full bg-green-200/30 dark:bg-green-900/10 blur-3xl -z-10"></div>
+      <div className="absolute -bottom-1/2 -left-1/4 w-1/2 h-1/2 rounded-full bg-green-200/20 dark:bg-green-900/10 blur-3xl -z-10"></div>
       
       {/* Enhanced Contact Container with nested neumorphic styling */}
       <div className="rounded-2xl p-[5px] mb-4
@@ -173,7 +173,7 @@ export function Contact() {
           overflow-hidden">
         
         {/* Inner container with gradient and shadow effects */}
-        <div className="bg-gradient-to-br from-blue-50/30 via-white/40 to-blue-50/30 dark:from-blue-900/20 dark:via-gray-900/20 dark:to-blue-900/20 p-8 rounded-xl relative">
+        <div className="bg-gradient-to-br from-green-50/30 via-white/40 to-green-50/30 dark:from-green-900/20 dark:via-gray-900/20 dark:to-green-900/20 p-8 rounded-xl relative">
           {/* Inner shadow effect */}
           <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
           
@@ -184,34 +184,43 @@ export function Contact() {
               {/* Main title with badge-like appearance */}
               <div className="relative inline-flex items-center justify-center mb-4">
                 {/* Decorative gradient blob behind the title */}
-                <div className="absolute -z-10 w-full h-full scale-150 bg-gradient-to-br from-blue-400/20 via-sky-300/10 to-indigo-400/5 dark:from-blue-400/10 dark:via-sky-300/5 dark:to-indigo-400/5 blur-2xl rounded-full"></div>
+                <div className="absolute -z-10 w-full h-full scale-150 bg-gradient-to-br from-green-400/20 via-green-300/10 to-green-400/5 dark:from-green-400/10 dark:via-green-300/5 dark:to-green-400/5 blur-2xl rounded-full"></div>
                 
                 {/* Badge container */}
                 <div className="bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-900
                   px-5 py-3 rounded-xl
                   shadow-[4px_4px_10px_rgba(0,0,0,0.1),-4px_-4px_10px_rgba(255,255,255,0.9),inset_1px_1px_1px_rgba(255,255,255,0.8),inset_-1px_-1px_1px_rgba(0,0,0,0.05)]
                   dark:shadow-[4px_4px_10px_rgba(0,0,0,0.3),-4px_-4px_10px_rgba(30,30,30,0.2),inset_1px_1px_1px_rgba(50,50,50,0.1),inset_-1px_-1px_1px_rgba(0,0,0,0.1)]
-                  flex items-center gap-3 border border-blue-200/50 dark:border-blue-800/30">
+                  flex items-center gap-3 border border-green-200/50 dark:border-green-800/30">
                   
                   {/* Left icon with enhanced styling - smaller */}
                   <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-sky-300/20 blur-xl rounded-full"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-green-300/20 blur-xl rounded-full"></div>
                     <div className="rounded-full p-2
-                      bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800
+                      bg-gradient-to-br from-green-50 to-white dark:from-green-900/30 dark:to-gray-800
                       shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8),inset_1px_1px_1px_rgba(255,255,255,0.8),inset_-1px_-1px_1px_rgba(0,0,0,0.05)]
                       dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1),inset_1px_1px_1px_rgba(50,50,50,0.1),inset_-1px_-1px_1px_rgba(0,0,0,0.1)]
-                      border border-blue-100/50 dark:border-blue-800/30 relative">
-                      <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+                      border border-green-100/50 dark:border-green-800/30 relative">
+                      <Mail className="w-5 h-5 text-green-600 dark:text-green-400" aria-hidden="true" />
                     </div>
                   </div>
                   
                   {/* Title with text color changed to black - smaller */}
                   <div className="flex flex-col items-start">
                     <h2 className="text-xl md:text-2xl font-bold font-serif antialiased relative
-                      text-gray-900 dark:text-white">
+                      text-gray-900 dark:text-white
+                      flex items-center gap-2">
                       {translate("Връзка с автора", "Connect with Author")}
+                      {/* Add second icon */}
+                      <div className="rounded-full p-2
+                        bg-gradient-to-br from-green-50 to-white dark:from-green-900/30 dark:to-gray-800
+                        shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8),inset_1px_1px_1px_rgba(255,255,255,0.8),inset_-1px_-1px_1px_rgba(0,0,0,0.05)]
+                        dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1),inset_1px_1px_1px_rgba(50,50,50,0.1),inset_-1px_-1px_1px_rgba(0,0,0,0.1)]
+                        border border-green-100/50 dark:border-green-800/30 relative">
+                        <MessageSquare className="w-5 h-5 text-green-600 dark:text-green-400" aria-hidden="true" />
+                      </div>
                     </h2>
-                    <div className="h-0.5 w-3/4 mx-auto bg-gradient-to-r from-gray-500 to-gray-400 dark:from-gray-400 dark:to-gray-300 rounded-full mt-1"></div>
+                    {/* Remove underline */}
                   </div>
                 </div>
               </div>
@@ -231,16 +240,28 @@ export function Contact() {
           {/* Tabs for Contact/Booking */}
           <div className="relative z-10 max-w-4xl mx-auto mb-2">
             <Tabs defaultValue="booking" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto bg-blue-50/70 dark:bg-gray-800/70 border border-blue-200/50 dark:border-blue-800/20 p-1.5 rounded-full">
+              <TabsList className="flex w-full max-w-md mx-auto bg-white/60 dark:bg-gray-800/60 border-0 p-1 rounded-full shadow-md overflow-hidden focus-within:ring-0 focus-within:ring-offset-0">
                 <TabsTrigger 
                   value="booking" 
-                  className="text-sm gap-2 py-2.5 px-4 rounded-full data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300">
+                  className="flex-1 text-sm font-medium flex items-center justify-center gap-2 py-3 px-4 rounded-full
+                    data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-500 data-[state=active]:to-green-700
+                    data-[state=active]:text-white data-[state=active]:shadow-md
+                    data-[state=inactive]:text-gray-700 data-[state=inactive]:dark:text-gray-300
+                    data-[state=inactive]:hover:bg-gray-100/80 data-[state=inactive]:dark:hover:bg-gray-700/40
+                    border-0 transition-all duration-300 focus:ring-0 focus:outline-none focus-visible:ring-0"
+                >
                   <CalendarClock className="h-4 w-4" />
                   {translate("Резервирай", "Book")}
                 </TabsTrigger>
                 <TabsTrigger 
                   value="contact" 
-                  className="text-sm gap-2 py-2.5 px-4 rounded-full data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300">
+                  className="flex-1 text-sm font-medium flex items-center justify-center gap-2 py-3 px-4 rounded-full
+                    data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-500 data-[state=active]:to-green-700
+                    data-[state=active]:text-white data-[state=active]:shadow-md
+                    data-[state=inactive]:text-gray-700 data-[state=inactive]:dark:text-gray-300
+                    data-[state=inactive]:hover:bg-gray-100/80 data-[state=inactive]:dark:hover:bg-gray-700/40
+                    border-0 transition-all duration-300 focus:ring-0 focus:outline-none focus-visible:ring-0"
+                >
                   <MessageSquare className="h-4 w-4" />
                   {translate("Контакт", "Contact")}
                 </TabsTrigger>
@@ -254,7 +275,7 @@ export function Contact() {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <div className="bg-white/90 dark:bg-gray-800/90 border border-blue-200/40 dark:border-blue-800/30 rounded-xl p-5 shadow-md">
+                  <div className="bg-white/90 dark:bg-gray-800/90 border border-green-200/40 dark:border-green-800/30 rounded-xl p-5 shadow-md">
                     <BookingCalendar onBookingComplete={handleBookingComplete} />
                   </div>
                 </motion.div>
@@ -272,10 +293,10 @@ export function Contact() {
                   {/* Left Column - Newsletter & Contact Info */}
                   <div className="flex flex-col gap-6">
                     {/* Newsletter Card */}
-                    <div className="rounded-xl border border-blue-200/50 dark:border-blue-700/30 shadow-md overflow-hidden bg-white/90 dark:bg-gray-800/90">
-                      <div className="p-5">
+                    <div className="rounded-xl border border-green-200/50 dark:border-green-700/30 shadow-md overflow-hidden bg-white/90 dark:bg-gray-800/90 p-[3px]">
+                      <div className="p-5 bg-gradient-to-br from-white/95 to-green-50/50 dark:from-gray-800/95 dark:to-green-950/30 rounded-lg border border-green-100/30 dark:border-green-900/30">
                         <div className="flex items-center gap-3 mb-3">
-                          <div className="bg-blue-600 rounded-full p-2.5 shadow-md">
+                          <div className="bg-gradient-to-br from-green-500 to-green-700 rounded-full p-2.5 shadow-md">
                             <BookOpen className="h-5 w-5 text-white" />
                           </div>
                           <h3 className="text-lg font-bold text-gray-900 dark:text-white">
@@ -290,7 +311,7 @@ export function Contact() {
                           )}
                         </p>
                         
-                        <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-lg border border-blue-200/50 dark:border-blue-700/30 p-3 shadow-inner">
+                        <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-lg border border-green-200/50 dark:border-green-700/30 p-3 shadow-inner">
                           <NewsletterSignup 
                             variant="card"
                             showIcon={true}
@@ -300,33 +321,33 @@ export function Contact() {
                     </div>
                     
                     {/* Contact Information */}
-                    <div className="rounded-xl border border-blue-200/50 dark:border-blue-700/30 shadow-md overflow-hidden bg-white/90 dark:bg-gray-800/90">
-                      <div className="p-5">
+                    <div className="rounded-xl border border-green-200/50 dark:border-green-700/30 shadow-md overflow-hidden bg-white/90 dark:bg-gray-800/90 p-[3px]">
+                      <div className="p-5 bg-gradient-to-br from-white/95 to-green-50/50 dark:from-gray-800/95 dark:to-green-950/30 rounded-lg border border-green-100/30 dark:border-green-900/30">
                         <h3 className="text-lg font-bold mb-4 flex items-center">
-                          <div className="bg-blue-100 dark:bg-blue-800/40 p-2 rounded-full shadow-sm mr-2">
-                            <MessageSquare className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                          <div className="bg-green-100 dark:bg-green-800/40 p-2 rounded-full shadow-sm mr-2">
+                            <MessageSquare className="h-4 w-4 text-green-600 dark:text-green-400" />
                           </div>
                           {translate("Информация за контакт", "Contact Information")}
                         </h3>
                         
                         <div className="space-y-3">
                           <div className="flex items-start gap-3">
-                            <div className="mt-1 bg-blue-100 dark:bg-blue-800/40 p-2 rounded-full shadow-sm">
-                              <Mail className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                            <div className="mt-1 bg-green-100 dark:bg-green-800/40 p-2 rounded-full shadow-sm">
+                              <Mail className="h-4 w-4 text-green-600 dark:text-green-400" />
                             </div>
                             <div>
                               <h4 className="font-medium text-gray-900 dark:text-white text-sm">
                                 {translate("Имейл", "Email")}
                               </h4>
-                              <a href="mailto:contact@elis-author.com" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors">
+                              <a href="mailto:contact@elis-author.com" className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 text-sm transition-colors">
                                 contact@elis-author.com
                               </a>
                             </div>
                           </div>
                           
                           <div className="flex items-start gap-3">
-                            <div className="mt-1 bg-blue-100 dark:bg-blue-800/40 p-2 rounded-full shadow-sm">
-                              <MapPin className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                            <div className="mt-1 bg-green-100 dark:bg-green-800/40 p-2 rounded-full shadow-sm">
+                              <MapPin className="h-4 w-4 text-green-600 dark:text-green-400" />
                             </div>
                             <div>
                               <h4 className="font-medium text-gray-900 dark:text-white text-sm">
@@ -339,8 +360,8 @@ export function Contact() {
                           </div>
                           
                           <div className="flex items-start gap-3">
-                            <div className="mt-1 bg-blue-100 dark:bg-blue-800/40 p-2 rounded-full shadow-sm">
-                              <Calendar className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                            <div className="mt-1 bg-green-100 dark:bg-green-800/40 p-2 rounded-full shadow-sm">
+                              <Calendar className="h-4 w-4 text-green-600 dark:text-green-400" />
                             </div>
                             <div>
                               <h4 className="font-medium text-gray-900 dark:text-white text-sm">
@@ -354,7 +375,7 @@ export function Contact() {
                         </div>
                         
                         {/* Social Media Links */}
-                        <div className="mt-4 bg-white/60 dark:bg-gray-800/60 rounded-lg border border-blue-200/40 dark:border-blue-700/20 p-3 shadow-inner">
+                        <div className="mt-4 bg-white/60 dark:bg-gray-800/60 rounded-lg border border-green-200/40 dark:border-green-700/20 p-3 shadow-inner">
                           <h4 className="font-medium text-gray-900 dark:text-white mb-2 text-sm">
                             {translate("Последвайте ме", "Follow Me")}
                           </h4>
@@ -383,11 +404,11 @@ export function Contact() {
                   
                   {/* Right Column - Contact Form */}
                   <div>
-                    <div className="rounded-xl border border-blue-200/50 dark:border-blue-700/30 shadow-md overflow-hidden bg-white/90 dark:bg-gray-800/90">
-                      <div className="p-5">
+                    <div className="rounded-xl border border-green-200/50 dark:border-green-700/30 shadow-md overflow-hidden bg-white/90 dark:bg-gray-800/90 p-[3px]">
+                      <div className="p-5 bg-gradient-to-br from-white/95 to-green-50/50 dark:from-gray-800/95 dark:to-green-950/30 rounded-lg border border-green-100/30 dark:border-green-900/30">
                         <h3 className="text-lg font-bold mb-4 flex items-center">
-                          <div className="bg-blue-100 dark:bg-blue-800/40 p-2 rounded-full shadow-sm mr-2">
-                            <Send className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                          <div className="bg-green-100 dark:bg-green-800/40 p-2 rounded-full shadow-sm mr-2">
+                            <Send className="h-4 w-4 text-green-600 dark:text-green-400" />
                           </div>
                           {translate("Изпратете съобщение", "Send a Message")}
                         </h3>
@@ -408,7 +429,7 @@ export function Contact() {
                             </p>
                           </div>
                         ) : (
-                          <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-lg border border-blue-200/50 dark:border-blue-700/30 p-4 shadow-inner">
+                          <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-lg border border-green-200/50 dark:border-green-700/30 p-4 shadow-inner">
                             <form onSubmit={handleContactSubmit} className="space-y-3">
                               <div>
                                 <div className="relative">
@@ -421,10 +442,10 @@ export function Contact() {
                                       "pl-10 h-11 border-2 rounded-lg shadow-sm bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm",
                                       formErrors.name 
                                         ? "border-red-500 focus:border-red-500 focus:ring-red-500" 
-                                        : "border-blue-200/60 dark:border-blue-800/30 focus:border-blue-400"
+                                        : "border-green-200/60 dark:border-green-800/30 focus:border-green-400"
                                     )}
                                   />
-                                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500/70">
+                                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500/70">
                                     <User className="h-4 w-4" />
                                   </div>
                                 </div>
@@ -445,10 +466,10 @@ export function Contact() {
                                       "pl-10 h-11 border-2 rounded-lg shadow-sm bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm",
                                       formErrors.email 
                                         ? "border-red-500 focus:border-red-500 focus:ring-red-500" 
-                                        : "border-blue-200/60 dark:border-blue-800/30 focus:border-blue-400"
+                                        : "border-green-200/60 dark:border-green-800/30 focus:border-green-400"
                                     )}
                                   />
-                                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500/70">
+                                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500/70">
                                     <Mail className="h-4 w-4" />
                                   </div>
                                 </div>
@@ -464,9 +485,9 @@ export function Contact() {
                                     value={contactForm.subject}
                                     onChange={handleContactInputChange}
                                     placeholder={translate("Тема (незадължително)", "Subject (optional)")}
-                                    className="pl-10 h-11 border-2 border-blue-200/60 dark:border-blue-800/30 focus:border-blue-400 rounded-lg shadow-sm bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm"
+                                    className="pl-10 h-11 border-2 border-green-200/60 dark:border-green-800/30 focus:border-green-400 rounded-lg shadow-sm bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm"
                                   />
-                                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500/70">
+                                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500/70">
                                     <Sparkles className="h-4 w-4" />
                                   </div>
                                 </div>
@@ -483,10 +504,10 @@ export function Contact() {
                                       "pl-10 pt-8 border-2 h-28 rounded-lg shadow-sm bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm",
                                       formErrors.message 
                                         ? "border-red-500 focus:border-red-500 focus:ring-red-500" 
-                                        : "border-blue-200/60 dark:border-blue-800/30 focus:border-blue-400"
+                                        : "border-green-200/60 dark:border-green-800/30 focus:border-green-400"
                                     )}
                                   />
-                                  <div className="absolute left-3 top-8 text-blue-500/70">
+                                  <div className="absolute left-3 top-8 text-green-500/70">
                                     <MessageSquare className="h-4 w-4" />
                                   </div>
                                 </div>
@@ -498,7 +519,10 @@ export function Contact() {
                               <Button
                                 type="submit"
                                 disabled={contactStatus === "loading"}
-                                className="w-full py-6 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-2 h-11"
+                                className="w-full rounded-full bg-gradient-to-br from-green-600 to-green-800 dark:from-green-500 dark:to-green-700
+                                hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5
+                                text-white font-medium flex items-center justify-center gap-2 h-12
+                                border border-green-400/30 dark:border-green-400/20 shadow-lg"
                               >
                                 {contactStatus === "loading" ? (
                                   <span className="flex items-center">
@@ -510,7 +534,7 @@ export function Contact() {
                                   </span>
                                 ) : (
                                   <span className="flex items-center gap-1.5">
-                                    <Send className="h-4 w-4" />
+                                    <Send className="h-5 w-5" />
                                     {translate("Изпрати съобщение", "Send Message")}
                                   </span>
                                 )}

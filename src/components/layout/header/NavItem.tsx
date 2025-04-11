@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 
@@ -34,28 +33,25 @@ export function NavItem({
   size = 'default',
   baseClassName = cn(
     "flex items-center gap-2",
-    "rounded-lg",
-    "transition-all duration-150",
+    "rounded-full",
+    "transition-all duration-300",
     "relative",
     "hover:bg-primary/5 dark:hover:bg-primary/10",
-    "hover:scale-[1.01] active:scale-[0.99]",
+    "hover:shadow-sm",
     "active:bg-primary/10",
     "font-medium"
   ),
   activeClassName = cn(
-    "bg-background dark:bg-background",
+    "bg-background/80 dark:bg-background/60",
     "text-primary dark:text-primary",
-    "font-semibold",
+    "font-medium",
     "shadow-sm",
-    "border-b-2 border-primary",
-    "after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:rounded-t",
-    "after:animate-fadeIn after:opacity-100"
+    "border-primary/20 dark:border-primary/20"
   ),
   inactiveClassName = cn(
     "text-foreground/80 dark:text-foreground/80",
     "hover:text-primary dark:hover:text-primary",
-    "after:absolute after:bottom-0 after:left-1/2 after:right-1/2 after:h-0.5 after:bg-primary after:rounded-t",
-    "hover:after:left-0 hover:after:right-0 after:transition-all after:duration-200"
+    "hover:border-primary/20 dark:hover:border-primary/20"
   ),
 }: NavItemProps) {
   const pathname = usePathname();
@@ -68,38 +64,21 @@ export function NavItem({
   );
 
   const content = (
-    <motion.div
-      className="flex items-center gap-2 w-full"
-      whileHover={{ scale: 1.01 }}
-      whileTap={{ scale: 0.99 }}
-      transition={{ 
-        duration: 0.15,
-        type: "spring",
-        stiffness: 400,
-        damping: 30
-      }}
-    >
+    <div className="flex items-center gap-2 w-full">
       {Icon && (
-        <motion.div
-          initial={false}
-          animate={{ 
-            rotate: isActive ? 0 : 0,
-            scale: isActive ? 1.05 : 1
-          }}
-          transition={{ 
-            duration: 0.2, 
-            ease: "easeInOut"
-          }}
-        >
+        <div className={cn(
+          "transition-transform duration-300",
+          isActive && "scale-105"
+        )}>
           <Icon className={cn(
             "h-4 w-4 flex-shrink-0",
             isActive ? "text-primary" : "text-foreground/70"
           )} />
-        </motion.div>
+        </div>
       )}
       <span className="flex-1 whitespace-nowrap">{label}</span>
       {children}
-    </motion.div>
+    </div>
   );
 
   if (href) {

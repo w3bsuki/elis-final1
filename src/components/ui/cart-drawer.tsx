@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/LanguageContext";
 import { useCart } from "@/lib/CartContext";
-import { ShoppingCart, Trash2, Plus, Minus, X, Clock, Download, ArrowRight } from "lucide-react";
+import { ShoppingCart, Trash2, Plus, Minus, X, Clock, Download, ArrowRight, CheckCircle } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -222,6 +222,33 @@ export function CartDrawer() {
             )}
           </div>
 
+          {/* In-cart notification */}
+          {cartContext?.cartNotification && (
+            <div className="absolute left-0 right-0 bottom-[160px] px-6 z-20 pointer-events-auto">
+              <div className={cn(
+                "bg-green-500/10 border border-green-500/30 text-green-700 dark:text-green-400 dark:border-green-500/30 dark:bg-green-500/20",
+                "rounded-xl shadow-lg backdrop-blur-md transition-all duration-300 p-3 relative"
+              )}>
+                <div className="flex items-start">
+                  <div className="shrink-0 mr-2">
+                    <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <div className="grid gap-1 flex-1 mr-2">
+                    <h4 className="text-sm font-semibold">{cartContext.cartNotification.title}</h4>
+                    <p className="text-sm opacity-90">{cartContext.cartNotification.description}</p>
+                  </div>
+                  <button 
+                    onClick={cartContext.dismissCartNotification}
+                    className="rounded-md p-1.5 text-foreground/70 opacity-100 transition-opacity hover:text-foreground absolute right-1 top-1"
+                    aria-label="Close notification"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Footer */}
           {hasItems && (
             <div className="border-t border-border/40 bg-background/60 backdrop-blur-sm supports-[backdrop-filter]:bg-background/40 sticky bottom-0 z-10">
@@ -257,10 +284,13 @@ export function CartDrawer() {
                       handleSetIsCartOpen(false);
                       router.push("/checkout");
                     }}
-                    className="w-full rounded-full bg-primary hover:bg-primary/90 text-primary-foreground gap-2 shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="w-full rounded-full gap-2 shadow-lg hover:shadow-xl transition-all duration-300
+                      bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500
+                      text-white font-medium border border-green-400/20
+                      animate-subtle-pulse hover:scale-[1.02]"
                   >
                     {translate("Продължи към плащане", "Proceed to Checkout")}
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowRight className="h-4 w-4 ml-1" />
                   </Button>
                 </SafeComponent>
               </div>

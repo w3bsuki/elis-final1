@@ -20,6 +20,15 @@ export interface CartItem {
   itemData?: any; // Original item data
 }
 
+// Custom notification for inside cart
+export interface CartNotification {
+  id: string;
+  title: string;
+  description: string;
+  type: 'success' | 'error' | 'info';
+  createdAt: number;
+}
+
 export interface CartContextProps {
   cartItems: CartItem[];
   addToCart: (item: Book | Service | any, quantity?: number) => void;
@@ -30,6 +39,8 @@ export interface CartContextProps {
   subtotal: number;
   isCartOpen: boolean;
   setIsCartOpen: (isOpen: boolean) => void;
+  cartNotification: CartNotification | null;
+  dismissCartNotification: () => void;
 }
 
 const CartContext = createContext<CartContextProps>({
@@ -42,6 +53,8 @@ const CartContext = createContext<CartContextProps>({
   subtotal: 0,
   isCartOpen: false,
   setIsCartOpen: () => {},
+  cartNotification: null,
+  dismissCartNotification: () => {},
 });
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
@@ -50,6 +63,23 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const initialLoadRef = useRef(false);
+  // New state for cart notification
+  const [cartNotification, setCartNotification] = useState<CartNotification | null>(null);
+
+  // Dismiss notification
+  const dismissCartNotification = () => {
+    setCartNotification(null);
+  };
+
+  // Auto-dismiss notification after 3 seconds
+  useEffect(() => {
+    if (cartNotification) {
+      const timer = setTimeout(() => {
+        dismissCartNotification();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [cartNotification]);
 
   // Load cart from localStorage on initial render
   useEffect(() => {
@@ -143,10 +173,13 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       }
     });
 
-    // Show toast notification
-    toast({
+    // Create in-cart notification
+    setCartNotification({
+      id: Date.now().toString(),
       title: itemType === 'service' ? 'Service added to cart' : 'Added to cart',
       description: `${item.title || 'Item'} has been added to your cart.`,
+      type: 'success',
+      createdAt: Date.now()
     });
 
     // Open cart drawer after adding item
@@ -208,7 +241,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       totalItems,
       subtotal,
       isCartOpen,
-      setIsCartOpen
+      setIsCartOpen,
+      cartNotification,
+      dismissCartNotification
     }}>
       {children}
     </CartContext.Provider>
@@ -231,7 +266,9 @@ export const useCart = () => {
       totalItems: 0,
       subtotal: 0,
       isCartOpen: false,
-      setIsCartOpen: () => {}
+      setIsCartOpen: () => {},
+      cartNotification: null,
+      dismissCartNotification: () => {}
     };
   }
 }; 

@@ -26,8 +26,14 @@ export function HomePage({ includeFooter = true, noContainer = false }: HomePage
   
   return (
     <div className="min-h-screen">
-      {/* Completely unconstrained full width hero */}
-      <HeroSection includeFooter={false} />
+      {/* Hero section in a dedicated container with minimal vertical spacing */}
+      <div className={cn(
+        "hero-section-container mb-0",
+        "w-full max-w-none", // Remove container width classes for full width
+        "px-0" // Remove horizontal padding
+      )}>
+        <HeroSection includeFooter={false} className="w-full" />
+      </div>
       
       {/* Featured Content section */}
       <FeaturedContent />

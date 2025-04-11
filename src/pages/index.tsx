@@ -59,8 +59,8 @@ const Home: NextPage = () => {
         {/* Main content area with proper spacing from header */}
         <main className="pt-0 mt-0 overflow-hidden">
           <div className={CONTAINER_WIDTH_CLASSES}>
-            {/* Main content container */}
-            <div className="rounded-xl shadow-lg bg-white dark:bg-gray-800 p-4">
+            {/* Main content container with zero top padding */}
+            <div className="rounded-xl shadow-lg bg-white dark:bg-gray-800 pt-0 px-4 pb-4 w-full">
               <HomePage includeFooter={true} noContainer={true} />
             </div>
           </div>

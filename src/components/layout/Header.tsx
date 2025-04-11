@@ -9,6 +9,7 @@ import { useLanguage, useSafeLanguage } from "@/lib/LanguageContext";
 import Link from "next/link";
 import Image from "next/image";
 import { CONTAINER_WIDTH_CLASSES } from "@/lib/constants";
+import { useTheme } from "next-themes";
 
 // Header components
 import { Logo } from "./header/Logo";
@@ -95,6 +96,8 @@ export default function Header({ containedMode }: HeaderProps) {
   const headerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const router = useRouter();
+  const { theme, resolvedTheme } = useTheme();
+  const isDarkMode = resolvedTheme === 'dark';
   
   // Service preview states
   const [selectedService, setSelectedService] = useState<ServiceType | null>(null);
@@ -174,6 +177,7 @@ export default function Header({ containedMode }: HeaderProps) {
         "z-50 w-full",
         "transition-all duration-200",
         isScrolled ? "backdrop-blur-md" : "backdrop-blur-none",
+        isScrolled ? (isDarkMode ? "border-b border-green-950/30" : "border-b border-green-200/70") : "",
         containedMode ? "bg-background/95" : ""
       )}
       initial={{ y: -100 }}
@@ -184,9 +188,18 @@ export default function Header({ containedMode }: HeaderProps) {
         damping: 20
       }}
       style={{
-        // Dynamic background with smooth opacity transition based on scroll
-        backgroundColor: !containedMode && isScrolled ? `rgba(var(--background-rgb), ${bgOpacity})` : '',
-        boxShadow: isScrolled ? `0 1px 3px rgba(0,0,0,${bgOpacity * 0.1})` : 'none'
+        // Dynamic background with smooth opacity transition based on scroll and subtle green gradient
+        backgroundColor: !containedMode && isScrolled 
+          ? `rgba(var(--background-rgb), ${bgOpacity})` 
+          : '',
+        backgroundImage: isDarkMode
+          ? 'linear-gradient(to bottom, rgba(20, 83, 45, 0.15), rgba(20, 83, 45, 0.05))'
+          : 'linear-gradient(to bottom, rgba(240, 253, 244, 0.9), rgba(240, 253, 244, 0.7))',
+        boxShadow: isScrolled 
+          ? isDarkMode
+             ? `0 1px 3px rgba(0,0,0,${bgOpacity * 0.2}), 0 1px 2px rgba(20, 83, 45, 0.1)` 
+             : `0 1px 3px rgba(0,0,0,${bgOpacity * 0.1}), 0 1px 2px rgba(20, 83, 45, 0.05)` 
+          : 'none',
       }}
     >
       <div className={cn(

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, BookOpen, Star, Bookmark, Quote, BookMarked } from "lucide-react";
+import { ArrowRight, BookOpen, Star, Bookmark, Quote, BookMarked, Library } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ import { FlipCard } from "@/components/ui/flip-card";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion, useMotionValue, useTransform, useSpring, useScroll, useVelocity, useAnimationFrame } from "framer-motion";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 
@@ -38,7 +38,7 @@ const shopBooks = [
   },
   {
     id: "2",
-    title: "Вдъхновения - Книга 2",
+    title: "Вдъхновения - 2",
     description: "Продължение на поредицата с поетични размисли и насоки за личностно развитие. Текстове, които ви помагат да намерите своя път към щастието.",
     coverImage: "/images/books/vdahnovenia-kniga-2.png",
     price: "26.00",
@@ -52,7 +52,7 @@ const shopBooks = [
   },
   {
     id: "3",
-    title: "Вдъхновения - Книга 1",
+    title: "Вдъхновения - 1",
     description: "Сборник с вдъхновяващи мисли и поетични текстове. Идеален спътник в моменти на несигурност, предлагащ утеха и насърчение.",
     coverImage: "/images/books/vdahnovenia-kniga-1.png",
     price: "26.00",
@@ -80,7 +80,7 @@ const shopBooks = [
   },
   {
     id: "5",
-    title: "Дневник на щастието",
+    title: "Дневник щастие",
     description: "Изследване на аспектите на любовта и как да изградим здравословни взаимоотношения. Научете как да създавате удовлетворяващи връзки с другите.",
     coverImage: "/images/books/dnevnik-na-shtastieto.jpg",
     price: "28.50",
@@ -136,7 +136,7 @@ const featuredBooks = [
   },
   {
     id: "5",
-    title: "Дневник на щастието",
+    title: "Дневник щастие",
     description: "Изследване на аспектите на любовта и как да изградим здравословни взаимоотношения и удовлетворяващи връзки с другите.",
     coverImage: "/images/books/dnevnik-na-shtastieto.jpg",
     price: "28.50",
@@ -166,90 +166,41 @@ const EnhancedFlipCardBack = ({
   onCtaClick: () => void
 }) => {
   return (
-    <div className="h-full w-full p-4 flex flex-col justify-between rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md">
-      {/* Book title */}
-      <div className="mb-auto">
-        <h3 className="font-bold text-lg text-black dark:text-white mb-1.5 antialiased">
+    <div className="h-full w-full flex flex-col bg-white dark:bg-gray-800 rounded-xl p-5 relative overflow-hidden">
+      {/* Decorative element */}
+      <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-green-100/40 to-transparent dark:from-green-900/20 rounded-bl-3xl" />
+      
+      {/* Book title with accent */}
+      <div className="relative">
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 pr-8">
           {book.title}
         </h3>
-        
-        {/* Author info */}
-        <div className="flex items-center gap-1.5 mb-2">
-          <div className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 text-blue-600/80"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-          </div>
-          <span className="text-sm text-blue-600 dark:text-blue-400 font-medium">{book.author}</span>
-        </div>
-        
-        {/* Category badge */}
-        <span className="inline-block px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-700 text-black dark:text-white mb-2 antialiased font-medium">
-          {book.category}
-        </span>
-        
-        {/* Quote */}
-        <div className="mb-3 flex items-start p-2 bg-gray-50 dark:bg-gray-900/50 rounded-md">
-          <Quote className="w-4 h-4 text-green-500/70 mt-0.5 mr-1.5 flex-shrink-0" />
-          <p className="text-xs italic text-gray-600 dark:text-gray-400">
+        <div className="w-16 h-1 bg-green-500 rounded-full mb-5"></div>
+      </div>
+      
+      {/* Description - primary focus */}
+      <div className="flex-grow mb-5">
+        <p className="text-gray-700 dark:text-gray-300 leading-relaxed line-clamp-6">
+          {book.description}
+        </p>
+      </div>
+      
+      {/* Quote - if there's space */}
+      {book.quote && (
+        <div className="mb-6 pl-3 border-l-2 border-green-400 dark:border-green-600">
+          <p className="text-sm italic text-gray-600 dark:text-gray-400 line-clamp-2">
             "{book.quote}"
           </p>
         </div>
-        
-        {/* Description - without scroll, using multiple rows */}
-        <div className="mb-3">
-          <p className="text-sm text-black dark:text-white whitespace-normal antialiased">
-            {book.description}
-          </p>
-        </div>
-        
-        {/* Topics */}
-        <div className="mb-1">
-          <p className="text-xs font-medium text-black dark:text-white mb-1 antialiased">{translate("Теми", "Topics")}:</p>
-          <div className="flex flex-wrap gap-1">
-            {book.topics.map((topic, i) => (
-              <span 
-                key={i}
-                className="inline-block px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-700 text-black dark:text-white border border-gray-200 dark:border-gray-600 antialiased"
-              >
-                {topic}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
+      )}
       
-      {/* Book details and CTA */}
-      <div className="mt-auto">
-        {/* Book details */}
-        <div className="grid grid-cols-2 gap-1.5 text-xs text-black dark:text-white mb-2 border-t border-gray-200 dark:border-gray-700 pt-2 antialiased">
-          <div className="flex items-center gap-1.5">
-            <span className="w-4 h-4 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-              <BookOpen className="w-2.5 h-2.5 text-gray-600 dark:text-gray-300" />
-            </span>
-            <span>{translate("Страници", "Pages")}: {book.pages}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-4 h-4 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-              <span className="text-[8px] font-bold text-gray-600 dark:text-gray-300">лв</span>
-            </span>
-            <span>{translate("Цена", "Price")}: {book.price} лв.</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-4 h-4 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-              <span className="text-[8px] font-bold text-gray-600 dark:text-gray-300">📅</span>
-            </span>
-            <span>{translate("Издадена", "Published")}: {book.publishDate}</span>
-          </div>
-        </div>
-        
-        {/* CTA button */}
-        <button
-          onClick={onCtaClick}
-          className="w-full py-2 rounded-lg bg-gradient-to-r from-green-500 to-teal-500 text-white text-sm font-medium hover:from-green-600 hover:to-teal-600 transition-colors flex items-center justify-center gap-1 antialiased"
-        >
-          {translate("Купи сега", "Buy Now")}
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
-      </div>
+      {/* Button */}
+      <button
+        onClick={onCtaClick}
+        className="w-full py-2 rounded-md bg-green-500 hover:bg-green-600 text-white text-sm font-medium transition-colors shadow-sm"
+      >
+        {translate("Прочети повече", "Read More")}
+      </button>
     </div>
   );
 };
@@ -363,10 +314,18 @@ export default function BooksSection() {
                   {/* Title with text color changed to black - smaller */}
                   <div className="flex flex-col items-start">
                     <h2 className="text-xl md:text-2xl font-bold font-serif antialiased relative
-                      text-gray-900 dark:text-white">
+                      text-gray-900 dark:text-white
+                      flex items-center gap-2">
                       {translate("Моите книги", "My Books")}
+                      {/* Fixed second icon to match original */}
+                      <div className="rounded-full p-2
+                        bg-gradient-to-br from-green-50 to-white dark:from-green-900/30 dark:to-gray-800
+                        shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8),inset_1px_1px_1px_rgba(255,255,255,0.8),inset_-1px_-1px_1px_rgba(0,0,0,0.05)]
+                        dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1),inset_1px_1px_1px_rgba(50,50,50,0.1),inset_-1px_-1px_1px_rgba(0,0,0,0.1)]
+                        border border-green-100/50 dark:border-green-800/30 relative">
+                        <BookMarked className="w-5 h-5 text-green-600 dark:text-green-400" aria-hidden="true" />
+                      </div>
                     </h2>
-                    <div className="h-0.5 w-3/4 mx-auto bg-gradient-to-r from-gray-500 to-gray-400 dark:from-gray-400 dark:to-gray-300 rounded-full mt-1"></div>
                   </div>
                 </div>
               </div>
@@ -375,27 +334,10 @@ export default function BooksSection() {
               <div className="max-w-2xl mx-auto mb-5">
                 <p className="text-gray-700 dark:text-gray-300 text-base sm:text-lg antialiased leading-relaxed">
                   {translate(
-                    "Автор на поредица книги, посветени на личностното развитие, психологията и творческото мислене.",
-                    "Author of a series of books dedicated to personal development, psychology, and creative thinking."
+                    "Автор на поредица книги, посветени на личностното развитие",
+                    "Author of books dedicated to personal development"
                   )}
                 </p>
-              </div>
-              
-              {/* Enhanced instruction badge with glow effect */}
-              <div className="relative inline-flex">
-                <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 via-teal-300/20 to-green-400/20 dark:from-green-400/10 dark:via-teal-300/10 dark:to-green-400/10 blur-xl rounded-full -z-10"></div>
-                <div className="inline-flex items-center gap-2 px-6 py-2.5
-                  rounded-full bg-gradient-to-br from-green-50 to-white dark:from-gray-800 dark:to-gray-900
-                  text-base text-green-700 dark:text-green-400 
-                  border border-green-100/50 dark:border-green-800/30 
-                  shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8),inset_1px_1px_1px_rgba(255,255,255,0.8),inset_-1px_-1px_1px_rgba(0,0,0,0.05)]
-                  dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1),inset_1px_1px_1px_rgba(50,50,50,0.1),inset_-1px_-1px_1px_rgba(0,0,0,0.1)]">
-                  <BookOpen className="w-5 h-5 text-green-500" />
-                  {translate(
-                    "Задръжте или натиснете върху книга за повече информация",
-                    "Hover or tap on a book for more information"
-                  )}
-                </div>
               </div>
             </div>
           </div>
@@ -432,44 +374,39 @@ export default function BooksSection() {
                         </div>
                       </div>
                       
-                      {/* Side-by-side layout for cover and info */}
-                      <div className="flex gap-4 mb-4 mt-5">
-                        {/* Book cover with improved proportions and shadows */}
-                        <div className="aspect-[3/4] bg-white dark:bg-gray-800 rounded-lg relative overflow-hidden 
-                          shadow-md
-                          w-1/3 min-w-[100px]">
-                          <img 
-                            src={book.coverImage} 
-                            alt={book.title}
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              e.currentTarget.src = "https://via.placeholder.com/300x400/f8f9fa/495057?text=Book+Cover";
-                            }}
-                          />
-                        </div>
+                      {/* Nested card design with inner border */}
+                      <div className="rounded-lg border-2 border-gray-100 dark:border-gray-800 p-4 mb-4 mt-5
+                        bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800/90
+                        shadow-[inset_1px_1px_2px_rgba(0,0,0,0.01),inset_-1px_-1px_2px_rgba(255,255,255,0.25)]
+                        dark:shadow-[inset_1px_1px_2px_rgba(0,0,0,0.1),inset_-1px_-1px_2px_rgba(255,255,255,0.05)]">
                         
-                        {/* Book info with better typography and spacing */}
-                        <div className="w-2/3">
-                          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 leading-tight">
-                            {book.title}
-                          </h3>
-                          
-                          {/* Author with improved styling */}
-                          <div className="flex items-center mb-3">
-                            <div className="w-5 h-5 rounded-full 
-                              bg-blue-50 dark:bg-blue-900/30
-                              flex items-center justify-center 
-                              shadow-sm
-                              border border-blue-100/50 dark:border-blue-800/30 mr-1.5">
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 text-blue-600/80"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                            </div>
-                            <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">{book.author}</span>
+                        {/* Side-by-side layout for cover and info */}
+                        <div className="flex gap-4">
+                          {/* Book cover with improved proportions and shadows */}
+                          <div className="aspect-[3/4] bg-white dark:bg-gray-800 rounded-lg relative overflow-hidden 
+                            shadow-md
+                            w-1/3 min-w-[100px]">
+                            <img 
+                              src={book.coverImage} 
+                              alt={book.title}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.src = "https://via.placeholder.com/300x400/f8f9fa/495057?text=Book+Cover";
+                              }}
+                            />
                           </div>
                           
-                          {/* Description with better readability and more height */}
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 line-clamp-3 min-h-[3.6rem]">
-                            {book.description.substring(0, 150)}...
-                          </p>
+                          {/* Book info with better typography and spacing */}
+                          <div className="w-2/3">
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 leading-tight">
+                              {book.title}
+                            </h3>
+                            
+                            {/* Description with better readability and more height */}
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 line-clamp-4 min-h-[4.8rem]">
+                              {book.description}
+                            </p>
+                          </div>
                         </div>
                       </div>
                       
@@ -480,7 +417,7 @@ export default function BooksSection() {
                           { label: translate("Година", "Year"), value: book.publishDate, icon: <span className="text-xs font-bold text-green-600/80">📅</span> },
                           { label: translate("Цена", "Price"), value: `${book.price} лв.`, icon: <span className="text-xs font-bold text-green-600/80">лв</span> }
                         ].map((item, i) => (
-                          <div key={i} className="flex flex-col items-center p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                          <div key={i} className="flex flex-col items-center p-2 rounded-lg bg-gray-50/70 dark:bg-gray-800/70 border border-gray-100 dark:border-gray-700/50">
                             <div className="w-6 h-6 rounded-full 
                               bg-gradient-to-br from-green-50 to-white dark:from-green-900/30 dark:to-gray-800
                               flex items-center justify-center 
@@ -494,16 +431,11 @@ export default function BooksSection() {
                         ))}
                       </div>
                       
-                      {/* Quote with improved styling */}
-                      <div className="flex items-start mb-4 p-3 bg-gray-50/80 dark:bg-gray-800/50 rounded-lg border-l-4 border-green-400 dark:border-green-600">
-                        <Quote className="w-5 h-5 text-green-500/70 mt-0.5 mr-2 flex-shrink-0" />
-                        <p className="text-sm italic text-gray-600 dark:text-gray-400 line-clamp-2">
-                          "{book.quote}"
-                        </p>
-                      </div>
-                      
                       {/* CTA buttons with improved design */}
-                      <div className="flex gap-3 mt-auto">
+                      <div className="flex gap-3 mt-auto rounded-lg border-2 border-gray-100 dark:border-gray-800 p-3
+                        bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800/90
+                        shadow-[inset_1px_1px_2px_rgba(0,0,0,0.01),inset_-1px_-1px_2px_rgba(255,255,255,0.25)]
+                        dark:shadow-[inset_1px_1px_2px_rgba(0,0,0,0.1),inset_-1px_-1px_2px_rgba(255,255,255,0.05)]">
                         <Link 
                           href={`/shop/book/${book.id}`} 
                           className="flex-1 px-4 py-2.5 rounded-lg text-sm
@@ -511,7 +443,8 @@ export default function BooksSection() {
                             text-green-700 dark:text-green-400 font-medium
                             border border-green-200 dark:border-green-800/50 
                             shadow-sm hover:shadow-md transition-all duration-300 
-                            flex items-center justify-center"
+                            flex items-center justify-center
+                            hover:bg-gray-50 dark:hover:bg-gray-700/80"
                         >
                           <BookOpen className="w-4 h-4 mr-2" />
                           {translate("Детайли", "Details")}
@@ -524,7 +457,8 @@ export default function BooksSection() {
                             text-white font-medium
                             border border-green-400/50 dark:border-green-600/30 
                             shadow-sm hover:shadow-md transition-all duration-300
-                            flex items-center justify-center"
+                            flex items-center justify-center
+                            hover:from-green-600 hover:to-teal-600"
                         >
                           <ArrowRight className="w-4 h-4 mr-2" />
                           {translate("Купи", "Buy")}
@@ -555,8 +489,8 @@ export default function BooksSection() {
             <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
             
             {/* Subtle section header with neumorphic style */}
-            <div className="flex justify-between items-center mb-6 relative z-10">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5
+            <div className="flex justify-between items-center mb-2 relative z-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5
                 rounded-full bg-gradient-to-br from-green-50 to-white dark:from-green-900/20 dark:to-gray-800
                 text-green-700 dark:text-green-400 
                 border border-green-100/50 dark:border-green-800/30 
@@ -566,9 +500,32 @@ export default function BooksSection() {
                 <h3 className="text-base font-medium antialiased">
                   {translate("Всички книги", "All Books")}
                 </h3>
+                {/* Added library icon */}
+                <Library className="w-4 h-4 text-green-500 ml-1" />
+              </div>
+              
+              {/* Centered instruction badge */}
+              <div className="flex-1 flex justify-center mx-2">
+                <div className="relative inline-flex">
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 via-teal-300/20 to-green-400/20 dark:from-green-400/10 dark:via-teal-300/10 dark:to-green-400/10 blur-xl rounded-full -z-10"></div>
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5
+                    rounded-full bg-gradient-to-br from-green-50 to-white dark:from-gray-800 dark:to-gray-900
+                    text-sm text-green-700 dark:text-green-400 
+                    border border-green-100/50 dark:border-green-800/30 
+                    shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8),inset_1px_1px_1px_rgba(255,255,255,0.8),inset_-1px_-1px_1px_rgba(0,0,0,0.05)]
+                    dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1),inset_1px_1px_1px_rgba(50,50,50,0.1),inset_-1px_-1px_1px_rgba(0,0,0,0.1)]">
+                    <BookOpen className="w-4 h-4 text-green-500" />
+                    {translate(
+                      "Задръжте или натиснете върху книга за повече информация",
+                      "Hover or tap on a book for more information"
+                    )}
+                  </div>
+                </div>
               </div>
               
               <div className="inline-flex items-center gap-1.5">
+                {/* Remove instruction badge from here */}
+                
                 <Link 
                   href="/shop?category=books" 
                   className="px-3 py-1.5 rounded-full 
@@ -624,23 +581,34 @@ export default function BooksSection() {
                     className="w-72 flex-shrink-0
                       rounded-xl 
                       transform transition-all duration-300 hover:translate-y-[-5px]
-                      hover:shadow-xl"
+                      hover:shadow-xl
+                      group"
                   >
-                    <FlipCard
-                      frontImage={book.coverImage}
-                      frontTitle={book.title}
-                      frontSubtitle={book.author}
-                      frontIcon={<BookOpen className="h-4 w-4" />}
-                      frontFooter={book.price + " лв."}
-                      triggerMode="hover"
-                      onCtaClick={() => window.location.href = `/shop/book/${book.id}`}
-                      backTitle={book.title}
-                      backDescription={book.description}
-                      backQuote={book.quote}
-                      backFeatures={book.topics || []}
-                      backCta={translate("Купи сега", "Buy Now")}
-                      className="h-[380px] shadow-lg"
-                    />
+                    <div className="p-1 rounded-xl border-2 border-gray-100 dark:border-gray-800 
+                      bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800
+                      group-hover:from-green-50 group-hover:to-white dark:group-hover:from-green-900/30 dark:group-hover:to-gray-800/90
+                      transition-all duration-300">
+                      {/* Return to using FlipCard with better styling */}
+                      <FlipCard
+                        frontImage={book.coverImage}
+                        frontTitle={book.title}
+                        frontSubtitle={`${book.pages} ${translate("стр.", "pages")} • ${book.publishDate}`}
+                        frontIcon={<BookOpen className="h-4 w-4" />}
+                        frontFooter={book.price + " лв."}
+                        triggerMode="hover"
+                        onCtaClick={() => window.location.href = `/shop/book/${book.id}`}
+                        backComponent={
+                          <EnhancedFlipCardBack
+                            book={book}
+                            translate={translate}
+                            onCtaClick={() => window.location.href = `/shop/book/${book.id}`}
+                          />
+                        }
+                        className="h-[380px] shadow-lg"
+                        frontClassName="bg-white dark:bg-gray-800"
+                        backClassName="bg-white dark:bg-gray-800"
+                      />
+                    </div>
                   </div>
                 ))}
               </motion.div>

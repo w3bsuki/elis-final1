@@ -28,6 +28,7 @@ import { SocialLinks } from "./SocialLinks";
 import { NavItem } from './NavItem';
 import { useSafeLanguage } from "@/lib/LanguageContext";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { useTheme } from "next-themes";
 
 interface MobileNavigationProps extends NavigationProps {
   isMenuOpen: boolean | string;
@@ -46,6 +47,8 @@ export function MobileNavigation({
 }: MobileNavigationProps) {
   const { language } = useSafeLanguage();
   const pathname = usePathname();
+  const { resolvedTheme } = useTheme();
+  const isDarkMode = resolvedTheme === 'dark';
 
   // Navigation translations
   const navTranslations = {
@@ -151,14 +154,19 @@ export function MobileNavigation({
             exit="closed"
             className={cn(
               "fixed inset-x-0 top-[var(--header-height)]",
-              "bg-background/90 backdrop-blur-md", // Lighter blur
-              "border-b border-border/30", // Lighter border
-              "shadow-sm", // Lighter shadow
+              "bg-background/95 backdrop-blur-lg", 
+              "border-b border-green-200/60 dark:border-green-950/60",
+              "shadow-lg",
               "lg:hidden z-50",
-              "overflow-auto", // Allow scrolling for tall menus
-              "max-h-[calc(100vh-var(--header-height))]" // Constrain height
+              "overflow-auto", 
+              "max-h-[calc(100vh-var(--header-height))]"
             )}
-            style={{ '--header-height': `${headerHeight}px` } as any}
+            style={{ 
+              '--header-height': `${headerHeight}px`,
+              backgroundImage: isDarkMode
+                ? 'linear-gradient(to bottom, rgba(20, 83, 45, 0.15), rgba(20, 83, 45, 0.05))'
+                : 'linear-gradient(to bottom, rgba(240, 253, 244, 0.9), rgba(240, 253, 244, 0.7))'
+            } as any}
           >
             <div className="container mx-auto px-4 py-4">
               <nav className="mx-auto max-w-md w-full">
@@ -169,6 +177,7 @@ export function MobileNavigation({
                   {[
                     { href: "/about", label: navTranslations.about, icon: UserRound },
                     { href: "/shop", label: navTranslations.books, icon: BookOpen },
+                    { href: "/shop/services", label: navTranslations.services, icon: Sparkles },
                     { href: "/blog", label: navTranslations.blog, icon: Mail },
                     { href: "/contact", label: navTranslations.contact, icon: Mail }
                   ].map((item) => (

@@ -88,7 +88,7 @@ export default function App({ Component, pageProps }: AppProps) {
                   z-index: 9999 !important;
                 }
                 .hero-section {
-                  z-index: 0 !important;
+                  z-index: 1 !important;
                 }
                 #header-wrapper {
                   z-index: 9999 !important;
