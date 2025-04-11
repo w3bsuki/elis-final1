@@ -22,16 +22,50 @@ interface ServicePreviewDialogProps {
     duration?: string;
     price?: number;
     image?: string;
-  };
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  } | null;
+  isOpen?: boolean;
+  open?: boolean;
+  onClose?: () => void;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function ServicePreviewDialog({ service, open, onOpenChange }: ServicePreviewDialogProps) {
+export function ServicePreviewDialog({ service, isOpen, open, onClose, onOpenChange }: ServicePreviewDialogProps) {
   const { language } = useLanguage();
   
+  // Handle both isOpen/onClose and open/onOpenChange prop patterns
+  const isDialogOpen = isOpen !== undefined ? isOpen : open;
+  const handleOpenChange = (newOpen: boolean) => {
+    if (onOpenChange) {
+      onOpenChange(newOpen);
+    } else if (onClose && !newOpen) {
+      onClose();
+    }
+  };
+  
+  // If service is null, render nothing or a placeholder
+  if (!service) {
+    return (
+      <Dialog open={!!isDialogOpen} onOpenChange={handleOpenChange}>
+        <DialogContent className="sm:max-w-md border-2 border-purple-600 dark:border-purple-700 p-0 overflow-hidden rounded-lg shadow-lg">
+          <div className="p-6 bg-white dark:bg-gray-900">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold text-gray-900 dark:text-white">
+                {language === 'bg' ? 'Услуга не е избрана' : 'No service selected'}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="mt-6 flex justify-end">
+              <Button onClick={() => handleOpenChange(false)}>
+                {language === 'bg' ? 'Затвори' : 'Close'}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+  
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={!!isDialogOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md border-2 border-purple-600 dark:border-purple-700 p-0 overflow-hidden rounded-lg shadow-lg">
         <div className="relative">
           <AspectRatio ratio={16/9} className="w-full">
@@ -45,7 +79,7 @@ export function ServicePreviewDialog({ service, open, onOpenChange }: ServicePre
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
               <button 
-                onClick={() => onOpenChange(false)}
+                onClick={() => handleOpenChange(false)}
                 className="absolute top-3 right-3 p-1.5 rounded-full bg-black/30 text-white hover:bg-black/50 transition-colors"
                 aria-label="Close dialog"
               >

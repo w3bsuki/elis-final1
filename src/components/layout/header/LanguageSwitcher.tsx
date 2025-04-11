@@ -1,73 +1,41 @@
 "use client";
 
 import React from "react";
-import { LanguagesIcon } from "lucide-react";
+import { Languages } from "lucide-react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { useSafeLanguage } from "@/lib/LanguageContext";
 import { Button } from "@/components/ui/button";
-import { useSafeLanguage } from "@/hooks/useSafeLanguage";
 
-const nestedGlassStyle = cn(
-  "border border-border/70", 
-  "shadow-inner", 
-  "bg-clip-padding backdrop-filter backdrop-blur-sm bg-background/75", 
-  "text-foreground", 
-  "transition-all duration-200 ease-in-out", 
-  "hover:bg-background/85 hover:shadow-sm hover:border-border", 
-  "active:bg-background/95 active:scale-[0.98] active:shadow-inner",
-  "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 dark:focus-visible:ring-offset-background"
-);
-
-export default function LanguageSwitcher() {
+export function LanguageSwitcher() {
   const { language, setLanguage } = useSafeLanguage();
 
-  const toggleLanguage = (lang: string) => {
-    if (setLanguage) {
-      setLanguage(lang);
-    }
+  const toggleLanguage = () => {
+    setLanguage(language === 'en' ? 'bg' : 'en');
   };
 
   return (
-    <div className="relative">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button 
-            variant="ghost" 
-            size="sm"
-            className={cn(nestedGlassStyle, "rounded-lg px-2 h-10 w-10", "flex items-center justify-center")}
-          >
-            <LanguagesIcon className="h-5 w-5" />
-            <span className="sr-only">Change language</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="z-[150]">
-          <DropdownMenuItem 
-            onClick={() => toggleLanguage('en')}
-            className={cn(
-              "flex items-center",
-              language === 'en' ? "font-medium" : "font-normal"
-            )}
-          >
-            <span className="mr-2">🇬🇧</span>
-            <span>English</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem 
-            onClick={() => toggleLanguage('bg')}
-            className={cn(
-              "flex items-center",
-              language === 'bg' ? "font-medium" : "font-normal"
-            )}
-          >
-            <span className="mr-2">🇧🇬</span>
-            <span>Български</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+    <motion.div
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+    >
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={toggleLanguage}
+        className={cn(
+          "relative w-10 h-10 rounded-lg",
+          "hover:bg-primary/10 dark:hover:bg-primary/20",
+          "active:bg-primary/20 dark:active:bg-primary/30",
+          "transition-colors duration-200"
+        )}
+        aria-label={language === 'en' ? 'Switch to Bulgarian' : 'Switch to English'}
+      >
+        <Languages className="h-5 w-5" />
+        <span className="absolute -bottom-1 -right-1 text-[10px] font-medium bg-primary text-primary-foreground rounded-sm px-1">
+          {language === 'en' ? 'EN' : 'BG'}
+        </span>
+      </Button>
+    </motion.div>
   );
 } 

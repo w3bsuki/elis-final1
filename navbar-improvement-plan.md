@@ -30,24 +30,111 @@ The website currently uses a single Header component (`src/components/layout/Hea
 
 ### 1. Standardize Button Components
 
+#### Button Variants
+Use these specific variants for different purposes:
+
+1. Primary Actions:
 ```tsx
-// Standardize all navbar buttons to use consistent variant, size and radius
-<Button 
-  variant="ghost"  // Use ghost for nav items, accent for primary actions
-  size="sm"        // Use sm size consistently 
-  className="rounded-lg" // Standard corner radius
->
-  {content}
+<Button variant="default">
+  Primary Action
 </Button>
 ```
+- Use for main calls-to-action
+- Examples: "Add to Cart", "Checkout", "Submit"
 
-- Apply consistent variant use across all navigation buttons:
-  - Regular nav links: `ghost` variant
-  - Theme toggle: `ghost` variant
-  - Language switcher: `ghost` variant
-  - Cart/Shop button: `accent` variant
-- Standardize all icon and text buttons to same size (`sm`)
-- Use consistent corner radius (recommend `rounded-lg`) 
+2. Secondary Actions:
+```tsx
+<Button variant="secondary">
+  Secondary Action
+</Button>
+```
+- Use for alternative actions
+- Examples: "View Details", "Learn More"
+
+3. Navigation/Menu Items:
+```tsx
+<Button variant="ghost">
+  Menu Item
+</Button>
+```
+- Use for navigation links and menu items
+- Examples: Mobile menu toggle, dropdown triggers
+
+4. Outline/Border Actions:
+```tsx
+<Button variant="outline">
+  Outline Action
+</Button>
+```
+- Use for less prominent actions
+- Examples: "Cancel", "Back", secondary navigation
+
+#### Button Sizes
+
+1. Default Size:
+```tsx
+<Button size="default">
+  Normal Button
+</Button>
+```
+- Use for most buttons in the interface
+
+2. Small Size:
+```tsx
+<Button size="sm">
+  Small Button
+</Button>
+```
+- Use for compact UI elements
+- Examples: Filter buttons, tags, secondary actions
+
+3. Icon Buttons:
+```tsx
+<Button size="icon" variant="ghost">
+  <Icon className="h-5 w-5" />
+</Button>
+```
+- Use for icon-only buttons
+- Examples: Theme toggle, menu toggle, close buttons
+
+4. Large Size:
+```tsx
+<Button size="lg">
+  Large Button
+</Button>
+```
+- Use sparingly for important actions
+- Examples: Primary CTAs on hero sections
+
+#### Standard Classes
+
+Always include these classes for consistent styling:
+```tsx
+className={cn(
+  "rounded-lg", // Consistent corner radius
+  "transition-all duration-200", // Smooth transitions
+  "hover:bg-primary/10 dark:hover:bg-primary/20", // Hover states
+  "active:bg-primary/20" // Active states
+)}
+```
+
+#### Implementation Priority
+
+1. Navigation Components:
+- Mobile menu toggle → `variant="ghost" size="icon"`
+- Language switcher → `variant="ghost" size="sm"`
+- Theme toggle → `variant="ghost" size="icon"`
+- Navigation links → `variant="ghost" size="default"`
+
+2. Shop/Cart Components:
+- Add to cart → `variant="default" size="lg"`
+- View cart → `variant="outline" size="default"`
+- Checkout → `variant="default" size="lg"`
+
+3. Form Components:
+- Submit buttons → `variant="default" size="lg"`
+- Cancel buttons → `variant="outline" size="default"`
+- Helper actions → `variant="ghost" size="sm"`
 
 ### 2. Enhance Desktop Navigation
 

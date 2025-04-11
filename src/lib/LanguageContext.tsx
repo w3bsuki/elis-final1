@@ -25,11 +25,24 @@ const defaultValue: LanguageContextType = {
 const LanguageContext = createContext<LanguageContextType | null>(null);
 
 export const useLanguage = () => {
+  // Use React's useState to create a fallback when context is not available
+  const [fallbackLanguage, setFallbackLanguage] = useState('bg');
+  
+  // Try to use the context
   const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
+  
+  // If context is available, return it
+  if (context) {
+    return context;
   }
-  return context;
+  
+  // If context is not available, return a fallback
+  console.warn('useLanguage used outside of LanguageProvider, using fallback');
+  return {
+    language: fallbackLanguage,
+    setLanguage: setFallbackLanguage,
+    translations: translationsData as TranslationsType
+  };
 };
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
@@ -53,4 +66,31 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </LanguageContext.Provider>
   );
-}; 
+};
+
+// Custom hook that safely uses language context
+export function useSafeLanguage() {
+  const [language, setLanguage] = useState('bg'); // Default to Bulgarian
+  const [setLanguageFunc, setSetLanguageFunc] = useState<((lang: string) => void) | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    try {
+      const context = useLanguage();
+      if (isMounted) {
+        setLanguage(context.language);
+        setSetLanguageFunc(() => context.setLanguage);
+      }
+    } catch (e) {
+      console.warn("Language context not available, using default.", e);
+      if (isMounted && !setLanguageFunc) {
+        setSetLanguageFunc(() => (newLang: string) => {
+          if (isMounted) setLanguage(newLang);
+        });
+      }
+    }
+    return () => { isMounted = false; };
+  }, []);
+
+  return { language, setLanguage: setLanguageFunc || ((lang: string) => setLanguage(lang)) };
+} 

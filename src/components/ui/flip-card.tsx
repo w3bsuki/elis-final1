@@ -172,23 +172,23 @@ export function FlipCard({
             )}
             
             {/* Content */}
-            <div className="absolute bottom-0 w-full p-6 space-y-2">
+            <div className="absolute bottom-0 w-full p-6 space-y-2 bg-gradient-to-t from-white via-white/90 to-white/0 dark:from-gray-800 dark:via-gray-800/90 dark:to-gray-800/0">
               {frontIcon && (
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary mb-2">
                   {frontIcon}
                 </div>
               )}
-              <h3 className="text-2xl font-bold text-white drop-shadow-md leading-tight">{finalFrontTitle}</h3>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white drop-shadow-md leading-tight">{finalFrontTitle}</h3>
               
               {frontSubtitle && (
-                <p className="text-sm text-gray-200 mb-1">{frontSubtitle}</p>
+                <p className="text-sm text-gray-700 dark:text-gray-200 mb-1">{frontSubtitle}</p>
               )}
               
               {frontFooter && (
-                <p className="text-sm font-medium text-green-400 mt-1 pt-1">{frontFooter}</p>
+                <p className="text-sm font-medium text-green-600 dark:text-green-400 mt-1 pt-1">{frontFooter}</p>
               )}
               
-              <div className="pt-2 text-sm text-white/90 font-medium flex items-center gap-1">
+              <div className="pt-2 text-sm text-gray-700 dark:text-white/90 font-medium flex items-center gap-1">
                 Flip for details <ArrowRight className="h-3.5 w-3.5" />
               </div>
             </div>

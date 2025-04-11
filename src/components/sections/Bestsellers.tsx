@@ -15,6 +15,20 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FlipCard } from "@/components/ui/flip-card";
 
+// Add keyframes for animations
+const fadeInUpAnimation = `
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
 // Define types
 interface Book {
   id: string;
@@ -77,12 +91,19 @@ const BookCard = ({ book, onBookClick, formatCategory, getDisplayTitle, language
   return (
     <div 
       key={book.id} 
-      className={`flex flex-col h-full min-h-[500px] group relative overflow-hidden rounded-xl transition-all duration-300 bg-white dark:bg-gray-800/50 shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1)] hover:shadow-[0px_4px_16px_rgba(22,163,74,0.15),_0px_8px_24px_rgba(22,163,74,0.15)] dark:shadow-[0px_4px_16px_rgba(0,0,0,0.2)] ${tabType === 'digital' ? 'border-l-4 border-blue-500 dark:border-blue-600' : 'border-l-4 border-green-500 dark:border-green-600'}`}
+      className={`flex flex-col h-full min-h-[480px] group relative overflow-hidden rounded-xl transition-all duration-300 
+        bg-white dark:bg-gray-800/50 
+        shadow-[0px_4px_16px_rgba(17,17,26,0.08),_0px_8px_24px_rgba(17,17,26,0.08)] 
+        hover:shadow-[0px_8px_24px_rgba(22,163,74,0.18),_0px_16px_56px_rgba(22,163,74,0.15)] 
+        transform hover:-translate-y-1 
+        ${tabType === 'digital' 
+          ? 'border-l-4 border-blue-500 dark:border-blue-600' 
+          : 'border-l-4 border-green-500 dark:border-green-600'}`}
     >
       {/* Bestseller badge - improved styling */}
       {(book.featured && showBestsellerBadge) && (
         <div className="absolute top-4 right-4 z-30">
-          <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-3 py-1.5 rounded-full shadow-lg font-medium text-xs flex items-center gap-1.5">
+          <div className="bg-gradient-to-r from-amber-400 to-amber-500 text-black px-3 py-1.5 rounded-full shadow-md font-medium text-xs flex items-center gap-1.5 backdrop-blur-sm">
             <TrendingUp className="h-3 w-3" />
             {language === 'en' ? 'Bestseller' : 'Бестселър'}
           </div>
@@ -92,7 +113,7 @@ const BookCard = ({ book, onBookClick, formatCategory, getDisplayTitle, language
       {/* Digital badge - if applicable */}
       {(book.digital && showDigitalBadge) && (
         <div className={`absolute ${book.featured && showBestsellerBadge ? 'top-14' : 'top-4'} right-4 z-30`}>
-          <div className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-3 py-1.5 rounded-full shadow-lg font-medium text-xs flex items-center gap-1.5">
+          <div className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-3 py-1.5 rounded-full shadow-md font-medium text-xs flex items-center gap-1.5 backdrop-blur-sm">
             <Download className="h-3 w-3" />
             {language === 'en' ? 'Digital' : 'Дигитална'}
           </div>
@@ -101,17 +122,19 @@ const BookCard = ({ book, onBookClick, formatCategory, getDisplayTitle, language
       
       {/* Category badge - top left */}
       <div className="absolute top-4 left-4 z-30">
-        <div className={`bg-gradient-to-r ${getCategoryColor(book.category)} px-3 py-1.5 rounded-full shadow-lg font-medium text-xs`}>
+        <div className={`bg-gradient-to-r ${getCategoryColor(book.category)} px-3 py-1.5 rounded-full shadow-md font-medium text-xs backdrop-blur-sm`}>
           {formatCategory(book.category)}
         </div>
       </div>
       
       {/* Book cover with proper container for flip animation */}
-      <div className={`relative p-6 pt-14 pb-2 h-[280px] flex items-center justify-center ${tabType === 'digital' ? 'bg-gradient-to-br from-blue-50/50 to-blue-100/50 dark:from-blue-900/20 dark:to-blue-800/20' : 'bg-gradient-to-br from-gray-50/50 to-gray-100/50 dark:from-gray-800/30 dark:to-gray-900/30'}`}>
+      <div className={`relative p-6 pt-14 pb-2 h-[260px] flex items-center justify-center ${tabType === 'digital' 
+        ? 'bg-gradient-to-br from-blue-50/50 to-blue-100/50 dark:from-blue-900/20 dark:to-blue-800/20' 
+        : 'bg-gradient-to-br from-gray-50/50 to-gray-100/50 dark:from-gray-800/30 dark:to-gray-900/30'}`}>
         <div className="absolute inset-0 opacity-50 pointer-events-none"></div>
         
         {/* Fixed sizing container for consistent flip behavior */}
-        <div className="w-[150px] h-[220px] relative">
+        <div className="w-[140px] h-[200px] relative">
           <FlipCard
             image={book.coverImage || "/images/books/placeholder-cover.png"}
             title={book.title}
@@ -128,7 +151,9 @@ const BookCard = ({ book, onBookClick, formatCategory, getDisplayTitle, language
           <Button 
             size="icon" 
             variant="secondary" 
-            className={`h-9 w-9 rounded-full bg-white/95 dark:bg-gray-800/95 shadow-[0px_8px_16px_rgba(0,0,0,0.1)] hover:bg-white dark:hover:bg-gray-800 backdrop-blur-sm ${tabType === 'digital' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'}`}
+            className={`h-9 w-9 rounded-full bg-white/95 dark:bg-gray-800/95 shadow-[0px_8px_16px_rgba(0,0,0,0.1)] 
+              hover:bg-white dark:hover:bg-gray-800 backdrop-blur-sm 
+              ${tabType === 'digital' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'}`}
             onClick={handleClick}
             title={language === 'en' ? 'Quick view' : 'Бърз преглед'}
           >
@@ -138,18 +163,24 @@ const BookCard = ({ book, onBookClick, formatCategory, getDisplayTitle, language
       </div>
       
       {/* Book details - redesigned with elegant styling */}
-      <div className={`flex flex-col flex-grow p-5 backdrop-blur-sm rounded-b-xl ${tabType === 'digital' ? 'bg-gradient-to-b from-white to-blue-50 dark:from-gray-800/80 dark:to-blue-900/40' : 'bg-gradient-to-b from-white to-gray-50 dark:from-gray-800/80 dark:to-gray-900/80'}`}>
-        <div className="flex items-start justify-between mb-2">
-          <h3 className="font-bold text-gray-900 dark:text-white text-base">{getDisplayTitle(book)}</h3>
-          <span className={`font-bold text-base ml-2 ${tabType === 'digital' ? 'text-blue-600 dark:text-blue-400' : 'text-green-600 dark:text-green-400'}`}>{book.price?.toFixed(0)}{language === 'en' ? ' BGN' : 'лв'}</span>
+      <div className={`flex flex-col flex-grow p-5 backdrop-blur-sm rounded-b-xl ${tabType === 'digital' 
+        ? 'bg-gradient-to-b from-white to-blue-50 dark:from-gray-800/80 dark:to-blue-900/40' 
+        : 'bg-gradient-to-b from-white to-gray-50 dark:from-gray-800/80 dark:to-gray-900/80'}`}>
+        <div className="flex items-start justify-between mb-3">
+          <h3 className="font-bold text-gray-900 dark:text-white text-base line-clamp-2">{getDisplayTitle(book)}</h3>
+          <span className={`font-bold text-base ml-2 ${tabType === 'digital' 
+            ? 'text-blue-600 dark:text-blue-400' 
+            : 'text-green-600 dark:text-green-400'}`}>{book.price?.toFixed(0)}{language === 'en' ? ' BGN' : 'лв'}</span>
         </div>
         
-        <div className="flex items-center gap-2 mb-2">
-          <FileText className="h-3.5 w-3.5 text-gray-500" />
-          <span className="text-xs text-gray-600 dark:text-gray-300">{book.pages} {language === 'en' ? 'pages' : 'стр.'}</span>
+        <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center gap-2 px-2 py-1 rounded-md bg-gray-50 dark:bg-gray-700/30">
+            <FileText className="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" />
+            <span className="text-xs text-gray-600 dark:text-gray-300">{book.pages} {language === 'en' ? 'pages' : 'стр.'}</span>
+          </div>
         </div>
         
-        <p className="text-xs text-gray-600 dark:text-gray-300 mb-3 line-clamp-2 flex-grow">
+        <p className="text-xs text-gray-600 dark:text-gray-300 mb-4 line-clamp-2 flex-grow">
           {book.description}
         </p>
         
@@ -159,10 +190,10 @@ const BookCard = ({ book, onBookClick, formatCategory, getDisplayTitle, language
             variant="outline"
             size="sm"
             className={cn(
-              "flex-1 h-9 text-xs border border-black dark:border-gray-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.2)] transition-all duration-300 rounded-md",
+              "flex-1 h-9 text-xs font-medium rounded-lg transition-all duration-300",
               tabType === 'digital' 
-                ? "border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-blue-950/30" 
-                : "border-green-600 text-green-600 hover:bg-green-50 dark:border-green-500 dark:text-green-500 dark:hover:bg-green-950/30"
+                ? "border-blue-200 bg-blue-50/50 text-blue-600 hover:bg-blue-100 hover:border-blue-300 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-400 dark:hover:bg-blue-900/30" 
+                : "border-green-200 bg-green-50/50 text-green-600 hover:bg-green-100 hover:border-green-300 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400 dark:hover:bg-green-900/30"
             )}
             onClick={handleClick}
           >
@@ -173,10 +204,10 @@ const BookCard = ({ book, onBookClick, formatCategory, getDisplayTitle, language
           <Button 
             size="sm"
             className={cn(
-              "flex-1 h-9 text-xs border border-black dark:border-gray-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.2)] transition-all duration-300 rounded-md text-white",
+              "flex-1 h-9 text-xs font-medium rounded-lg transition-all duration-300 text-white",
               tabType === 'digital' 
-                ? "bg-blue-600 hover:bg-blue-700" 
-                : "bg-green-600 hover:bg-green-700"
+                ? "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-sm" 
+                : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-sm"
             )}
             asChild
           >
@@ -218,12 +249,17 @@ const ServiceCard = ({ service, language }: {
   return (
     <div 
       key={service.id} 
-      className="flex flex-col h-full min-h-[500px] group relative overflow-hidden rounded-xl transition-all duration-300 bg-white dark:bg-gray-800/50 shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1)] hover:shadow-[0px_4px_16px_rgba(22,163,74,0.15),_0px_8px_24px_rgba(22,163,74,0.15)] dark:shadow-[0px_4px_16px_rgba(0,0,0,0.2)] border-r-4 border-green-500 dark:border-green-600"
+      className="flex flex-col h-full min-h-[480px] group relative overflow-hidden rounded-xl transition-all duration-300 
+        bg-white dark:bg-gray-800/50 
+        shadow-[0px_4px_16px_rgba(17,17,26,0.08),_0px_8px_24px_rgba(17,17,26,0.08)] 
+        hover:shadow-[0px_8px_24px_rgba(147,51,234,0.18),_0px_16px_56px_rgba(147,51,234,0.15)] 
+        transform hover:-translate-y-1  
+        border-r-4 border-purple-500 dark:border-purple-600"
     >
       {/* Featured badge - if applicable */}
       {service.featured && (
         <div className="absolute top-4 right-4 z-30">
-          <div className="bg-gradient-to-r from-green-400 to-green-500 text-white px-3 py-1.5 rounded-full shadow-lg font-medium text-xs flex items-center gap-1.5">
+          <div className="bg-gradient-to-r from-green-400 to-green-500 text-white px-3 py-1.5 rounded-full shadow-md font-medium text-xs flex items-center gap-1.5 backdrop-blur-sm">
             <Star className="h-3 w-3" />
             {language === 'en' ? 'Featured' : 'Препоръчано'}
           </div>
@@ -232,16 +268,16 @@ const ServiceCard = ({ service, language }: {
       
       {/* Service type badge - top left */}
       <div className="absolute top-4 left-4 z-30">
-        <div className={`bg-gradient-to-r ${getServiceTypeColor(service.category)} px-3 py-1.5 rounded-full shadow-lg font-medium text-xs`}>
+        <div className={`bg-gradient-to-r ${getServiceTypeColor(service.category)} px-3 py-1.5 rounded-full shadow-md font-medium text-xs backdrop-blur-sm`}>
           {service.category === 'individual' ? (language === 'en' ? 'Individual' : 'Индивидуална') : (language === 'en' ? 'Package' : 'Пакет')}
         </div>
       </div>
       
       {/* Service image area */}
-      <div className="relative p-6 pt-14 pb-2 h-[280px] flex items-center justify-center bg-gradient-to-br from-gray-50/50 to-gray-100/50 dark:from-gray-800/30 dark:to-gray-900/30">
+      <div className="relative p-6 pt-14 pb-2 h-[240px] flex items-center justify-center bg-gradient-to-br from-gray-50/50 to-gray-100/50 dark:from-gray-800/30 dark:to-gray-900/30">
         <div className="absolute inset-0 opacity-50 pointer-events-none"></div>
         
-        <div className="w-full h-full relative rounded-lg overflow-hidden shadow-lg">
+        <div className="w-full h-full relative rounded-lg overflow-hidden shadow-md">
           {/* Placeholder colored gradient with service icon */}
           <div className={`absolute inset-0 ${getServicePlaceholderColor(service.category)} flex items-center justify-center`}>
             {service.category === 'individual' ? (
@@ -251,84 +287,92 @@ const ServiceCard = ({ service, language }: {
             )}
           </div>
           
-          {/* Fallback to author image with overlay */}
-          <div className="absolute inset-0 flex items-center justify-center">
+          {/* Service image */}
+          {service.coverImage && (
             <Image
-              src="/images/avatar/avatar.jpg"
+              src={service.coverImage}
               alt={service.title}
               fill
-              className="object-cover opacity-30"
+              className="object-cover mix-blend-overlay opacity-60"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-          </div>
+          )}
           
-          {/* Service title overlay */}
-          <div className="absolute bottom-0 left-0 w-full p-4 text-white z-10">
-            <h3 className="text-xl font-bold">{service.title}</h3>
+          {/* Overlay with service title */}
+          <div className="absolute inset-0 flex flex-col justify-end p-4 text-white bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+            <h3 className="text-lg font-bold mb-2 leading-tight">{service.title}</h3>
+            <div className="flex items-center gap-2 mb-1">
+              <Clock className="h-3.5 w-3.5 opacity-80" />
+              <span className="text-xs font-medium opacity-90">{service.duration}</span>
+            </div>
           </div>
-        </div>
-        
-        {/* Quick action button */}
-        <div className="absolute top-14 right-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-110">
-          <Button 
-            size="icon" 
-            variant="secondary" 
-            className="h-9 w-9 rounded-full bg-white/95 dark:bg-gray-800/95 shadow-[0px_8px_16px_rgba(0,0,0,0.1)] hover:bg-white dark:hover:bg-gray-800 backdrop-blur-sm text-green-600 dark:text-green-400"
-            asChild
-          >
-            <Link href={`/services/${service.id}`}>
-              <Calendar className="h-4 w-4" />
-            </Link>
-          </Button>
         </div>
       </div>
       
       {/* Service details */}
-      <div className="flex flex-col flex-grow p-5 backdrop-blur-sm rounded-b-xl bg-gradient-to-b from-white to-gray-50 dark:from-gray-800/80 dark:to-gray-900/80">
-        <div className="flex items-start justify-between mb-2">
-          <h3 className="font-bold text-gray-900 dark:text-white text-base">{service.title}</h3>
-          <span className="font-bold text-base text-green-600 dark:text-green-400 ml-2">{service.price.toFixed(0)}{language === 'en' ? ' BGN' : 'лв'}</span>
+      <div className="flex flex-col flex-grow p-5 backdrop-blur-sm rounded-b-xl bg-gradient-to-b from-white to-purple-50/50 dark:from-gray-800/80 dark:to-purple-900/20">
+        {/* Price display */}
+        <div className="flex justify-between items-center mb-3">
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-purple-100/80 dark:bg-purple-900/30">
+            <Clock className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
+            <span className="text-xs font-medium text-purple-700 dark:text-purple-300">{service.duration}</span>
+          </div>
+          <span className="font-bold text-base text-purple-600 dark:text-purple-400">{service.price.toFixed(0)}{language === 'en' ? ' BGN' : 'лв'}</span>
         </div>
         
-        <div className="flex items-center gap-2 mb-2">
-          <Clock className="h-3.5 w-3.5 text-gray-500" />
-          <span className="text-xs text-gray-600 dark:text-gray-300">{service.duration}</span>
-        </div>
-        
-        <p className="text-xs text-gray-600 dark:text-gray-300 mb-3 line-clamp-2 flex-grow">
+        {/* Description */}
+        <p className="text-xs text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 flex-grow">
           {service.description}
         </p>
         
-        {/* Action buttons */}
-        <div className="flex gap-2 mt-auto">
-          {service.relatedBookId && (
-            <Button 
-              variant="outline"
-              size="sm"
-              className={cn(
-                "flex-1 h-9 text-xs border border-black dark:border-gray-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.2)] transition-all duration-300 rounded-md",
-                "border-green-600 text-green-600 hover:bg-green-50 dark:border-green-500 dark:text-green-500 dark:hover:bg-green-950/30"
+        {/* Includes list - if available */}
+        {service.includes && service.includes.length > 0 && (
+          <div className="mb-4">
+            <h4 className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-2">
+              {language === 'en' ? 'Includes:' : 'Включва:'}
+            </h4>
+            <ul className="space-y-1.5">
+              {service.includes.slice(0, 3).map((item, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <div className="h-4 w-4 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mt-0.5 flex-shrink-0">
+                    <ArrowRight className="h-2.5 w-2.5 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <span className="text-xs text-gray-700 dark:text-gray-300 line-clamp-1">{item}</span>
+                </li>
+              ))}
+              {service.includes.length > 3 && (
+                <li className="text-xs text-purple-600 dark:text-purple-400 font-medium ml-6">
+                  {language === 'en' ? `+ ${service.includes.length - 3} more` : `+ още ${service.includes.length - 3}`}
+                </li>
               )}
-              asChild
-            >
-              <Link href={`/shop/book/${service.relatedBookId}`} className="flex items-center justify-center">
-                <BookOpen className="h-3 w-3 mr-1" />
-                {language === 'en' ? 'Related Book' : 'Свързана Книга'}
-              </Link>
-            </Button>
-          )}
+            </ul>
+          </div>
+        )}
+        
+        {/* Actions */}
+        <div className="mt-auto flex gap-2">
+          <Button 
+            variant="outline"
+            size="sm"
+            className="flex-1 h-9 text-xs font-medium rounded-lg transition-all duration-300
+              border-purple-200 bg-purple-50/50 text-purple-600 hover:bg-purple-100 hover:border-purple-300
+              dark:border-purple-800 dark:bg-purple-900/20 dark:text-purple-400 dark:hover:bg-purple-900/30"
+            asChild
+          >
+            <Link href={`/shop/service/${service.id}`} className="flex items-center justify-center">
+              <Eye className="h-3 w-3 mr-1" />
+              {language === 'en' ? 'Details' : 'Детайли'}
+            </Link>
+          </Button>
           
           <Button 
             size="sm"
-            className={cn(
-              "flex-1 h-9 text-xs border border-black dark:border-gray-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.2)] transition-all duration-300 rounded-md text-white",
-              "bg-green-600 hover:bg-green-700"
-            )}
+            className="flex-1 h-9 text-xs font-medium rounded-lg transition-all duration-300 text-white
+              bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 shadow-sm"
             asChild
           >
-            <Link href={`/services/${service.id}`} className="flex items-center justify-center">
-              <Calendar className="h-3 w-3 mr-1" />
-              {language === 'en' ? 'Learn More' : 'Научи повече'}
+            <Link href={`/shop/service/${service.id}#buy`} className="flex items-center justify-center">
+              <ShoppingCart className="h-3 w-3 mr-1" />
+              {language === 'en' ? 'Buy' : 'Купи'}
             </Link>
           </Button>
         </div>
@@ -342,6 +386,19 @@ export default function Bestsellers() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'books' | 'digital' | 'services'>('books');
   const { language } = useLanguage();
+  
+  // Insert the animation styles into the DOM
+  useEffect(() => {
+    // Create a style element
+    const styleElement = document.createElement('style');
+    styleElement.innerHTML = fadeInUpAnimation;
+    document.head.appendChild(styleElement);
+    
+    // Clean up when component unmounts
+    return () => {
+      document.head.removeChild(styleElement);
+    };
+  }, []);
   
   // Memoize filtered data to avoid unnecessary recalculations
   const bestsellers = useMemo(() => 
@@ -421,10 +478,10 @@ export default function Bestsellers() {
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold font-playfair mb-4 text-gray-900 dark:text-white">
             <span className="relative inline-block">
-              {language === 'en' ? 'Bestselling' : 'Бестселъри'}
+              {language === 'en' ? 'Bestselling' : 'Най-продавани'}
               <span className="absolute -bottom-2 left-0 w-full h-4 bg-green-300 dark:bg-green-600/60 -z-10 transform -rotate-1 rounded-sm"></span>
             </span>
-            {language === 'en' ? ' Books & Services' : ''}
+            {language === 'en' ? ' Books & Services' : ' Книги и Услуги'}
           </h2>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             {language === 'en' 
@@ -436,26 +493,48 @@ export default function Bestsellers() {
         {/* Tabs for switching between books and services */}
         <Tabs defaultValue="books" className="w-full" onValueChange={handleTabChange}>
           <div className="flex justify-center mb-12">
-            <TabsList className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 px-4 py-6 rounded-full border-2 border-black dark:border-gray-700 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.2)]">
+            <TabsList className="bg-gradient-to-r from-gray-50/90 via-white/95 to-gray-50/90 
+              dark:from-gray-800/50 dark:via-gray-900/60 dark:to-gray-800/50 
+              p-1.5 rounded-full border border-gray-200/50 dark:border-gray-700/40 
+              shadow-[3px_3px_6px_rgba(0,0,0,0.06),-3px_-3px_6px_rgba(255,255,255,0.8)] 
+              dark:shadow-[3px_3px_6px_rgba(0,0,0,0.2),-3px_-3px_6px_rgba(30,30,30,0.1)]">
               <TabsTrigger 
                 value="books" 
-                className="rounded-full px-10 py-3.5 mx-2 my-1 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:data-[state=active]:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] data-[state=active]:border-2 data-[state=active]:border-black dark:data-[state=active]:border-gray-700 transition-all duration-200 font-medium text-base"
+                className="relative rounded-full px-8 py-3 
+                  data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 
+                  data-[state=active]:shadow-[2px_2px_4px_rgba(0,0,0,0.1),-2px_-2px_4px_rgba(255,255,255,0.7)] 
+                  dark:data-[state=active]:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)] 
+                  transition-all duration-300 font-medium text-sm group"
               >
-                <BookOpen className="h-5 w-5 mr-2" />
+                {/* Creating the animation glow effect for active tab */}
+                <span className="absolute inset-0 rounded-full bg-gradient-to-r from-green-500/10 via-green-500/10 to-green-500/10 dark:from-green-500/20 dark:via-green-500/20 dark:to-green-500/20 opacity-0 data-[state=active]:opacity-100 blur-md transition-opacity duration-500"></span>
+                <BookOpen className="h-4 w-4 mr-2 transition-transform duration-300 group-data-[state=active]:scale-110" />
                 {language === 'en' ? 'Bestsellers' : 'Бестселъри'}
               </TabsTrigger>
               <TabsTrigger 
                 value="digital" 
-                className="rounded-full px-10 py-3.5 mx-2 my-1 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:data-[state=active]:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] data-[state=active]:border-2 data-[state=active]:border-black dark:data-[state=active]:border-gray-700 transition-all duration-200 font-medium text-base"
+                className="relative rounded-full px-8 py-3 
+                  data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 
+                  data-[state=active]:shadow-[2px_2px_4px_rgba(0,0,0,0.1),-2px_-2px_4px_rgba(255,255,255,0.7)] 
+                  dark:data-[state=active]:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)] 
+                  transition-all duration-300 font-medium text-sm group"
               >
-                <Download className="h-5 w-5 mr-2" />
+                {/* Creating the animation glow effect for active tab */}
+                <span className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/10 via-blue-500/10 to-blue-500/10 dark:from-blue-500/20 dark:via-blue-500/20 dark:to-blue-500/20 opacity-0 data-[state=active]:opacity-100 blur-md transition-opacity duration-500"></span>
+                <Download className="h-4 w-4 mr-2 transition-transform duration-300 group-data-[state=active]:scale-110" />
                 {language === 'en' ? 'Digital' : 'Дигитални'}
               </TabsTrigger>
               <TabsTrigger 
                 value="services" 
-                className="rounded-full px-10 py-3.5 mx-2 my-1 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:data-[state=active]:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] data-[state=active]:border-2 data-[state=active]:border-black dark:data-[state=active]:border-gray-700 transition-all duration-200 font-medium text-base"
+                className="relative rounded-full px-8 py-3 
+                  data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 
+                  data-[state=active]:shadow-[2px_2px_4px_rgba(0,0,0,0.1),-2px_-2px_4px_rgba(255,255,255,0.7)] 
+                  dark:data-[state=active]:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)] 
+                  transition-all duration-300 font-medium text-sm group"
               >
-                <Calendar className="h-5 w-5 mr-2" />
+                {/* Creating the animation glow effect for active tab */}
+                <span className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/10 via-purple-500/10 to-purple-500/10 dark:from-purple-500/20 dark:via-purple-500/20 dark:to-purple-500/20 opacity-0 data-[state=active]:opacity-100 blur-md transition-opacity duration-500"></span>
+                <Calendar className="h-4 w-4 mr-2 transition-transform duration-300 group-data-[state=active]:scale-110" />
                 {language === 'en' ? 'Services' : 'Услуги'}
               </TabsTrigger>
             </TabsList>
@@ -464,9 +543,17 @@ export default function Bestsellers() {
           {/* Books Content */}
           <TabsContent value="books" className="relative pt-8">
             <div className="max-w-5xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {bestsellers.map((book) => (
-                  <div key={book.id} className="fade-in-item">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                {bestsellers.map((book, index) => (
+                  <div key={book.id} 
+                    className="fade-in-item transition-all duration-500"
+                    style={{ 
+                      animationDelay: `${index * 150}ms`,
+                      transform: "translateY(20px)",
+                      opacity: 0,
+                      animation: `fadeInUp 600ms ease-out ${index * 150}ms forwards`
+                    }}
+                  >
                     <BookCard
                       book={book}
                       onBookClick={handleBookClick}
@@ -480,14 +567,34 @@ export default function Bestsellers() {
                   </div>
                 ))}
               </div>
+              <div className="text-center mt-12">
+                <Button 
+                  asChild
+                  variant="outline" 
+                  className="px-6 py-2 h-auto rounded-full bg-white dark:bg-gray-800 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/30 shadow-sm"
+                >
+                  <Link href="/shop">
+                    {language === 'en' ? 'View All Books' : 'Вижте Всички Книги'} 
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
+                </Button>
+              </div>
             </div>
           </TabsContent>
 
           <TabsContent value="digital" className="relative pt-8">
             <div className="max-w-5xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {digitalBooks.map((book) => (
-                  <div key={book.id} className="fade-in-item">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                {digitalBooks.map((book, index) => (
+                  <div key={book.id} 
+                    className="fade-in-item transition-all duration-500"
+                    style={{ 
+                      animationDelay: `${index * 150}ms`,
+                      transform: "translateY(20px)",
+                      opacity: 0,
+                      animation: `fadeInUp 600ms ease-out ${index * 150}ms forwards`
+                    }}
+                  >
                     <BookCard
                       book={book}
                       onBookClick={handleBookClick}
@@ -495,26 +602,58 @@ export default function Bestsellers() {
                       getDisplayTitle={getDisplayTitle}
                       language={language}
                       showDigitalBadge={true}
-                      showBestsellerBadge={book.featured}
+                      showBestsellerBadge={false}
                       tabType="digital"
                     />
                   </div>
                 ))}
+              </div>
+              <div className="text-center mt-12">
+                <Button 
+                  asChild
+                  variant="outline" 
+                  className="px-6 py-2 h-auto rounded-full bg-white dark:bg-gray-800 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 shadow-sm"
+                >
+                  <Link href="/shop?filter=digital">
+                    {language === 'en' ? 'View All Digital Books' : 'Вижте Всички Дигитални Книги'} 
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
+                </Button>
               </div>
             </div>
           </TabsContent>
 
           <TabsContent value="services" className="relative pt-8">
             <div className="max-w-5xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {featuredServices.map((service) => (
-                  <div key={service.id} className="fade-in-item">
-                    <ServiceCard
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                {featuredServices.map((service, index) => (
+                  <div key={service.id} 
+                    className="fade-in-item transition-all duration-500"
+                    style={{ 
+                      animationDelay: `${index * 150}ms`,
+                      transform: "translateY(20px)",
+                      opacity: 0,
+                      animation: `fadeInUp 600ms ease-out ${index * 150}ms forwards`
+                    }}
+                  >
+                    <ServiceCard 
                       service={service}
                       language={language}
                     />
                   </div>
                 ))}
+              </div>
+              <div className="text-center mt-12">
+                <Button 
+                  asChild
+                  variant="outline" 
+                  className="px-6 py-2 h-auto rounded-full bg-white dark:bg-gray-800 border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/30 shadow-sm"
+                >
+                  <Link href="/services">
+                    {language === 'en' ? 'View All Services' : 'Вижте Всички Услуги'} 
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
+                </Button>
               </div>
             </div>
           </TabsContent>

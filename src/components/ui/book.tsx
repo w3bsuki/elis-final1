@@ -132,13 +132,13 @@ export function Book(props: BookProps) {
           </Stack>
           {texture && (
             <div
-              aria-hidden={true}
+              aria-hidden="true"
               className="absolute bg-ali bg-no-repeat bg-cover inset-0 mix-blend-hard-light opacity-60"
             />
           )}
         </Stack>
         <div
-          aria-hidden={true}
+          aria-hidden="true"
           className="absolute bg-book-pages w-[calc(var(--book-depth)-2px)] h-[calc(100%-2*6px)] top-[3px]"
           style={{
             transform:
@@ -146,7 +146,7 @@ export function Book(props: BookProps) {
           }}
         />
         <div
-          aria-hidden={true}
+          aria-hidden="true"
           className="rounded-l-md rounded-r bg-[var(--book-color)] book-bg absolute left-0 w-full h-full"
           style={{
             transform: 'translateZ(calc(-1 * var(--book-depth)))',

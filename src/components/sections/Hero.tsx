@@ -277,7 +277,7 @@ export default function Hero({ includeFooter = false, noContainer = false }: Her
   return (
     <>
       {/* Header with refined nested look - Inside the container */}
-      <div className="relative w-full mb-6 rounded-xl bg-gradient-to-b from-white via-gray-50/95 to-gray-100/90 dark:from-gray-800/95 dark:via-gray-850/95 dark:to-gray-900/90 p-4 shadow-[0_4px_16px_rgba(0,0,0,0.1),0_1px_3px_rgba(0,0,0,0.05)] border border-gray-200/80 dark:border-gray-700/60 backdrop-blur-md contained-header overflow-hidden">
+      <div className="relative w-full mb-0 rounded-xl bg-gradient-to-b from-white via-gray-50/95 to-gray-100/90 dark:from-gray-800/95 dark:via-gray-850/95 dark:to-gray-900/90 shadow-[0_4px_16px_rgba(0,0,0,0.1),0_1px_3px_rgba(0,0,0,0.05)] border border-gray-200/80 dark:border-gray-700/60 backdrop-blur-md contained-header overflow-hidden">
         {/* Subtle inner shadow overlay */}
         <div className="absolute inset-0 shadow-[inset_0_0_10px_rgba(0,0,0,0.04)] pointer-events-none rounded-xl"></div>
         
@@ -290,13 +290,11 @@ export default function Hero({ includeFooter = false, noContainer = false }: Her
         {/* Subtle glow effect */}
         <div className="absolute inset-0 rounded-xl bg-gradient-radial from-transparent via-transparent to-gray-100/30 dark:to-primary/5 pointer-events-none"></div>
         
-        <div className="flex justify-center w-full mx-auto relative z-10">
-          <Header containedMode={true} />
-        </div>
+        <Header containedMode={true} />
       </div>
       
       {/* Hero content */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-gray-50 to-gray-100 p-4 sm:p-5 md:p-6 shadow-[inset_-10px_-10px_16px_rgba(255,255,255,0.9),inset_10px_10px_16px_rgba(0,0,0,0.08),_6px_6px_16px_rgba(0,0,0,0.07)]">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-gray-50 to-gray-100 p-3 sm:p-4 md:p-5 shadow-[inset_-10px_-10px_16px_rgba(255,255,255,0.9),inset_10px_10px_16px_rgba(0,0,0,0.08),_6px_6px_16px_rgba(0,0,0,0.07)]">
         {/* Animated gradient orb - top right */}
         <div className="absolute top-0 right-0 h-72 w-72 bg-gradient-radial from-green-100/40 to-transparent rounded-full blur-3xl transform translate-x-1/4 -translate-y-1/4 pointer-events-none animate-pulse-slow"></div>
         
@@ -312,15 +310,6 @@ export default function Hero({ includeFooter = false, noContainer = false }: Her
         
         {/* Subtle diagonal lines pattern */}
         <div className="absolute inset-0 bg-[url('/images/diagonal-lines.svg')] opacity-[0.03] bg-repeat pointer-events-none"></div>
-        
-        {/* Decorative ribbon */}
-        <div className="absolute -top-1 -right-1 w-24 h-24 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 right-0 pt-1 pr-4 rotate-45 transform origin-bottom-left">
-            <div className="h-6 w-28 bg-gradient-to-r from-green-400 to-green-500 shadow-sm flex items-center justify-center">
-              <span className="text-[10px] font-medium tracking-tight text-white uppercase">New</span>
-            </div>
-          </div>
-        </div>
         
         <HeroSection includeFooter={false} className="pt-0 relative z-10 bg-gradient-to-r from-transparent via-white/50 to-transparent p-3 sm:p-4 rounded-2xl backdrop-blur-sm" />
       </div>

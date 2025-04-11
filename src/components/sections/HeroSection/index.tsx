@@ -176,9 +176,9 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
   }, [shouldReduceMotion]);
   
   return (
-    <div className={cn("", className)}>
+    <div className={cn("pt-0 pb-4 px-4 md:pb-6 md:px-6", className)}>
       {/* Main Hero content */}
-      <div className="mb-6 sm:mb-8 max-w-[1440px] mx-auto">
+      <div className="mb-4 sm:mb-6 max-w-[1440px] mx-auto">
         {/* Outer Neumorphic Container - Green accent */}
         <div className="w-full rounded-2xl p-[2px]
             bg-gradient-to-br from-green-100/80 via-white/90 to-green-50/80 
@@ -187,7 +187,7 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
             dark:shadow-[5px_5px_10px_rgba(0,0,0,0.25),-5px_-5px_10px_rgba(40,40,40,0.15)]">
           
           {/* Inner Neumorphic Container with green accent */}
-          <div className="bg-gradient-to-br from-white/90 via-white/80 to-green-50/50 dark:from-gray-900/90 dark:via-gray-900/80 dark:to-green-900/10 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 relative min-h-[calc(60vh-80px)] sm:min-h-[calc(60vh-100px)] flex flex-col justify-start shadow-inner border border-green-100/50 dark:border-green-900/30 pt-8">
+          <div className="bg-gradient-to-br from-white/90 via-white/80 to-green-50/50 dark:from-gray-900/90 dark:via-gray-900/80 dark:to-green-900/10 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-5 relative min-h-[calc(60vh-40px)] sm:min-h-[calc(60vh-60px)] flex flex-col justify-start shadow-inner border border-green-100/50 dark:border-green-900/30 pt-6">
             {/* Subtle pattern background */}
             <div 
               className="absolute inset-0 bg-[url('/images/pattern-light.svg')] dark:bg-[url('/images/pattern-dark.svg')] opacity-[0.02] bg-repeat bg-[length:24px_24px] pointer-events-none rounded-lg"
@@ -205,50 +205,57 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
                 variants={ANIMATIONS.container}
                 initial="hidden"
                 animate="visible"
-                className="space-y-6 md:space-y-8 text-center md:text-left"
+                className="space-y-6 md:space-y-8 text-center md:text-left flex flex-col justify-center h-full relative"
                 aria-live="polite"
               >
-                {/* Avatar */}
+                {/* Decorative background element */}
+                <div className="absolute -inset-6 md:inset-auto md:-left-4 md:-right-4 md:-top-4 md:-bottom-4 bg-gradient-to-br from-white/40 via-white/60 to-green-50/30 dark:from-gray-800/40 dark:via-gray-800/60 dark:to-green-900/20 rounded-2xl -z-10 backdrop-blur-sm pointer-events-none"></div>
+                <div className="absolute top-1/4 right-1/4 w-32 h-32 bg-green-100/30 dark:bg-green-900/10 rounded-full blur-2xl pointer-events-none -z-10"></div>
+                
+                {/* Avatar with green glow effect */}
                 <motion.div variants={shouldReduceMotion ? {} : ANIMATIONS.item} className="mb-4 sm:mb-6 mx-auto md:mx-0 w-max">
                   <div className="relative">
-                    <div className="absolute -inset-1 bg-gradient-to-r from-green-400 to-green-500 rounded-full blur opacity-70 animate-pulse-slow"></div>
-                    <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-2 border-white dark:border-gray-800 relative">
+                    <div className="absolute -inset-1.5 bg-gradient-to-r from-green-400 to-green-500 rounded-full blur opacity-70 animate-pulse-slow"></div>
+                    <Avatar className="h-24 w-24 md:h-32 md:w-32 border-2 border-white dark:border-gray-800 relative shadow-xl">
                       <AvatarImage src="/images/author-avatar.jpg" alt={profile.altText} />
                       <AvatarFallback>{profile.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                   </div>
                 </motion.div>
                 
-                {/* Badge */}
-                <motion.div variants={shouldReduceMotion ? {} : ANIMATIONS.item} className="mb-5 sm:mb-7 inline-flex md:justify-start justify-center w-full">
-                  <Badge variant="outline" className="px-3 py-1 sm:px-4 sm:py-1.5 rounded-full border-green-200 dark:border-green-900/40 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm
-                    shadow-[0_2px_5px_rgba(22,163,74,0.15)] text-xs sm:text-sm">
-                    <Heart className="w-4 h-4 mr-1.5 text-green-500 dark:text-green-400" aria-hidden="true" />
+                {/* Professional badge with visual upgrade */}
+                <motion.div variants={shouldReduceMotion ? {} : ANIMATIONS.item} className="inline-flex md:justify-start justify-center w-full mb-4">
+                  <Badge variant="outline" className="px-4 py-1.5 rounded-full border-green-200 dark:border-green-900/40 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm
+                    shadow-[0_2px_5px_rgba(22,163,74,0.15)] text-sm font-medium">
+                    <Heart className="w-4 h-4 mr-2 text-green-500 dark:text-green-400" aria-hidden="true" />
                     <span className="font-medium text-green-700 dark:text-green-300">{profile.title}</span>
                   </Badge>
                 </motion.div>
                 
-                {/* Author name */}
+                {/* Author name with improved typography */}
                 <motion.h1 
                   variants={shouldReduceMotion ? {} : ANIMATIONS.item}
-                  className="text-3xl sm:text-4xl md:text-5xl font-bold font-serif !leading-[1.15] text-gray-900 dark:text-white tracking-tight"
+                  className="text-3xl md:text-4xl lg:text-5xl font-bold font-serif !leading-[1.15] text-gray-900 dark:text-white tracking-tight"
                 >
                   {profile.name}
                 </motion.h1>
                 
-                {/* Heading */}
+                {/* Heading with stylish gradient */}
                 <motion.h2 
                   variants={shouldReduceMotion ? {} : ANIMATIONS.item}
-                  className="text-xl sm:text-2xl md:text-3xl font-bold font-serif !leading-[1.2] bg-gradient-to-r from-green-700 to-green-500 dark:from-green-400 dark:to-green-300 bg-clip-text text-transparent"
+                  className="text-xl md:text-2xl lg:text-3xl font-bold font-serif !leading-tight 
+                    bg-gradient-to-r from-green-700 to-green-500 dark:from-green-400 dark:to-green-300 
+                    bg-clip-text text-transparent mb-1 mt-2"
                 >
                   {ui.transformHeading}
                 </motion.h2>
               
-                {/* Subheading */}
+                {/* About text with enhanced visual treatment */}
                 <motion.p 
                   variants={shouldReduceMotion ? {} : ANIMATIONS.item}
-                  className="text-sm sm:text-base lg:text-lg text-gray-700 dark:text-gray-300 mx-auto md:mx-0 max-w-md
-                    px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-4 rounded-xl 
+                  className="text-sm md:text-base lg:text-lg text-gray-700 dark:text-gray-300 
+                    max-w-md mx-auto md:mx-0
+                    px-5 py-4 rounded-xl 
                     bg-gradient-to-br from-white via-white to-green-50/50 dark:from-gray-800/80 dark:via-gray-800/80 dark:to-green-900/20
                     backdrop-blur-sm 
                     shadow-inner border border-green-100/50 dark:border-green-900/30 
@@ -257,17 +264,39 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
                   {ui.aboutText}
                 </motion.p>
               
-                {/* Call to action button - Green gradient theme */}
-                <motion.div variants={shouldReduceMotion ? {} : ANIMATIONS.item} className="flex justify-center md:justify-start">
+                {/* Social proof element */}
+                <motion.div 
+                  variants={shouldReduceMotion ? {} : ANIMATIONS.item} 
+                  className="flex items-center justify-center md:justify-start gap-3 my-1"
+                >
+                  <div className="flex -space-x-2">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div 
+                        key={i}
+                        className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800 bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-700 dark:to-gray-900 flex items-center justify-center text-xs font-medium overflow-hidden"
+                      >
+                        <span className="sr-only">Happy client {i}</span>
+                        <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(/images/client-${i}.jpg)` }}></div>
+                      </div>
+                    ))}
+                    <div className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800 bg-green-100 dark:bg-green-900/50 flex items-center justify-center text-xs font-medium text-green-600 dark:text-green-400">+5</div>
+                  </div>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    <span className="font-medium">50+</span> happy clients
+                  </span>
+                </motion.div>
+              
+                {/* Call to action button with improved design */}
+                <motion.div variants={shouldReduceMotion ? {} : ANIMATIONS.item} className="flex justify-center md:justify-start pt-2">
                   <Button 
                     variant="ghost" 
                     size="lg" 
                     className={cn(
                       "rounded-full",
-                      "px-6 py-5", 
+                      "px-7 py-6", 
                       "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700", 
                       "text-white font-bold text-base", 
-                      "flex items-center gap-2", 
+                      "flex items-center gap-3", 
                       "transition-all duration-300",
                       "shadow-[0_4px_14px_rgba(22,163,74,0.3),0_1px_3px_rgba(22,163,74,0.2)]",
                       "hover:shadow-[0_6px_20px_rgba(22,163,74,0.4),0_1px_3px_rgba(22,163,74,0.2)]",

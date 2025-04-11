@@ -1,7 +1,7 @@
 "use client";
 
 import AutoScroll from "embla-carousel-auto-scroll";
-import { BookOpen, ChevronRight, Quote, Star, Zap } from "lucide-react";
+import { BookOpen, ChevronRight, Quote, Star, Zap, MessageCircle } from "lucide-react";
 import { useRef, memo, useMemo } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useLanguage } from "@/lib/LanguageContext";
@@ -218,145 +218,145 @@ export const Testimonials = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative py-12">
+    <div ref={containerRef} className="relative z-0 py-12">
       {/* Decorative background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div 
-          style={{ y: y1 }} 
-          className="absolute -top-1/2 -right-1/4 w-1/2 h-1/2 rounded-full bg-blue-200/20 dark:bg-blue-900/10 blur-3xl"
-        />
-        <motion.div 
-          style={{ y: y2 }} 
-          className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_400px_at_50%_300px,rgba(59,130,246,0.08),transparent)]"
-        />
-      </div>
+      <motion.div 
+        style={{ y: y1 }} 
+        className="absolute -top-1/2 -right-1/4 w-1/2 h-1/2 rounded-full bg-blue-200/20 dark:bg-blue-900/10 blur-3xl -z-10"
+      />
+      <motion.div 
+        style={{ y: y2 }} 
+        className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_400px_at_50%_300px,rgba(59,130,246,0.08),transparent)] -z-10"
+      />
       
-      {/* Main container with neumorphic styling */}
-      <div className="relative container mx-auto">
-        <div className="absolute inset-0 bg-pattern-dots opacity-5"></div>
+      {/* Enhanced Testimonials Container with nested neumorphic styling - now includes header */}
+      <div className="rounded-2xl p-[5px] mb-12
+          bg-gradient-to-br from-gray-200/80 via-white/90 to-gray-100/80 
+          dark:from-gray-800/80 dark:via-gray-900/90 dark:to-gray-800/80
+          shadow-[6px_6px_12px_rgba(0,0,0,0.1),-6px_-6px_12px_rgba(255,255,255,0.9)]
+          dark:shadow-[6px_6px_12px_rgba(0,0,0,0.3),-6px_-6px_12px_rgba(30,30,30,0.2)]
+          overflow-hidden">
         
-        {/* Outer container with neumorphic styling */}
-        <div className="relative z-10 rounded-2xl 
-          bg-gradient-to-br from-white/80 to-blue-50/50 dark:from-gray-900/80 dark:to-blue-950/30 
-          border border-blue-100/60 dark:border-blue-900/40 
-          shadow-[-10px_-10px_30px_rgba(255,255,255,0.8),_10px_10px_30px_rgba(0,0,0,0.1)] 
-          dark:shadow-[-10px_-10px_30px_rgba(15,15,15,0.1),_10px_10px_30px_rgba(0,0,0,0.2)]
-          backdrop-blur-md 
-          p-4 sm:p-8"
-        >
+        {/* Inner container with gradient and shadow effects */}
+        <div className="bg-gradient-to-br from-blue-50/30 via-white/40 to-blue-50/30 dark:from-blue-900/20 dark:via-gray-900/20 dark:to-blue-900/20 p-8 rounded-xl relative">
+          {/* Inner shadow effect */}
+          <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
+          
           {/* Section header with badge headline style */}
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-3 mb-4 px-6 py-3 
-              bg-gradient-to-br from-white/90 to-blue-50/70 dark:from-gray-800/90 dark:to-blue-900/40
-              border border-blue-200/50 dark:border-blue-800/30
-              rounded-full 
-              shadow-[-5px_-5px_10px_rgba(255,255,255,0.8),_5px_5px_10px_rgba(0,0,0,0.1)] 
-              dark:shadow-[-2px_-2px_5px_rgba(40,40,40,0.25),_2px_2px_5px_rgba(0,0,0,0.3)]
-              backdrop-blur-sm"
-            >
-              <div className="rounded-full p-1.5
-                bg-gradient-to-br from-blue-100 to-white dark:from-blue-800 dark:to-blue-900
-                shadow-[-3px_-3px_6px_rgba(255,255,255,0.8),_3px_3px_6px_rgba(0,0,0,0.1)] 
-                dark:shadow-[-2px_-2px_4px_rgba(40,40,40,0.25),_2px_2px_4px_rgba(0,0,0,0.3)]"
-              >
-                <Quote className="w-6 h-6 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+          <div className="text-center mb-10 relative z-10">
+            {/* Enhanced header with special badge styling */}
+            <div className="inline-flex flex-col items-center justify-center">
+              {/* Main title with badge-like appearance */}
+              <div className="relative inline-flex items-center justify-center mb-4">
+                {/* Decorative gradient blob behind the title */}
+                <div className="absolute -z-10 w-full h-full scale-150 bg-gradient-to-br from-blue-400/20 via-sky-300/10 to-indigo-400/5 dark:from-blue-400/10 dark:via-sky-300/5 dark:to-indigo-400/5 blur-2xl rounded-full"></div>
+                
+                {/* Badge container */}
+                <div className="bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-900
+                  px-5 py-3 rounded-xl
+                  shadow-[4px_4px_10px_rgba(0,0,0,0.1),-4px_-4px_10px_rgba(255,255,255,0.9),inset_1px_1px_1px_rgba(255,255,255,0.8),inset_-1px_-1px_1px_rgba(0,0,0,0.05)]
+                  dark:shadow-[4px_4px_10px_rgba(0,0,0,0.3),-4px_-4px_10px_rgba(30,30,30,0.2),inset_1px_1px_1px_rgba(50,50,50,0.1),inset_-1px_-1px_1px_rgba(0,0,0,0.1)]
+                  flex items-center gap-3 border border-blue-200/50 dark:border-blue-800/30">
+                  
+                  {/* Left icon with enhanced styling - smaller */}
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-sky-300/20 blur-xl rounded-full"></div>
+                    <div className="rounded-full p-2
+                      bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800
+                      shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8),inset_1px_1px_1px_rgba(255,255,255,0.8),inset_-1px_-1px_1px_rgba(0,0,0,0.05)]
+                      dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1),inset_1px_1px_1px_rgba(50,50,50,0.1),inset_-1px_-1px_1px_rgba(0,0,0,0.1)]
+                      border border-blue-100/50 dark:border-blue-800/30 relative">
+                      <MessageCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+                    </div>
+                  </div>
+                  
+                  {/* Title with text color changed to black - smaller */}
+                  <div className="flex flex-col items-start">
+                    <h2 className="text-xl md:text-2xl font-bold font-serif antialiased relative
+                      text-gray-900 dark:text-white">
+                      {translate("Какво казват читателите", "What Readers Say")}
+                    </h2>
+                    <div className="h-0.5 w-3/4 mx-auto bg-gradient-to-r from-gray-500 to-gray-400 dark:from-gray-400 dark:to-gray-300 rounded-full mt-1"></div>
+                  </div>
+                </div>
               </div>
-              <h2 className="text-xl md:text-2xl font-bold font-serif text-black dark:text-white antialiased">
-                {translate("Какво казват читателите", "What Readers Say")}
-              </h2>
-            </div>
-            
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-400 rounded-full mx-auto mb-4"></div>
-            
-            <div className="max-w-2xl mx-auto px-6 py-4 rounded-xl
-              bg-gradient-to-br from-white/80 to-blue-50/50 dark:from-gray-800/80 dark:to-blue-950/20
-              shadow-[inset_2px_2px_5px_rgba(0,0,0,0.03),_inset_-2px_-2px_5px_rgba(255,255,255,0.7)] 
-              dark:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),_inset_-2px_-2px_5px_rgba(255,255,255,0.05)]
-              backdrop-blur-sm"
-            >
-              <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base antialiased">
-                {translate(
-                  "Присъединете се към глобална мрежа от читатели, които вече са открили своя път към по-добър живот.",
-                  "Join a global network of readers who have already discovered their path to a better life."
-                )}
-              </p>
-            </div>
-            
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full 
-              bg-gradient-to-br from-blue-50 to-white/90 dark:from-blue-900/40 dark:to-blue-950/20
-              text-sm font-semibold text-blue-600 dark:text-blue-400 
-              mt-6 
-              border border-blue-200/50 dark:border-blue-800/30 
-              shadow-[-3px_-3px_6px_rgba(255,255,255,0.8),_3px_3px_6px_rgba(0,0,0,0.1)] 
-              dark:shadow-[-2px_-2px_4px_rgba(40,40,40,0.25),_2px_2px_4px_rgba(0,0,0,0.3)]"
-            >
-              <div className="p-1.5 rounded-full 
-                bg-gradient-to-br from-amber-100 to-amber-50 dark:from-amber-800/30 dark:to-amber-900/20
-                shadow-[0_1px_3px_rgba(0,0,0,0.1)]
-                dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]"
-              >
-                <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
+              
+              {/* Description text */}
+              <div className="max-w-2xl mx-auto mb-5">
+                <p className="text-gray-700 dark:text-gray-300 text-base sm:text-lg antialiased leading-relaxed">
+                  {translate(
+                    "Присъединете се към глобална мрежа от читатели, които вече са открили своя път към по-добър живот.",
+                    "Join a global network of readers who have already discovered their path to a better life."
+                  )}
+                </p>
               </div>
-              {translate("Оценен с 5 звезди от 1000+ читатели", "Rated 5 stars by 1000+ readers")}
+              
+              {/* Enhanced instruction badge with glow effect */}
+              <div className="relative inline-flex">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-sky-300/20 to-blue-400/20 dark:from-blue-400/10 dark:via-sky-300/10 dark:to-blue-400/10 blur-xl rounded-full -z-10"></div>
+                <div className="inline-flex items-center gap-2 px-6 py-2.5
+                  rounded-full bg-gradient-to-br from-blue-50 to-white dark:from-gray-800 dark:to-gray-900
+                  text-base text-blue-700 dark:text-blue-400 
+                  border border-blue-100/50 dark:border-blue-800/30 
+                  shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8),inset_1px_1px_1px_rgba(255,255,255,0.8),inset_-1px_-1px_1px_rgba(0,0,0,0.05)]
+                  dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1),inset_1px_1px_1px_rgba(50,50,50,0.1),inset_-1px_-1px_1px_rgba(0,0,0,0.1)]">
+                  <Star className="w-5 h-5 fill-amber-500 text-amber-500" />
+                  {translate("Оценен с 5 звезди от 1000+ читатели", "Rated 5 stars by 1000+ readers")}
+                </div>
+              </div>
             </div>
           </div>
           
-          {/* Inner container for carousel with neumorphic styling */}
-          <div className="rounded-xl p-4
-            bg-gradient-to-br from-white/70 to-blue-50/30 dark:from-gray-900/70 dark:to-blue-950/20 
-            border border-blue-100/40 dark:border-blue-900/20 
-            shadow-[inset_2px_2px_5px_rgba(0,0,0,0.03),_inset_-2px_-2px_5px_rgba(255,255,255,0.7)] 
-            dark:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),_inset_-2px_-2px_5px_rgba(255,255,255,0.05)]
-            backdrop-blur-sm
-            overflow-hidden"
-          >
-            {/* Testimonials Carousel */}
-            <div className="mb-4">
-              <Carousel
-                opts={{
-                  loop: true,
-                }}
-                plugins={[plugin.current]}
-                onMouseLeave={() => plugin.current.play()}
-                className="lg:-mx-4 relative before:absolute before:top-0 before:bottom-0 before:left-0 before:z-10 before:w-24 sm:before:w-36 before:bg-gradient-to-r before:from-white/90 dark:before:from-gray-900/90 before:to-transparent after:absolute after:top-0 after:right-0 after:bottom-0 after:z-10 after:w-24 sm:after:w-36 after:bg-gradient-to-l after:from-white/90 dark:after:from-gray-900/90 after:to-transparent"
-              >
-                <CarouselContent>
-                  {testimonials.map((testimonial, index) => (
-                    <CarouselItem key={index} className="basis-auto pl-4 md:basis-1/2 lg:basis-1/3">
+          {/* Testimonials Grid */}
+          <div className="relative z-10">
+            <Carousel
+              opts={{
+                loop: true,
+              }}
+              plugins={[plugin.current]}
+              onMouseLeave={() => plugin.current.play()}
+              className="lg:-mx-4 relative before:absolute before:top-0 before:bottom-0 before:left-0 before:z-10 before:w-24 sm:before:w-36 before:bg-gradient-to-r before:from-white/90 dark:before:from-gray-900/90 before:to-transparent after:absolute after:top-0 after:right-0 after:bottom-0 after:z-10 after:w-24 sm:after:w-36 after:bg-gradient-to-l after:from-white/90 dark:after:from-gray-900/90 after:to-transparent"
+            >
+              <CarouselContent>
+                {testimonials.map((testimonial, index) => (
+                  <CarouselItem key={index} className="basis-auto pl-4 md:basis-1/2 lg:basis-1/3">
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="transform transition-all duration-300 hover:translate-y-[-8px]"
+                    >
                       <TestimonialCard 
                         testimonial={testimonial} 
                         getSourceColor={getSourceColor} 
                       />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-              </Carousel>
-            </div>
+                    </motion.div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
           </div>
-
-          {/* View all testimonials button with enhanced neumorphic style */}
-          <div className="flex justify-center mt-8 mb-2">
-            <Link 
-              href="/testimonials" 
-              className={`
-                px-6 py-3.5 rounded-full 
-                flex items-center justify-center gap-2 
-                text-blue-700 dark:text-blue-400 font-medium
-                bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800/80
-                shadow-[-5px_-5px_10px_rgba(255,255,255,0.8),_5px_5px_10px_rgba(0,0,0,0.15),_0_5px_15px_rgba(37,99,235,0.1)] 
-                dark:shadow-[-5px_-5px_10px_rgba(40,40,40,0.15),_5px_5px_10px_rgba(0,0,0,0.35),_0_5px_15px_rgba(37,99,235,0.2)]
-                border border-blue-200/50 dark:border-blue-800/30
-                transition-all duration-300
-
-                hover:shadow-[-1px_-1px_5px_rgba(255,255,255,0.6),_1px_1px_5px_rgba(0,0,0,0.2),inset_-2px_-2px_5px_rgba(255,255,255,1),inset_2px_2px_4px_rgba(0,0,0,0.15)]
-                dark:hover:shadow-[-1px_-1px_5px_rgba(40,40,40,0.2),_1px_1px_5px_rgba(0,0,0,0.3),inset_-2px_-2px_5px_rgba(40,40,40,0.2),inset_2px_2px_4px_rgba(0,0,0,0.3)]
-                hover:text-blue-600 dark:hover:text-blue-300
-                hover:translate-y-0.5
-              `}
-            >
-              {translate("Вижте всички отзиви", "View All Testimonials")}
-              <ChevronRight className="w-4 h-4" />
-            </Link>
+          
+          {/* Add header for view all testimonials with button */}
+          <div className="mt-12 pt-6 border-t border-blue-200/30 dark:border-blue-800/30 relative z-10">
+            <div className="flex justify-center">
+              <Link 
+                href="/testimonials" 
+                className="px-5 py-2 rounded-full 
+                  bg-gradient-to-br from-gray-800 to-black dark:from-gray-900 dark:to-black
+                  text-white font-medium 
+                  border border-gray-700 dark:border-gray-800 
+                  shadow-[2px_2px_4px_rgba(0,0,0,0.1),-2px_-2px_4px_rgba(255,255,255,0.8)]
+                  dark:shadow-[2px_2px_4px_rgba(0,0,0,0.3),-2px_-2px_4px_rgba(30,30,30,0.15)]
+                  hover:shadow-[1px_1px_2px_rgba(0,0,0,0.05),-1px_-1px_2px_rgba(255,255,255,0.8),inset_1px_1px_2px_rgba(0,0,0,0.05),inset_-1px_-1px_2px_rgba(255,255,255,0.8)]
+                  dark:hover:shadow-[1px_1px_2px_rgba(0,0,0,0.2),-1px_-1px_2px_rgba(30,30,30,0.1),inset_1px_1px_2px_rgba(0,0,0,0.1),inset_-1px_-1px_2px_rgba(30,30,30,0.05)]
+                  transition-all duration-300 flex items-center gap-1.5"
+                >
+                {translate("Вижте всички отзиви", "View All Testimonials")}
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
