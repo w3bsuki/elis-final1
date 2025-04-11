@@ -251,59 +251,6 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
   }, [carouselApi]);
   
   const [isPaused, setIsPaused] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-  
-  // Create a duplicate array of books for infinite scrolling
-  const duplicatedBooks = [...heroBooks, ...heroBooks, ...heroBooks];
-  
-  // Add autoscroll carousel effect
-  useEffect(() => {
-    const carousel = carouselRef.current;
-    if (!carousel) return;
-    
-    let animationId: number;
-    
-    // Initial animation setup
-    const animate = () => {
-      if (isPaused) return;
-      
-      // Get the current position of the carousel
-      const currentX = x.get();
-      
-      // Get the width of a book item (assuming all books have same width)
-      const bookItemWidth = 120; // Reduced width for better mobile display
-      
-      // Calculate the total width of all books
-      const totalWidth = duplicatedBooks.length * bookItemWidth;
-      
-      // Reset position when reaching the end
-      if (currentX <= -totalWidth / 3) {
-        x.set(0);
-      } else {
-        // Move 0.25px per frame for slower scrolling (right to left direction)
-        x.set(currentX - 0.25);
-      }
-      
-      // Continue animation if not paused
-      if (!isPaused) {
-        animationId = requestAnimationFrame(animate);
-      }
-    };
-    
-    // Start animation if not paused
-    if (!isPaused) {
-      animationId = requestAnimationFrame(animate);
-    }
-    
-    // Cleanup
-    return () => {
-      if (animationId) {
-        cancelAnimationFrame(animationId);
-      }
-    };
-  }, [isPaused, duplicatedBooks.length, x]);
   
   // The render JSX is kept identical to the original
   return (
@@ -312,248 +259,314 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
       <div className="absolute inset-0 top-[10px] flex items-start justify-center">
         <div className="w-[99.5%] max-w-none px-0 mx-auto">
           {/* Outer container with 3D nested look */}
-          <div className="p-1.5 rounded-xl bg-gradient-to-br from-green-200/40 to-emerald-100/40 dark:from-green-800/30 dark:to-emerald-900/30 shadow-xl">
+          <div className="p-1.5 rounded-xl bg-gradient-to-br from-green-200/60 to-emerald-100/50 dark:from-green-700/40 dark:to-emerald-800/30 shadow-xl shadow-green-100/30 dark:shadow-green-900/30">
             {/* Middle container */}
             <div className="p-1 rounded-lg bg-gradient-to-br from-white/90 via-white/80 to-green-50/70 dark:from-gray-800/90 dark:via-gray-900/80 dark:to-green-950/50 shadow-md">
               {/* Inner main container */}
-              <div className="bg-gradient-to-br from-white/95 via-white/95 to-green-50/90 dark:from-gray-900/95 dark:via-gray-900/95 dark:to-green-950/15 backdrop-blur-sm rounded-lg border border-green-100/50 dark:border-green-900/30 shadow-sm p-4 md:p-6 lg:p-8 mt-0">
+              <div className="bg-gradient-to-br from-white/95 via-white/95 to-green-50/90 dark:from-gray-900/95 dark:via-gray-900/95 dark:to-green-950/15 backdrop-blur-sm rounded-lg border border-green-200/80 dark:border-green-800/50 shadow-sm p-4 md:p-6 lg:p-8 mt-0">
                 {/* Subtle pattern background */}
                 <div 
                   className="absolute inset-0 bg-[url('/images/pattern-light.svg')] dark:bg-[url('/images/pattern-dark.svg')] opacity-[0.03] bg-repeat bg-[length:24px_24px] pointer-events-none rounded-lg"
                   aria-hidden="true"
                 ></div>
                 
-                {/* Subtle accent orbs - reduced size and effect */}
-                <div className="absolute top-1/3 right-10 h-40 w-40 bg-green-200/20 dark:bg-green-900/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div className="absolute bottom-1/3 left-10 h-40 w-40 bg-green-100/20 dark:bg-green-900/10 rounded-full blur-3xl pointer-events-none"></div>
+                {/* Subtle accent orbs - enhanced */}
+                <div className="absolute top-1/4 right-1/6 h-64 w-64 bg-green-200/20 dark:bg-green-900/15 rounded-full blur-3xl pointer-events-none"></div>
+                <div className="absolute bottom-1/3 left-1/6 h-56 w-56 bg-green-100/20 dark:bg-green-900/15 rounded-full blur-3xl pointer-events-none"></div>
+                <div className="absolute top-2/3 left-1/3 h-40 w-40 bg-blue-100/10 dark:bg-blue-900/10 rounded-full blur-3xl pointer-events-none animate-pulse-slow"></div>
                 
-                {/* Main Hero Content - larger sizes but still compact spacing */}
-                <div className="flex flex-col items-center justify-center text-center relative z-10 space-y-5 lg:space-y-6">
-                  {/* Profile Image - INCREASED SIZE FROM PREVIOUS EDIT */}
+                {/* Main Hero Content - centered design */}
+                <div className="flex flex-col items-center justify-center text-center relative z-10 min-h-[calc(100vh-150px)]">
+                  {/* Profile Image - with enhanced styling */}
                   <motion.div 
                     variants={ANIMATIONS.item}
                     initial="hidden"
                     animate="visible"
-                    className="relative group"
+                    className="relative z-20 mb-6"
                   >
-                    <Link href="/about">
-                      <div className="relative">
-                        <Avatar className="h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 border-2 border-green-100 group-hover:border-green-300 dark:border-green-900 dark:group-hover:border-green-700 shadow-sm group-hover:shadow-md transition-all duration-300">
-                          <AvatarImage
-                            src="/images/avatar/avatar.jpg"
-                            alt={language === 'en' ? "Profile photo of Elisa Ivanova" : "Профилна снимка на Елиса Иванова"}
-                            className="object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                          <AvatarFallback>{language === 'en' ? "EI" : "ЕИ"}</AvatarFallback>
-                          <AvatarBadge position="top-right" className="h-5 w-auto px-1.5 text-[10px] rounded-full">
-                            {language === 'bg' ? 'Добре дошли' : 'Welcome'}
-                          </AvatarBadge>
-                        </Avatar>
-                        
-                        {/* Tooltip */}
-                        <div className="absolute -bottom-7 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 px-2.5 py-0.5 rounded-full text-xs text-green-700 dark:text-green-300 font-medium shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none">
-                          {language === 'bg' ? 'За мен' : 'About Me'}
-                          <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white dark:bg-gray-800 rotate-45"></div>
+                    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                      <DialogTrigger asChild>
+                        <div className="relative cursor-pointer transform hover:scale-[1.03] transition-all duration-300 group" aria-label={language === 'bg' ? 'Отвори приветствено съобщение' : 'Open welcome message'}>
+                          {/* Decorative rings around avatar */}
+                          <div className="absolute -inset-3 rounded-full border-2 border-dashed border-green-300/20 dark:border-green-700/20 animate-spin-slow"></div>
+                          <div className="absolute -inset-6 rounded-full border border-green-200/10 dark:border-green-800/10"></div>
+                          
+                          {/* Outer glow */}
+                          <div className="absolute -inset-2 rounded-full bg-gradient-to-br from-emerald-400/30 to-teal-300/20 dark:from-emerald-500/20 dark:to-teal-400/15 blur-md transform scale-110 animate-pulse-slow"></div>
+                          
+                          {/* The actual avatar container */}
+                          <div className="p-1.5 rounded-full bg-gradient-to-br from-green-200 to-emerald-100 dark:from-green-700 dark:to-emerald-800 relative z-10 shadow-xl">
+                            <Avatar className="h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 border-2 border-white dark:border-gray-900 shadow-md group-hover:shadow-lg transition-all duration-300 relative">
+                              <AvatarImage
+                                src="/images/avatar/avatar.jpg"
+                                alt={language === 'en' ? "Profile photo of Elisa Ivanova" : "Профилна снимка на Елиса Иванова"}
+                                className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                              />
+                              <AvatarFallback>{language === 'en' ? "EI" : "ЕИ"}</AvatarFallback>
+                            </Avatar>
+                          </div>
+                          
+                          {/* Enhanced message indicator */}
+                          <div className="absolute -right-1 -bottom-1 w-5 h-5 bg-gradient-to-br from-green-500 to-emerald-400 dark:from-green-400 dark:to-emerald-300 rounded-full border-2 border-white dark:border-gray-800 shadow-md flex items-center justify-center animate-pulse z-20">
+                            <SendIcon className="h-2.5 w-2.5 text-white" />
+                          </div>
+                          
+                          {/* Improved floating message hint */}
+                          <div className="absolute -right-2 top-1/2 transform translate-x-full -translate-y-1/2 px-3 py-1.5 bg-white dark:bg-gray-900 rounded-lg shadow-md border border-green-100 dark:border-green-900/50 text-sm font-medium text-green-700 dark:text-green-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                            <div className="absolute left-0 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 rotate-45 bg-white dark:bg-gray-900 border-l border-t border-green-100 dark:border-green-900/50"></div>
+                            {language === 'en' ? 'Click for message' : 'Кликнете за съобщение'}
+                          </div>
                         </div>
-                      </div>
-                    </Link>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md rounded-lg border-green-200/50 dark:border-green-900/50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm">
+                        <DialogHeader>
+                          <DialogTitle className="text-xl text-green-800 dark:text-green-300 font-semibold">
+                            {language === 'en' ? 'Welcome to My Website' : 'Добре дошли в моя уебсайт'}
+                          </DialogTitle>
+                          <DialogDescription className="text-gray-600 dark:text-gray-400">
+                            {language === 'en' 
+                              ? 'A personal note from Elisa Ivanova' 
+                              : 'Лично съобщение от Елиса Иванова'}
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-2">
+                          <div className="bg-green-50/80 dark:bg-green-900/20 p-4 rounded-md border border-green-100 dark:border-green-900 text-gray-700 dark:text-gray-300">
+                            <p className="text-sm leading-relaxed">
+                              {language === 'en' 
+                                ? 'Thank you for visiting my website. I believe that personal growth and self-discovery are lifelong journeys, and I\'m here to support you every step of the way. Whether through my books, therapy sessions, or workshops, my goal is to help you find balance and purpose in your life.' 
+                                : 'Добре дошли в моето онлайн пространство за сътворяване на своята реалност на своите мечти, щастие и любов! Приветствам те с любов и се радвам, че ме откри! Аз съм Елис Джелилова и съм тук, за да ти помогна и подкрепя в преодоляването на твоите трудности сътворяването на осъзнат, мечтан живот, изпълнен с любов и хармония. Усещам, че да бъда част, от този процес за мен е щастие и призвание. Тук ще бъдеш изслушан, разбран и подкрепен.\nЗа мен любовта е смисълът на всичко, което правя! Вярвам, че всеки един от нас заслужава и може да създаде своя живот мечта! А аз ще се радвам да бъда част от този процес.\nКонсултациите и семинарите които организирам са насочени към това да изградим здрава връзка със себе си, във връзките и взаимоотношенията си и със заобикалящия ни свят; личностно развитие, преодоляване на лоши навици и придобиване на нови, които ни служат за наше благо, здравословен начин на живот, хармония и щастие.\nВярвам, че в живота няма случайни неща и щом си попаднал тук, то със сигурност има нещо полезно за теб!'}
+                            </p>
+                          </div>
+                          <div className="flex justify-end gap-2 pt-2">
+                            <Button 
+                              variant="outline" 
+                              onClick={() => setDialogOpen(false)}
+                              className="rounded-full px-4 border-green-200 dark:border-green-900 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20"
+                            >
+                              {language === 'en' ? 'Close' : 'Затвори'}
+                            </Button>
+                            <Button 
+                              variant="default" 
+                              onClick={() => {
+                                setDialogOpen(false);
+                                window.location.href = "/about";
+                              }}
+                              className="rounded-full px-4 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-medium"
+                            >
+                              {language === 'en' ? 'Learn More' : 'Научете повече'}
+                            </Button>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   </motion.div>
-                      
-                  {/* Main heading - FIXED TO SINGLE ROW */}
-                  {/* 
-                    ALTERNATIVE HEADLINE STYLES - Choose one by uncommenting:
-                    
-                    Option 1: Gradient text 
-                    className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold font-playfair max-w-7xl whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-br from-green-800 via-green-700 to-emerald-600 dark:from-emerald-300 dark:via-green-300 dark:to-green-200 tracking-tight"
-                    
-                    Option 2: Soft black/white text (active)
-                    className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold font-playfair max-w-7xl whitespace-nowrap text-[#171717] dark:text-white tracking-tight"
-                    
-                    Option 3: Solid green text
-                    className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold font-playfair max-w-7xl whitespace-nowrap text-green-700 dark:text-green-300 tracking-tight"
-                  */}
-                  <motion.h1 
+                  
+                  {/* Author intro badge */}
+                  <motion.div 
                     variants={ANIMATIONS.item}
-                    className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold font-playfair max-w-7xl whitespace-nowrap text-[#171717] dark:text-white tracking-tight"
+                    className="px-3 py-1.5 rounded-full bg-green-100/80 dark:bg-green-900/30 text-green-800 dark:text-green-300 font-medium text-sm mb-4 inline-flex items-center border border-green-200/50 dark:border-green-800/30"
                   >
-                    {ui.transformHeading}
-                  </motion.h1>
-                      
-                  {/* Author description - INCREASED SIZE FROM PREVIOUS EDIT */}
+                    <span className="mr-1.5">✦</span> {language === 'en' ? 'Author • Psychologist • Life Coach' : 'Автор • Психолог • Лайф Коуч'}
+                  </motion.div>
+                  
+                  {/* Main heading - single line with improved styling */}
+                  <motion.div
+                    variants={ANIMATIONS.item}
+                    className="relative overflow-hidden mb-4 max-w-4xl"
+                  >
+                    <h1 className="text-[2.2rem] sm:text-[2.8rem] md:text-[3.4rem] lg:text-[4.2rem] font-bold font-playfair leading-[1.1] tracking-tight whitespace-nowrap">
+                      <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-800 via-emerald-700 to-green-800 dark:from-green-300 dark:via-emerald-200 dark:to-green-300 animate-text-shimmer bg-[length:200%_auto]">
+                        {language === 'en' ? 'Transform Your Life' : 'Трансформирай Твоя Живот'}
+                      </span>
+                      <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-green-500/80 via-green-400/50 to-transparent dark:from-green-400/80 dark:via-green-500/50 dark:to-transparent rounded-full"></div>
+                    </h1>
+                    {/* Subtle decorative elements */}
+                    <div className="absolute -top-6 -left-6 w-12 h-12 border-t-2 border-l-2 border-green-300/20 dark:border-green-700/30 rounded-tl-lg"></div>
+                    <div className="absolute -bottom-6 -right-6 w-12 h-12 border-b-2 border-r-2 border-green-300/20 dark:border-green-700/30 rounded-br-lg"></div>
+                  </motion.div>
+                    
+                  {/* Author description - fixed to display in exactly 2 rows total */}
                   <motion.p 
                     variants={ANIMATIONS.item}
-                    className="text-sm sm:text-base md:text-lg text-gray-800 dark:text-gray-200 max-w-3xl font-medium leading-relaxed"
+                    className="text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-200 max-w-2xl font-medium leading-relaxed mb-6"
                   >
-                    {ui.aboutText}
+                    {language === 'en' 
+                      ? <span>Join me on a journey of <span className="text-emerald-700 dark:text-emerald-400 font-semibold">self-discovery</span> and personal growth. {" "}
+                        As a certified psychologist and author, I help people create <span className="text-emerald-700 dark:text-emerald-400 font-semibold">conscious, meaningful lives</span>.</span>
+                      : <span>Присъединете се към мен в пътуването към <span className="text-emerald-700 dark:text-emerald-400 font-semibold">себепознание</span> и личностно израстване. {" "}
+                        Като дипломиран психолог и автор, помагам на хората да създадат <span className="text-emerald-700 dark:text-emerald-400 font-semibold">осъзнат, мечтан живот</span>.</span>}
                   </motion.p>
-                      
-                  {/* CTA Button - INCREASED SIZE FROM PREVIOUS EDIT */}
-                  <motion.div variants={ANIMATIONS.item}>
+                  
+                  {/* CTA Buttons - with improved styling */}
+                  <motion.div 
+                    variants={ANIMATIONS.item}
+                    className="flex flex-col sm:flex-row gap-4 sm:gap-5 mb-8"
+                  >
                     <Button 
                       asChild 
                       size="lg" 
-                      className="group rounded-full bg-gradient-to-r from-green-700 to-emerald-600 hover:from-green-600 hover:to-emerald-500 border-0 px-5 sm:px-6 md:px-7 py-2.5 sm:py-3.5 text-sm sm:text-base font-medium shadow-[0_4px_14px_rgba(0,128,0,0.25)] hover:shadow-[0_6px_20px_rgba(0,128,0,0.35)] transition-all duration-300"
+                      className="group rounded-full bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400 border-0 px-6 py-3 sm:px-7 sm:py-3.5 text-base font-medium shadow-[0_4px_14px_rgba(16,185,129,0.25)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.35)] transition-all duration-300 relative overflow-hidden"
                     >
-                      <Link href="/services#consultation" className="flex items-center">
-                        <span className="relative z-10 flex items-center justify-center -ml-1 mr-2 w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 bg-white/20 rounded-full">
-                          <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+                      <Link href="/services#consultation" className="flex items-center justify-center">
+                        {/* Subtle button animation */}
+                        <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                        <span className="relative z-10 flex items-center justify-center -ml-1 mr-2 w-8 h-8 bg-white/20 rounded-full">
+                          <BookOpen className="h-4 w-4 text-white" />
                         </span>
                         <span className="font-medium tracking-wide text-white">
                           {language === 'bg' ? 'Безплатна Консултация' : 'Free Consultation'}
                         </span>
-                        <ArrowRight className="ml-2 sm:ml-3 h-5 w-5 sm:h-6 sm:w-6 text-white/80 transition-transform group-hover:translate-x-1" />
+                        <ArrowRight className="ml-2 h-5 w-5 text-white/80 transition-transform group-hover:translate-x-1" />
+                      </Link>
+                    </Button>
+                    
+                    <Button 
+                      asChild 
+                      variant="outline" 
+                      size="lg" 
+                      className="group rounded-full bg-white/80 dark:bg-gray-900/50 border border-green-200 dark:border-green-800/50 px-6 py-3 sm:px-7 sm:py-3.5 text-base font-medium text-green-700 dark:text-green-400 shadow-sm hover:shadow-md transition-all duration-300 hover:bg-green-50 dark:hover:bg-green-900/10"
+                    >
+                      <Link href="/shop" className="flex items-center justify-center">
+                        <span className="font-medium">
+                          {language === 'bg' ? 'Разгледай Книгите' : 'Browse Books'}
+                        </span>
+                        <ChevronRight className="ml-1 h-5 w-5 text-green-600/80 dark:text-green-500/80 transition-transform group-hover:translate-x-0.5" />
                       </Link>
                     </Button>
                   </motion.div>
-                      
-                  {/* Navigation - INCREASED SIZE FROM PREVIOUS EDIT */}
+                  
+                  {/* Framer Motion Infinite Scrolling Book Carousel */}
                   <motion.div 
                     variants={ANIMATIONS.item}
-                    className="grid grid-cols-3 gap-3 md:gap-4 w-full max-w-2xl sm:max-w-3xl md:max-w-4xl mx-auto"
+                    className="w-full max-w-5xl relative mt-4"
                   >
-                    {expertiseAreas.map((area, index) => (
-                      <Link 
-                        href={area.url}
-                        key={area.title}
-                        className={cn(
-                          "group flex flex-col items-center p-[3px] rounded-lg backdrop-blur-sm bg-white/80 dark:bg-gray-800/70 hover:shadow-md duration-300 transition-all shadow-sm",
-                          "overflow-hidden select-none",
-                          // Outer border colors - transparent by default, visible on hover
-                          "border-2",
-                          index === 0 && "border-green-100/30 dark:border-green-900/30 hover:border-green-300 dark:hover:border-green-700",
-                          index === 1 && "border-blue-100/30 dark:border-blue-900/30 hover:border-blue-300 dark:hover:border-blue-700",
-                          index === 2 && "border-purple-100/30 dark:border-purple-900/30 hover:border-purple-300 dark:hover:border-purple-700"
-                        )}
-                      >
-                        {/* Inner card with its own border */}
-                        <div className={cn(
-                          "flex flex-col items-center rounded-md p-2 sm:p-3 w-full h-full",
-                          "bg-white/90 dark:bg-gray-900/90",
-                          "shadow-[inset_1px_1px_2px_rgba(0,0,0,0.01),inset_-1px_-1px_2px_rgba(255,255,255,0.25)]",
-                          "dark:shadow-[inset_1px_1px_2px_rgba(0,0,0,0.05),inset_-1px_-1px_2px_rgba(255,255,255,0.05)]",
-                          // Inner border - subtle by default
-                          "border",
-                          index === 0 && "border-green-100/30 dark:border-green-900/30 hover:border-green-300/50 dark:hover:border-green-700/50",
-                          index === 1 && "border-blue-100/30 dark:border-blue-900/30 hover:border-blue-300/50 dark:hover:border-blue-700/50", 
-                          index === 2 && "border-purple-100/30 dark:border-purple-900/30 hover:border-purple-300 dark:hover:border-purple-700/50"
-                        )}>
-                          {/* Corner decoration element */}
-                          <div className={cn(
-                            "absolute top-0 right-0 w-24 h-24 rounded-bl-3xl -z-1",
-                            index === 0 && "bg-gradient-to-bl from-green-100/40 to-transparent dark:from-green-900/20",
-                            index === 1 && "bg-gradient-to-bl from-blue-100/40 to-transparent dark:from-blue-900/20",
-                            index === 2 && "bg-gradient-to-bl from-purple-100/40 to-transparent dark:from-purple-900/20"
-                          )} />
-                        
-                          <div className={cn(
-                            "p-1.5 rounded-full flex items-center justify-center mb-2 sm:mb-3",
-                            index === 0 && "bg-gradient-to-br from-green-50 to-green-100/60 dark:from-green-900/30 dark:to-green-800/20",
-                            index === 1 && "bg-gradient-to-br from-blue-50 to-blue-100/60 dark:from-blue-900/30 dark:to-blue-800/20",
-                            index === 2 && "bg-gradient-to-br from-purple-50 to-purple-100/60 dark:from-purple-900/30 dark:to-purple-800/20"
-                          )}>
-                            <span className="text-lg sm:text-xl w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 flex items-center justify-center">{area.icon}</span>
-                          </div>
-                          <h3 className={cn(
-                            "font-semibold text-sm sm:text-base text-gray-900 dark:text-white"
-                          )}>{area.title}</h3>
-                          <p className={cn(
-                            "text-xs sm:text-sm line-clamp-1 text-gray-700 dark:text-gray-300"
-                          )}>{area.description}</p>
-                        </div>
-                      </Link>
-                    ))}
-                  </motion.div>
-                      
-                  {/* Book Carousel - REDUCED HEIGHT SLIGHTLY */}
-                  <motion.div 
-                    variants={ANIMATIONS.item}
-                    className="w-full relative h-[140px] sm:h-[180px] md:h-[200px] lg:h-[240px]"
-                  >
-                    <div ref={containerRef} className="relative w-full h-full">
-                      {/* Outer container */}
-                      <div className="rounded-lg sm:rounded-xl p-[2px] h-full
-                          bg-gradient-to-br from-green-100/80 via-white/90 to-green-50/80 
-                          dark:from-green-900/20 dark:via-gray-900/90 dark:to-gray-800/80
-                          shadow-md">
+                    {/* Premium nested container */}
+                    <div className="p-2 rounded-2xl bg-gradient-to-br from-green-200/30 to-emerald-100/20 dark:from-green-700/30 dark:to-emerald-800/20 shadow-lg">
+                      <div className="p-0.5 rounded-xl bg-gradient-to-br from-white/80 via-white/60 to-green-50/60 dark:from-gray-800/80 dark:via-gray-900/60 dark:to-green-950/40">
+                        <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-lg border border-green-100/80 dark:border-green-800/30 shadow-inner">
                           
-                        {/* Inner container */}
-                        <div className="bg-gradient-to-br from-white/90 via-white/80 to-green-50/70 dark:from-gray-900/70 dark:via-gray-900/60 dark:to-green-950/10 p-3 sm:p-4 rounded-lg sm:rounded-xl relative h-full flex flex-col">
-                          {/* Section header */}
-                          <div className="flex justify-between items-center mb-2 sm:mb-3 relative z-10">
-                            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2
-                              rounded-full bg-gradient-to-r from-green-100 to-green-50 dark:from-green-900/30 dark:to-green-800/20
-                              text-green-700 dark:text-green-400 font-medium
-                              border border-green-100/50 dark:border-green-800/30">
-                              <Bookmark className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 dark:text-green-500" />
-                              <h3 className="text-sm sm:text-base">
-                                {ui.booksHeader}
-                              </h3>
-                            </div>
+                          {/* Pure Framer Motion carousel with infinite scrolling */}
+                          <div className="py-2 px-3 h-[220px] sm:h-[240px] md:h-[260px] relative overflow-hidden">
+                            {/* Edge fade gradients */}
+                            <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white/90 dark:from-gray-900/90 to-transparent z-10 pointer-events-none"></div>
+                            <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white/90 dark:from-gray-900/90 to-transparent z-10 pointer-events-none"></div>
                             
-                            <Link 
-                              href="/shop" 
-                              className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-full text-sm sm:text-base
-                                bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400
-                                text-white font-medium
-                                transition-all duration-300
-                                flex items-center gap-1.5 sm:gap-2"
-                            >
-                              {language === 'bg' ? 'Всички книги' : 'All Books'}
-                              <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                            </Link>
-                          </div>
-                          
-                          {/* Books carousel - INCREASED SIZE */}
-                          <div className="relative overflow-hidden px-3 flex-1" ref={carouselRef}>
+                            {/* Framer motion scrolling track */}
                             <motion.div
-                              className="flex gap-3 sm:gap-4 h-full"
-                              style={{ x }}
+                              className="flex space-x-6 absolute top-0 bottom-0 py-4"
+                              initial={{ x: 0 }}
+                              animate={{ 
+                                x: [0, -heroBooks.length * 150], 
+                              }}
+                              transition={{
+                                x: {
+                                  duration: 20,
+                                  repeat: Infinity,
+                                  ease: "linear"
+                                }
+                              }}
                             >
-                              {duplicatedBooks.map((book, index) => (
-                                <div
-                                  key={`${book.id}-${index}`}
-                                  className="flex-shrink-0 cursor-pointer transition-all duration-300 group h-full w-28 sm:w-36 md:w-44 lg:w-48"
-                                  onMouseEnter={() => setIsPaused(true)}
-                                  onMouseLeave={() => setIsPaused(false)}
+                              {/* First set of books */}
+                              {heroBooks.map((book, index) => (
+                                <Link 
+                                  key={`book-${book.id}`} 
+                                  href={`/shop/${book.id}`} 
+                                  className="group flex-none"
                                 >
-                                  <Link href={`/shop/${book.id}`} className="h-full block">
-                                    <div className="relative h-full shadow-md group-hover:shadow-lg transition-all duration-300 rounded-lg overflow-hidden aspect-[2/3]">
-                                      <Image
-                                        src={book.coverImage}
-                                        alt={book.title}
-                                        fill
-                                        className="object-cover transition-transform duration-300 group-hover:scale-105"
-                                        sizes="(max-width: 640px) 112px, (max-width: 768px) 144px, (max-width: 1024px) 176px, 192px"
-                                      />
+                                  <div className="relative h-[180px] sm:h-[200px] md:h-[220px] w-[130px] sm:w-[140px] md:w-[150px] transition-all duration-300 rounded-lg shadow-md group-hover:shadow-xl overflow-hidden">
+                                    <Image
+                                      src={book.coverImage}
+                                      alt={book.title}
+                                      fill
+                                      className="object-cover rounded-lg border border-white/50 dark:border-gray-800/50 transition-all duration-300 group-hover:brightness-[0.85] group-hover:scale-[1.05]"
+                                      sizes="(max-width: 640px) 130px, (max-width: 768px) 140px, 150px"
+                                    />
+                                    
+                                    {/* Overlay on hover */}
+                                    <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center">
+                                      {/* View icon in the middle */}
+                                      <div className="bg-white/20 backdrop-blur-sm p-2.5 rounded-full transform scale-75 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 mb-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+                                          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                          <circle cx="12" cy="12" r="3" />
+                                        </svg>
+                                      </div>
                                       
-                                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-2 sm:p-3">
-                                        <h3 className="font-medium text-xs sm:text-sm leading-tight text-white">{book.title}</h3>
+                                      {/* Book title on hover */}
+                                      <div className="text-white text-center text-sm font-medium mx-2 mb-1.5">{book.title}</div>
+                                      
+                                      {/* Click for info text */}
+                                      <div className="bg-black/60 backdrop-blur-sm text-white text-xs py-1 px-2.5 rounded-full opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-500 delay-100 shadow-lg flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 mr-1">
+                                          <circle cx="12" cy="12" r="10" />
+                                          <path d="M12 16v-4" />
+                                          <path d="M12 8h.01" />
+                                        </svg>
+                                        {language === 'en' ? 'Click for info' : 'Кликни за инфо'}
                                       </div>
                                     </div>
-                                  </Link>
-                                </div>
+                                  </div>
+                                </Link>
+                              ))}
+                              
+                              {/* Duplicate set for infinite scrolling */}
+                              {heroBooks.map((book, index) => (
+                                <Link 
+                                  key={`book-dup-${book.id}`} 
+                                  href={`/shop/${book.id}`} 
+                                  className="group flex-none"
+                                >
+                                  <div className="relative h-[180px] sm:h-[200px] md:h-[220px] w-[130px] sm:w-[140px] md:w-[150px] transition-all duration-300 rounded-lg shadow-md group-hover:shadow-xl overflow-hidden">
+                                    <Image
+                                      src={book.coverImage}
+                                      alt={book.title}
+                                      fill
+                                      className="object-cover rounded-lg border border-white/50 dark:border-gray-800/50 transition-all duration-300 group-hover:brightness-[0.85] group-hover:scale-[1.05]"
+                                      sizes="(max-width: 640px) 130px, (max-width: 768px) 140px, 150px"
+                                    />
+                                    
+                                    {/* Overlay on hover */}
+                                    <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center">
+                                      {/* View icon in the middle */}
+                                      <div className="bg-white/20 backdrop-blur-sm p-2.5 rounded-full transform scale-75 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 mb-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+                                          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                          <circle cx="12" cy="12" r="3" />
+                                        </svg>
+                                      </div>
+                                      
+                                      {/* Book title on hover */}
+                                      <div className="text-white text-center text-sm font-medium mx-2 mb-1.5">{book.title}</div>
+                                      
+                                      {/* Click for info text */}
+                                      <div className="bg-black/60 backdrop-blur-sm text-white text-xs py-1 px-2.5 rounded-full opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-500 delay-100 shadow-lg flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 mr-1">
+                                          <circle cx="12" cy="12" r="10" />
+                                          <path d="M12 16v-4" />
+                                          <path d="M12 8h.01" />
+                                        </svg>
+                                        {language === 'en' ? 'Click for info' : 'Кликни за инфо'}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </Link>
                               ))}
                             </motion.div>
                           </div>
-
-                          {/* Gradient fades */}
-                          <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-16 md:w-20 bg-gradient-to-r from-white/80 to-transparent dark:from-gray-900/80 dark:to-transparent z-10 pointer-events-none"></div>
-                          <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-16 md:w-20 bg-gradient-to-l from-white/80 to-transparent dark:from-gray-900/80 dark:to-transparent z-10 pointer-events-none"></div>
-
-                          {/* Simple control */}
-                          <button
-                            onClick={() => setIsPaused(!isPaused)}
-                            className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-white dark:bg-gray-800 text-green-700 dark:text-green-400 flex items-center justify-center shadow-sm border border-green-100/50 dark:border-green-800/30 z-20"
-                            aria-label={isPaused ? translate("Възобнови", "Resume") : translate("Пауза", "Pause")}
-                          >
-                            {isPaused ? (
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                            ) : (
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
-                            )}
-                          </button>
                         </div>
                       </div>
+                    </div>
+                    
+                    {/* "View all books" link */}
+                    <div className="mt-5 text-center">
+                      <Link 
+                        href="/shop" 
+                        className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-white/90 to-green-50/90 dark:from-gray-900/90 dark:to-green-950/80 border border-green-200/60 dark:border-green-800/40 text-sm font-medium text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
+                      >
+                        <Bookmark className="mr-2 h-4 w-4" />
+                        {language === 'en' ? 'View all books' : 'Виж всички книги'}
+                        <ChevronRight className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                      </Link>
                     </div>
                   </motion.div>
                 </div>
