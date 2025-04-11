@@ -7,7 +7,7 @@ import { shopBooks } from "@/lib/shop-data";
 import { services } from "@/data/services";
 import Link from "next/link";
 import Image from "next/image";
-import { BookOpen, ShoppingCart, Clock, Package, ArrowUp, Sparkles, Download, FileText, Eye, Star, User, ArrowRight, CheckCircle, CalendarDays, Users, Flower, ArrowDown } from "lucide-react";
+import { BookOpen, ShoppingCart, Clock, Package, ArrowUp, Sparkles, Download, FileText, Eye, Star, User, ArrowRight, CheckCircle, CalendarDays, Users, Flower, ArrowDown, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/LanguageContext";
@@ -16,8 +16,11 @@ import { Book, Service } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CONTAINER_WIDTH_CLASSES } from "@/lib/constants";
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { useRouter } from "next/router";
 
 export default function ShopPage() {
+  const router = useRouter();
   const { language, translations } = useLanguage();
   const { addToCart } = useCart();
   const translate = (bg: string, en: string) => language === "bg" ? bg : en;
@@ -31,10 +34,20 @@ export default function ShopPage() {
     });
   };
   
+  // Handle book click - navigate to book details page
+  const handleBookClick = (book: Book) => {
+    router.push(`/shop/${book.id}`);
+  };
+  
+  // Handle service click - navigate to service details page
+  const handleServiceClick = (service: Service) => {
+    router.push(`/services/${service.id}`);
+  };
+  
   // State for filtering and sorting
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSort, setActiveSort] = useState("newest");
-  const [activeTab, setActiveTab] = useState("books");
+  const [activeTab, setActiveTab] = useState('all');
   const [activeFilters, setActiveFilters] = useState({
     featured: false,
     newReleases: false,
@@ -194,7 +207,7 @@ export default function ShopPage() {
         <meta name="description" content={translate("Разгледайте книги и услуги от Елис", "Browse books and services by Elis")} />
       </Head>
       
-      <main className="flex flex-col min-h-screen pt-16 pb-12 relative overflow-x-hidden">
+      <main className="flex flex-col min-h-screen pt-10 pb-12 relative overflow-x-hidden">
         {/* Enhanced Background Elements */}
         <div className="absolute inset-0 -z-10 pointer-events-none">
           {/* Primary gradient background */}
@@ -230,7 +243,7 @@ export default function ShopPage() {
                   
                   {/* Tabs */}
                   <div className="mt-8">
-                    <Tabs defaultValue="books" className="w-full" onValueChange={setActiveTab}>
+                    <Tabs defaultValue="all" className="w-full" onValueChange={setActiveTab}>
                       <div className="flex justify-center mb-8 relative">
                         {/* Arrow indicator pointing to tabs */}
                         <div className="absolute -top-20 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce">
@@ -246,31 +259,49 @@ export default function ShopPage() {
                           shadow-[3px_3px_6px_rgba(0,0,0,0.06),-3px_-3px_6px_rgba(255,255,255,0.8)] 
                           dark:shadow-[3px_3px_6px_rgba(0,0,0,0.2),-3px_-3px_6px_rgba(30,30,30,0.1)]">
                           <TabsTrigger 
-                            value="books" 
+                            value="all" 
                             className="relative rounded-full px-7 py-3.5 text-base
-                              data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 
                               data-[state=active]:shadow-[2px_2px_4px_rgba(0,0,0,0.1),-2px_-2px_4px_rgba(255,255,255,0.7)] 
                               dark:data-[state=active]:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)] 
-                              transition-all duration-300 font-medium group"
+                              transition-all duration-300 font-medium group
+                              data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500
+                              data-[state=active]:text-white"
                           >
-                            {/* Creating the animation glow effect for active tab */}
-                            <span className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 dark:from-blue-500/20 dark:via-purple-500/20 dark:to-pink-500/20 opacity-0 data-[state=active]:opacity-100 blur-md transition-opacity duration-500"></span>
+                            <span className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-orange-500/10 dark:from-purple-500/20 dark:via-pink-500/20 dark:to-orange-500/20 opacity-0 data-[state=active]:opacity-100 blur-md transition-opacity duration-500"></span>
+                            
+                            <span className="relative flex items-center justify-center gap-2">
+                              <Layers className="h-5 w-5 transition-transform duration-300 group-data-[state=active]:scale-110" />
+                              {translate("Всички", "All")}
+                            </span>
+                          </TabsTrigger>
+                          
+                          <TabsTrigger 
+                            value="books" 
+                            className="relative rounded-full px-7 py-3.5 text-base
+                              data-[state=active]:shadow-[2px_2px_4px_rgba(0,0,0,0.1),-2px_-2px_4px_rgba(255,255,255,0.7)] 
+                              dark:data-[state=active]:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)] 
+                              transition-all duration-300 font-medium group
+                              data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-emerald-600
+                              data-[state=active]:text-white"
+                          >
+                            <span className="absolute inset-0 rounded-full bg-gradient-to-r from-green-500/10 via-emerald-500/10 to-teal-500/10 dark:from-green-500/20 dark:via-emerald-500/20 dark:to-teal-500/20 opacity-0 data-[state=active]:opacity-100 blur-md transition-opacity duration-500"></span>
                             
                             <span className="relative flex items-center justify-center gap-2">
                               <BookOpen className="h-5 w-5 transition-transform duration-300 group-data-[state=active]:scale-110" />
                               {translate("Книги", "Books")}
                             </span>
                           </TabsTrigger>
+                          
                           <TabsTrigger 
                             value="services" 
                             className="relative rounded-full px-7 py-3.5 text-base
-                              data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 
                               data-[state=active]:shadow-[2px_2px_4px_rgba(0,0,0,0.1),-2px_-2px_4px_rgba(255,255,255,0.7)] 
                               dark:data-[state=active]:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1)] 
-                              transition-all duration-300 font-medium group"
+                              transition-all duration-300 font-medium group
+                              data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600
+                              data-[state=active]:text-white"
                           >
-                            {/* Creating the animation glow effect for active tab */}
-                            <span className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 dark:from-blue-500/20 dark:via-purple-500/20 dark:to-pink-500/20 opacity-0 data-[state=active]:opacity-100 blur-md transition-opacity duration-500"></span>
+                            <span className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/10 via-blue-500/10 to-indigo-500/10 dark:from-blue-500/20 dark:via-blue-500/20 dark:to-indigo-500/20 opacity-0 data-[state=active]:opacity-100 blur-md transition-opacity duration-500"></span>
                             
                             <span className="relative flex items-center justify-center gap-2">
                               <Package className="h-5 w-5 transition-transform duration-300 group-data-[state=active]:scale-110" />
@@ -292,6 +323,476 @@ export default function ShopPage() {
                           showServiceFilters={activeTab === "services"}
                         />
                       </div>
+
+                      {/* All Content - Books and Services Combined */}
+                      <TabsContent value="all">
+                        <div className="mt-8">
+                          {filteredBooks.length === 0 && filteredServices.length === 0 ? (
+                            <div className="text-center py-10 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-inner">
+                              <Layers className="mx-auto h-12 w-12 text-gray-400" />
+                              <h3 className="mt-4 text-lg font-medium">{translate("Няма намерени резултати", "No results found")}</h3>
+                              <p className="mt-2 text-sm text-gray-500">
+                                {translate("Опитайте да промените критериите за търсене", "Try adjusting your search or filter criteria")}
+                              </p>
+                            </div>
+                          ) : (
+                            <div className="space-y-12">
+                              {/* Books section */}
+                              {filteredBooks.length > 0 && (
+                                <div>
+                                  <div className="flex items-center justify-between mb-6">
+                                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                      <BookOpen className="h-6 w-6 text-green-600 dark:text-green-400" />
+                                      {translate("Книги", "Books")}
+                                    </h2>
+                                    <Badge 
+                                      className="rounded-full px-3 py-1.5 text-sm font-medium 
+                                        bg-green-100 dark:bg-green-900/50 
+                                        text-green-800 dark:text-green-300 
+                                        border border-green-200 dark:border-green-800/50"
+                                    >
+                                      {filteredBooks.length}
+                                    </Badge>
+                                  </div>
+                                  
+                                  <motion.div 
+                                    variants={containerVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8"
+                                  >
+                                    {filteredBooks.slice(0, 4).map((book) => (
+                                      <motion.div 
+                                        key={book.id}
+                                        variants={itemVariants}
+                                        className="group relative flex flex-col h-full"
+                                        onClick={() => handleBookClick(book)}
+                                      >
+                                        {/* Card with double border hover effect - matching the style of featured content cards */}
+                                        <div className={cn(
+                                          "h-full p-[3px] select-none rounded-xl",
+                                          "bg-gradient-to-br from-white/90 via-green-100/20 to-white/90 dark:from-gray-900/90 dark:via-green-900/20 dark:to-gray-900/90",
+                                          "backdrop-blur-sm",
+                                          "shadow-[-5px_-5px_15px_rgba(255,255,255,0.8),_5px_5px_15px_rgba(0,0,0,0.08)]", 
+                                          "dark:shadow-[-5px_-5px_15px_rgba(20,20,30,0.1),_5px_5px_15px_rgba(0,0,0,0.2)]",
+                                          "transition-all duration-300", 
+                                          "hover:shadow-[-2px_-2px_10px_rgba(255,255,255,0.6),_2px_2px_10px_rgba(0,0,0,0.1),_0_8px_20px_rgba(0,0,0,0.05)]", 
+                                          "dark:hover:shadow-[-2px_-2px_10px_rgba(20,20,30,0.15),_2px_2px_10px_rgba(0,0,0,0.3),_0_8px_20px_rgba(0,0,0,0.15)]",
+                                          "border-2 border-green-100/30 dark:border-green-900/30 hover:border-green-300 dark:hover:border-green-700",
+                                          "relative overflow-hidden cursor-pointer"
+                                        )}>
+                                          {/* Inner container with its own border - creates nested effect */}
+                                          <div className={cn(
+                                            "h-full w-full flex flex-col bg-white/90 dark:bg-gray-900/90 rounded-lg",
+                                            "border border-green-100/30 dark:border-green-900/30 hover:border-green-300/50 dark:hover:border-green-700/50",
+                                            "shadow-[inset_1px_1px_2px_rgba(0,0,0,0.01),inset_-1px_-1px_2px_rgba(255,255,255,0.25)]",
+                                            "dark:shadow-[inset_1px_1px_2px_rgba(0,0,0,0.05),inset_-1px_-1px_2px_rgba(255,255,255,0.05)]"
+                                          )}>
+                                            {/* Corner decoration element with enhanced styling */}
+                                            <div className="absolute top-0 right-0 w-32 h-32 rounded-bl-3xl -z-1 
+                                              bg-gradient-to-bl from-green-100/40 to-transparent dark:from-green-900/20
+                                              group-hover:from-green-200/60 dark:group-hover:from-green-800/40
+                                              transition-colors duration-300" />
+                                            
+                                            {/* Book cover image with enhanced styling */}
+                                            <div className="relative w-full h-52 overflow-hidden rounded-t-lg">
+                                              {book.coverImage ? (
+                                                <div className="absolute inset-0">
+                                                  <Image
+                                                    src={book.coverImage}
+                                                    alt={book.title}
+                                                    fill
+                                                    className="object-cover transition-all duration-300"
+                                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                                                  />
+                                                  
+                                                  {/* Subtle image overlay effect */}
+                                                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                  
+                                                  {/* Enhanced vignette */}
+                                                  <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)] dark:shadow-[inset_0_0_20px_rgba(0,0,0,0.4)] pointer-events-none"></div>
+                                                </div>
+                                              ) : (
+                                                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-green-50 to-white dark:from-gray-900 dark:to-gray-800">
+                                                  <Flower className="h-20 w-20 text-green-500/40" />
+                                                </div>
+                                              )}
+                                            </div>
+                                            
+                                            {/* Book details with refined styling */}
+                                            <div className="p-5 lg:p-6 flex flex-col flex-grow">
+                                              {/* Category badge */}
+                                              {book.category && (
+                                                <span className="inline-flex items-center mb-2.5 text-sm font-medium mr-2 px-3 py-1 rounded-full
+                                                  bg-gradient-to-r from-green-500 to-emerald-600 text-white
+                                                  border border-green-400/20 shadow-md">
+                                                    {book.category === 'health' ? (language === 'bg' ? 'Здраве' : 'Health') : 
+                                                    book.category === 'poetry' ? (language === 'bg' ? 'Поезия' : 'Poetry') : 
+                                                    book.category === 'selfHelp' ? (language === 'bg' ? 'Самопомощ' : 'Self Help') : 
+                                                    book.category}
+                                                </span>
+                                              )}
+                                              
+                                              {/* Book title with clean typography - no color transitions */}
+                                              <h3 className="font-bold text-xl leading-6 text-[#171717] dark:text-white mb-2 
+                                                tracking-tight line-clamp-2">
+                                                {book.title}
+                                              </h3>
+                                              
+                                              {/* Price display under headline */}
+                                              <div className="flex items-center mb-3">
+                                                <span className="font-semibold text-gray-700 dark:text-gray-300">
+                                                  {book.price?.toFixed(2)} лв.
+                                                </span>
+                                              </div>
+                                              
+                                              {/* Enhanced book details with badges */}
+                                              <div className="flex items-center gap-1.5 mb-3.5 w-full">
+                                                <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
+                                                  bg-gray-100/80 dark:bg-gray-700/50 text-sm text-gray-700 dark:text-gray-300">
+                                                  <FileText className="h-3.5 w-3.5 mr-1 text-gray-500 dark:text-gray-400" />
+                                                  <span>{book.pages} {language === 'bg' ? 'стр.' : 'pg'}</span>
+                                                </div>
+                                                
+                                                {/* Publication date */}
+                                                {book.publishDate && (
+                                                  <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
+                                                    bg-gray-100/80 dark:bg-gray-700/50 text-sm text-gray-700 dark:text-gray-300">
+                                                    <CalendarDays className="h-3.5 w-3.5 mr-1 text-gray-500 dark:text-gray-400" />
+                                                    <span>{new Date(book.publishDate).getFullYear()}</span>
+                                                  </div>
+                                                )}
+                                                
+                                                {/* Digital badge if available */}
+                                                {book.digital && (
+                                                  <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
+                                                    bg-blue-50/80 dark:bg-blue-900/30 text-sm text-blue-700 dark:text-blue-400 
+                                                    border border-blue-200/50 dark:border-blue-800/40">
+                                                    <Download className="h-3.5 w-3.5 mr-1" />
+                                                    <span>{language === 'bg' ? 'PDF' : 'PDF'}</span>
+                                                  </div>
+                                                )}
+                                              </div>
+                                              
+                                              {/* Book description with clean typography - no color transitions */}
+                                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2 flex-grow leading-relaxed">
+                                                {book.description}
+                                              </p>
+                                              
+                                              {/* Rating and reviews */}
+                                              <div className="flex items-center mb-4">
+                                                <div className="flex text-yellow-400 mr-2">
+                                                  <Star className="h-4 w-4 fill-current" />
+                                                  <Star className="h-4 w-4 fill-current" />
+                                                  <Star className="h-4 w-4 fill-current" />
+                                                  <Star className="h-4 w-4 fill-current" />
+                                                  <Star className="h-4 w-4 fill-current text-gray-300 dark:text-gray-600" />
+                                                </div>
+                                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                  (4.0) · {Math.floor(Math.random() * 50) + 10} {translate("ревюта", "reviews")}
+                                                </span>
+                                              </div>
+                                              
+                                              {/* Buttons at the bottom */}
+                                              <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700/30 flex justify-between items-center">
+                                                {/* View button with refined styling */}
+                                                <Button
+                                                  variant="outline"
+                                                  size="sm"
+                                                  className="rounded-full h-10 w-[45%]
+                                                    bg-white dark:bg-gray-800 
+                                                    border-gray-200 dark:border-gray-700
+                                                    text-gray-700 dark:text-gray-300
+                                                    group-hover:bg-green-50 dark:group-hover:bg-green-900/20
+                                                    group-hover:border-green-300 dark:group-hover:border-green-700
+                                                    transition-all duration-300"
+                                                  onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    handleBookClick(book);
+                                                  }}
+                                                >
+                                                  <Eye className="h-4 w-4 mr-2" />
+                                                  {translate("Преглед", "Preview")}
+                                                </Button>
+                                                
+                                                {/* Buy button with gradient styling */}
+                                                <Button
+                                                  size="sm"
+                                                  className="rounded-full h-10 w-[50%]
+                                                    bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 
+                                                    text-white hover:shadow-sm transition-all duration-300"
+                                                  asChild
+                                                >
+                                                  <Link href={`/shop/book/${book.id}`} onClick={(e) => e.stopPropagation()} className="flex items-center justify-center">
+                                                    <ShoppingCart className="h-4 w-4 mr-2" />
+                                                    {translate("Купи", "Buy")}
+                                                  </Link>
+                                                </Button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </motion.div>
+                                    ))}
+                                  </motion.div>
+                                  
+                                  {filteredBooks.length > 4 && (
+                                    <div className="flex justify-center mt-6">
+                                      <Button 
+                                        variant="outline" 
+                                        onClick={() => setActiveTab('books')}
+                                        className="rounded-full border border-green-200 dark:border-green-800/50 
+                                          bg-green-50/50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30
+                                          text-green-700 dark:text-green-300 gap-2
+                                          hover:shadow-sm transition-all duration-300"
+                                      >
+                                        {translate("Покажи всички книги", "View all books")}
+                                        <ArrowRight className="h-4 w-4" />
+                                      </Button>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                              
+                              {/* Services section */}
+                              {filteredServices.length > 0 && (
+                                <div>
+                                  <div className="flex items-center justify-between mb-6">
+                                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                      <Package className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                                      {translate("Услуги", "Services")}
+                                    </h2>
+                                    <Badge 
+                                      className="rounded-full px-3 py-1.5 text-sm font-medium
+                                        bg-blue-100 dark:bg-blue-900/50 
+                                        text-blue-800 dark:text-blue-300 
+                                        border border-blue-200 dark:border-blue-800/50"
+                                    >
+                                      {filteredServices.length}
+                                    </Badge>
+                                  </div>
+                                  
+                                  <motion.div 
+                                    variants={containerVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8"
+                                  >
+                                    {filteredServices.slice(0, 4).map((service) => (
+                                      <motion.div 
+                                        key={service.id}
+                                        variants={itemVariants}
+                                        className="group relative flex flex-col h-full"
+                                        onClick={() => handleServiceClick(service)}
+                                      >
+                                        {/* Card with double border hover effect - matching the style of featured content cards */}
+                                        <div className={cn(
+                                          "h-full p-[3px] select-none rounded-xl",
+                                          "bg-gradient-to-br from-white/90 via-purple-100/20 to-white/90 dark:from-gray-900/90 dark:via-purple-900/20 dark:to-gray-900/90",
+                                          "backdrop-blur-sm",
+                                          "shadow-[-5px_-5px_15px_rgba(255,255,255,0.8),_5px_5px_15px_rgba(0,0,0,0.08)]", 
+                                          "dark:shadow-[-5px_-5px_15px_rgba(20,20,30,0.1),_5px_5px_15px_rgba(0,0,0,0.2)]",
+                                          "transition-all duration-300", 
+                                          "hover:shadow-[-2px_-2px_10px_rgba(255,255,255,0.6),_2px_2px_10px_rgba(0,0,0,0.1),_0_8px_20px_rgba(0,0,0,0.05)]", 
+                                          "dark:hover:shadow-[-2px_-2px_10px_rgba(20,20,30,0.15),_2px_2px_10px_rgba(0,0,0,0.3),_0_8px_20px_rgba(0,0,0,0.15)]",
+                                          "border-2 border-purple-100/30 dark:border-purple-900/30 hover:border-purple-300 dark:hover:border-purple-700",
+                                          "relative overflow-hidden cursor-pointer"
+                                        )}>
+                                          {/* Inner container with its own border - creates nested effect */}
+                                          <div className={cn(
+                                            "h-full w-full flex flex-col bg-white/90 dark:bg-gray-900/90 rounded-lg",
+                                            "border border-purple-100/30 dark:border-purple-900/30 hover:border-purple-300/50 dark:hover:border-purple-700/50",
+                                            "shadow-[inset_1px_1px_2px_rgba(0,0,0,0.01),inset_-1px_-1px_2px_rgba(255,255,255,0.25)]",
+                                            "dark:shadow-[inset_1px_1px_2px_rgba(0,0,0,0.05),inset_-1px_-1px_2px_rgba(255,255,255,0.05)]"
+                                          )}>
+                                            {/* Corner decoration element with enhanced styling */}
+                                            <div className="absolute top-0 right-0 w-32 h-32 rounded-bl-3xl -z-1 
+                                              bg-gradient-to-bl from-purple-100/40 to-transparent dark:from-purple-900/20
+                                              group-hover:from-purple-200/60 dark:group-hover:from-purple-800/40
+                                              transition-colors duration-300" />
+                                            
+                                            {/* Service image with enhanced styling */}
+                                            <div className="relative w-full h-52 overflow-hidden rounded-t-lg">
+                                              {service.image ? (
+                                                <div className="absolute inset-0">
+                                                  <Image
+                                                    src={service.image}
+                                                    alt={service.title}
+                                                    fill
+                                                    className="object-cover transition-all duration-500 group-hover:scale-[1.03]"
+                                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                                                  />
+                                                  
+                                                  {/* Subtle image overlay effect */}
+                                                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                  
+                                                  {/* Enhanced vignette */}
+                                                  <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)] dark:shadow-[inset_0_0_20px_rgba(0,0,0,0.4)] pointer-events-none"></div>
+                                                </div>
+                                              ) : (
+                                                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-50 to-white dark:from-gray-900 dark:to-gray-800">
+                                                  <Flower className="h-20 w-20 text-purple-500/40" />
+                                                </div>
+                                              )}
+                                            </div>
+                                            
+                                            {/* Service details with refined styling */}
+                                            <div className="p-5 lg:p-6 flex flex-col flex-grow">
+                                              {/* Category badge for package vs individual */}
+                                              <span className="inline-flex items-center mb-2.5 text-sm font-medium mr-2 px-3 py-1 rounded-full
+                                                bg-purple-100/80 dark:bg-purple-900/40 text-purple-700 dark:text-purple-400 border border-purple-400/20 dark:border-purple-800/40">
+                                                {service.category === 'package' ? (language === 'bg' ? 'Пакет' : 'Package') : 
+                                                 service.category === 'individual' ? (language === 'bg' ? 'Индивидуална' : 'Individual') : 
+                                                 service.category}
+                                              </span>
+                                              
+                                              {/* Featured badge if applicable */}
+                                              {service.featured && (
+                                                <span className="inline-flex items-center mb-2.5 text-sm font-medium mr-2 px-3 py-1 rounded-full
+                                                  bg-amber-100/80 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 border border-amber-400/20 dark:border-amber-800/40">
+                                                  <Sparkles className="h-3.5 w-3.5 mr-1" />
+                                                  {language === 'bg' ? 'Препоръчана' : 'Featured'}
+                                                </span>
+                                              )}
+                                              
+                                              {/* Service title with clean typography - no color transitions */}
+                                              <h3 className="font-bold text-xl leading-6 text-[#171717] dark:text-white mb-2 
+                                                tracking-tight line-clamp-2">
+                                                {service.title}
+                                              </h3>
+                                              
+                                              {/* Price display under headline */}
+                                              <div className="flex items-center mb-3">
+                                                <span className="font-semibold text-gray-700 dark:text-gray-300">
+                                                  {service.price?.toFixed(2)} лв.
+                                                </span>
+                                              </div>
+                                              
+                                              {/* Service details with badges */}
+                                              <div className="flex items-center gap-1.5 mb-3.5 w-full">
+                                                <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
+                                                  bg-gray-100/80 dark:bg-gray-700/50 text-sm text-gray-700 dark:text-gray-300">
+                                                  <Clock className="h-3.5 w-3.5 mr-1 text-gray-500 dark:text-gray-400" />
+                                                  <span>{service.duration}</span>
+                                                </div>
+                                                
+                                                {/* Popular badge if applicable */}
+                                                {service.popular && (
+                                                  <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
+                                                    bg-red-50/80 dark:bg-red-900/30 text-sm text-red-700 dark:text-red-400 
+                                                    border border-red-200/50 dark:border-red-800/40">
+                                                    <Flower className="h-3.5 w-3.5 mr-1" />
+                                                    <span>{language === 'bg' ? 'Популярна' : 'Popular'}</span>
+                                                  </div>
+                                                )}
+                                                
+                                                {/* MVP badge if applicable */}
+                                                {service.mvp && (
+                                                  <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
+                                                    bg-blue-50/80 dark:bg-blue-900/30 text-sm text-blue-700 dark:text-blue-400 
+                                                    border border-blue-200/50 dark:border-blue-800/40">
+                                                    <Star className="h-3.5 w-3.5 mr-1" />
+                                                    <span>{language === 'bg' ? 'Топ Избор' : 'Top Pick'}</span>
+                                                  </div>
+                                                )}
+                                              </div>
+                                              
+                                              {/* Service description with clean typography - no color transitions */}
+                                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2 flex-grow leading-relaxed">
+                                                {service.description}
+                                              </p>
+                                              
+                                              {/* Service features for packages - simplified styling */}
+                                              {service.includes && service.includes.length > 0 && (
+                                                <div className="mb-4 bg-purple-50/50 dark:bg-purple-900/10 rounded-lg p-2.5 border border-purple-100/50 dark:border-purple-800/20">
+                                                    <p className="text-xs uppercase tracking-wider font-medium text-purple-600 dark:text-purple-400 mb-1.5">
+                                                      {translate("Включва", "Includes")}:
+                                                    </p>
+                                                    <ul className="space-y-1">
+                                                      {service.includes.slice(0, 3).map((feature, idx) => (
+                                                        <li key={idx} className="flex items-start text-sm text-gray-600 dark:text-gray-400">
+                                                          <CheckCircle className="h-3.5 w-3.5 mr-1.5 mt-0.5 flex-shrink-0 text-purple-500 dark:text-purple-400" />
+                                                          <span className="line-clamp-1">{feature}</span>
+                                                        </li>
+                                                      ))}
+                                                      {service.includes.length > 3 && (
+                                                        <li className="text-xs text-gray-500 dark:text-gray-400 pl-5 italic">
+                                                          +{service.includes.length - 3} {translate("още", "more")}
+                                                        </li>
+                                                      )}
+                                                    </ul>
+                                                  </div>
+                                              )}
+                                              
+                                              {/* Buttons at the bottom */}
+                                              <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700/30 flex justify-between items-center">
+                                                {/* Details button with refined styling */}
+                                                <Button
+                                                  variant="outline"
+                                                  size="sm"
+                                                  className="rounded-full h-10 w-[45%]
+                                                    bg-white dark:bg-gray-800 
+                                                    border-gray-200 dark:border-gray-700
+                                                    text-gray-700 dark:text-gray-300
+                                                    group-hover:bg-purple-50 dark:group-hover:bg-purple-900/20
+                                                    group-hover:border-purple-300 dark:group-hover:border-purple-700
+                                                    transition-all duration-300"
+                                                  asChild
+                                                >
+                                                  <Link href={`/services/${service.id}`} className="flex items-center justify-center">
+                                                    <Eye className="h-4 w-4 mr-2" />
+                                                    <span>{translate("Детайли", "Details")}</span>
+                                                  </Link>
+                                                </Button>
+                                                
+                                                {/* Book button with simplified styling */}
+                                                <Button
+                                                  size="sm"
+                                                  className="rounded-full h-10 w-[50%]
+                                                    bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 
+                                                    text-white hover:shadow-sm transition-all duration-300"
+                                                  onClick={() => addToCart({
+                                                    id: service.id,
+                                                    title: service.title,
+                                                    price: service.price || 0,
+                                                    image: service.image || '',
+                                                    quantity: 1,
+                                                    isService: true
+                                                  })}
+                                                >
+                                                  <CalendarDays className="h-4 w-4 mr-2" />
+                                                  {translate("Резервирай", "Book")}
+                                                </Button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </motion.div>
+                                    ))}
+                                  </motion.div>
+                                  
+                                  {filteredServices.length > 4 && (
+                                    <div className="flex justify-center mt-6">
+                                      <Button 
+                                        variant="outline"
+                                        onClick={() => setActiveTab('services')}
+                                        className="rounded-full border border-purple-200 dark:border-purple-800/50 
+                                          bg-purple-50/50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30
+                                          text-purple-700 dark:text-purple-300 gap-2
+                                          hover:shadow-sm transition-all duration-300"
+                                      >
+                                        {translate("Покажи всички услуги", "View all services")}
+                                        <ArrowRight className="h-4 w-4" />
+                                      </Button>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </TabsContent>
 
                       {/* Books Content */}
                       <TabsContent value="books">
@@ -315,202 +816,124 @@ export default function ShopPage() {
                                 <motion.div 
                                   key={book.id}
                                   variants={itemVariants}
-                                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                                  className="group relative flex flex-col h-full overflow-hidden"
+                                  className="group relative flex flex-col h-full"
                                 >
-                                  {/* Premium book card with neumorphic styling */}
-                                  <div className="rounded-2xl h-full cursor-pointer transition-all duration-300
-                                    bg-gradient-to-br from-gray-50/30 via-white/40 to-gray-50/30 dark:from-gray-900/20 dark:via-gray-850/20 dark:to-gray-900/20
-                                    shadow-[6px_6px_12px_rgba(0,0,0,0.08),-6px_-6px_12px_rgba(255,255,255,0.8)] dark:shadow-[6px_6px_12px_rgba(0,0,0,0.3),-6px_-6px_12px_rgba(30,30,30,0.2)]
-                                    hover:shadow-[4px_4px_8px_rgba(0,0,0,0.06),-4px_-4px_8px_rgba(255,255,255,0.7)] dark:hover:shadow-[4px_4px_8px_rgba(0,0,0,0.25),-4px_-4px_8px_rgba(30,30,30,0.15)]
-                                    transform group-hover:scale-[1.02]
-                                    p-[3px]
-                                    border border-gray-200/60 dark:border-gray-700/40 group-hover:border-green-200/70 dark:group-hover:border-green-700/40
-                                    overflow-hidden">
+                                  {/* Card with double border hover effect - matching the style of featured content cards */}
+                                  <div className={cn(
+                                    "h-full p-[3px] select-none rounded-xl",
+                                    "bg-gradient-to-br from-white/90 via-green-100/20 to-white/90 dark:from-gray-900/90 dark:via-green-900/20 dark:to-gray-900/90",
+                                    "backdrop-blur-sm",
+                                    "shadow-[-5px_-5px_15px_rgba(255,255,255,0.8),_5px_5px_15px_rgba(0,0,0,0.08)]", 
+                                    "dark:shadow-[-5px_-5px_15px_rgba(20,20,30,0.1),_5px_5px_15px_rgba(0,0,0,0.2)]",
+                                    "transition-all duration-300", 
+                                    "hover:shadow-[-2px_-2px_10px_rgba(255,255,255,0.6),_2px_2px_10px_rgba(0,0,0,0.1),_0_8px_20px_rgba(0,0,0,0.05)]", 
+                                    "dark:hover:shadow-[-2px_-2px_10px_rgba(20,20,30,0.15),_2px_2px_10px_rgba(0,0,0,0.3),_0_8px_20px_rgba(0,0,0,0.15)]",
+                                    "border-2 border-green-100/30 dark:border-green-900/30 hover:border-green-300 dark:hover:border-green-700",
+                                    "relative overflow-hidden cursor-pointer"
+                                  )}>
                                     
-                                    {/* Inner container with gradient effect */}
-                                    <div className="bg-white dark:bg-gray-800 rounded-xl h-full overflow-hidden border border-gray-100/50 dark:border-gray-800/50">
+                                    {/* Inner container with its own border - creates nested effect */}
+                                    <div className={cn(
+                                      "h-full w-full flex flex-col bg-white/90 dark:bg-gray-900/90 rounded-lg",
+                                      "border border-green-100/30 dark:border-green-900/30 hover:border-green-300/50 dark:hover:border-green-700/50",
+                                      "shadow-[inset_1px_1px_2px_rgba(0,0,0,0.01),inset_-1px_-1px_2px_rgba(255,255,255,0.25)]",
+                                      "dark:shadow-[inset_1px_1px_2px_rgba(0,0,0,0.05),inset_-1px_-1px_2px_rgba(255,255,255,0.05)]"
+                                    )}>
+                                      {/* Corner decoration element with enhanced styling */}
+                                      <div className="absolute top-0 right-0 w-32 h-32 rounded-bl-3xl -z-1 
+                                        bg-gradient-to-bl from-green-100/40 to-transparent dark:from-green-900/20
+                                        group-hover:from-green-200/60 dark:group-hover:from-green-800/40 
+                                        transition-colors duration-300" />
                                       
                                       {/* Book cover image with enhanced styling */}
-                                      <div className="relative w-full h-52 overflow-hidden">
+                                      <div className="relative w-full h-52 overflow-hidden rounded-t-lg">
                                         {book.coverImage ? (
                                           <div className="absolute inset-0">
                                             <Image
                                               src={book.coverImage}
                                               alt={book.title}
                                               fill
-                                              className="object-cover transition-all duration-700 group-hover:scale-110"
+                                              className="object-cover transition-all duration-300"
                                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                                             />
                                             
-                                            {/* Enhanced image overlay effects */}
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                                            <div className="absolute inset-0 backdrop-blur-[1px] opacity-0 group-hover:opacity-40 transition-all duration-700"></div>
+                                            {/* Subtle image overlay effect */}
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                             
-                                            {/* Additional glowing effect on hover */}
-                                            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-blue-500/5 dark:from-green-500/10 dark:to-blue-500/10 opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
-                                            
-                                            {/* Subtle vignette */}
+                                            {/* Enhanced vignette */}
                                             <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)] dark:shadow-[inset_0_0_20px_rgba(0,0,0,0.4)] pointer-events-none"></div>
                                           </div>
                                         ) : (
                                           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-green-50 to-white dark:from-gray-900 dark:to-gray-800">
-                                            <Flower className="h-20 w-20 text-green-500/40 transition-transform duration-500 group-hover:scale-110 group-hover:text-green-500/60" />
+                                            <Flower className="h-20 w-20 text-green-500/40" />
                                           </div>
                                         )}
                                       </div>
                                       
                                       {/* Book details with refined styling */}
-                                      <div className="relative p-5 lg:p-6 z-10 flex flex-col flex-grow">
-                                        {/* Subtle gradient overlay */}
-                                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-gray-50/10 dark:from-gray-800/10 dark:to-gray-900/10 pointer-events-none"></div>
+                                      <div className="p-5 lg:p-6 flex flex-col flex-grow">
+                                        {/* Category badge */}
+                                        {book.category && (
+                                          <span className="inline-flex items-center mb-2.5 text-sm font-medium mr-2 px-3 py-1 rounded-full
+                                            bg-green-100/80 dark:bg-green-900/40 text-green-700 dark:text-green-400 border border-green-400/20 dark:border-green-800/40">
+                                            {book.category}
+                                          </span>
+                                        )}
                                         
-                                        {/* Content relative to overlay */}
-                                        <div className="relative z-10">
-                                          {/* Category badge */}
-                                          {book.category && (
-                                            <span className="inline-flex items-center mb-2.5 text-sm font-medium mr-2 px-3 py-1 rounded-full
-                                              bg-green-100/80 dark:bg-green-900/40 text-green-700 dark:text-green-400 border border-green-400/20 dark:border-green-800/40
-                                              backdrop-blur-sm transform group-hover:translate-x-1 transition-transform duration-300">
-                                              {book.category === 'health' ? (language === 'bg' ? 'Здраве' : 'Health') : 
-                                              book.category === 'poetry' ? (language === 'bg' ? 'Поезия' : 'Poetry') : 
-                                              book.category === 'selfHelp' ? (language === 'bg' ? 'Самопомощ' : 'Self Help') : 
-                                              book.category}
-                                            </span>
-                                          )}
+                                        {/* Book title with clean typography - no color transitions */}
+                                        <h3 className="font-bold text-xl leading-6 text-[#171717] dark:text-white mb-2 
+                                          tracking-tight line-clamp-2">
+                                          {book.title}
+                                        </h3>
+                                        
+                                        {/* Price display under headline */}
+                                        <div className="flex items-center mb-3">
+                                          <span className="font-semibold text-gray-700 dark:text-gray-300">
+                                            {book.price?.toFixed(2)} лв.
+                                          </span>
+                                        </div>
+                                        
+                                        {/* Book description with clean typography */}
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-3 flex-grow leading-relaxed">
+                                          {book.description}
+                                        </p>
+                                        
+                                        {/* Action buttons at the bottom */}
+                                        <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700/30 flex justify-between items-center">
+                                          {/* View button with refined styling */}
+                                          <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className="rounded-full h-10 w-[45%]
+                                              bg-white dark:bg-gray-800 
+                                              border-gray-200 dark:border-gray-700
+                                              text-gray-700 dark:text-gray-300
+                                              group-hover:bg-green-50 dark:group-hover:bg-green-900/20
+                                              group-hover:border-green-300 dark:group-hover:border-green-700
+                                              transition-all duration-300"
+                                            onClick={(e) => {
+                                              e.preventDefault();
+                                              e.stopPropagation();
+                                              handleBookClick(book);
+                                            }}
+                                          >
+                                            <Eye className="h-4 w-4 mr-2" />
+                                            {translate("Преглед", "Preview")}
+                                          </Button>
                                           
-                                          {/* Book title with premium typography */}
-                                          <h3 className="font-bold text-xl leading-6 text-gray-900 dark:text-white mb-2 
-                                            tracking-tight group-hover:text-green-700 dark:group-hover:text-green-400 
-                                            transition-colors duration-300 line-clamp-2">
-                                            {book.title}
-                                          </h3>
-                                          
-                                          {/* Price display under headline */}
-                                          <div className="flex items-center mb-3">
-                                            <span className="font-semibold text-gray-700 dark:text-gray-300">
-                                              {book.price?.toFixed(2)} лв.
-                                            </span>
-                                            {book.originalPrice && (
-                                              <span className="text-xs text-gray-500 dark:text-gray-400 line-through ml-2">
-                                                {book.originalPrice.toFixed(2)} лв.
-                                              </span>
-                                            )}
-                                          </div>
-                                          
-                                          {/* Enhanced book details with badges */}
-                                          <div className="flex items-center gap-1.5 mb-3.5 w-full">
-                                            <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
-                                              bg-gray-100/80 dark:bg-gray-700/50 text-sm text-gray-700 dark:text-gray-300 
-                                              backdrop-blur-sm shadow-sm transform group-hover:translate-y-[-2px] transition-all duration-300">
-                                              <FileText className="h-3.5 w-3.5 mr-1 text-gray-500 dark:text-gray-400" />
-                                              <span>{book.pages} {language === 'bg' ? 'стр.' : 'pg'}</span>
-                                            </div>
-                                            
-                                            {/* Publication date */}
-                                            {book.publishDate && (
-                                              <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
-                                                bg-gray-100/80 dark:bg-gray-700/50 text-sm text-gray-700 dark:text-gray-300 
-                                                backdrop-blur-sm shadow-sm transform group-hover:translate-y-[-2px] transition-all duration-300">
-                                                <CalendarDays className="h-3.5 w-3.5 mr-1 text-gray-500 dark:text-gray-400" />
-                                                <span>{new Date(book.publishDate).getFullYear()}</span>
-                                              </div>
-                                            )}
-                                            
-                                            {/* Digital badge if available */}
-                                            {book.digital && (
-                                              <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
-                                                bg-blue-50/80 dark:bg-blue-900/30 text-sm text-blue-700 dark:text-blue-400 
-                                                backdrop-blur-sm shadow-sm border border-blue-200/50 dark:border-blue-800/40
-                                                transform group-hover:translate-y-[-2px] transition-all duration-300">
-                                                <Download className="h-3.5 w-3.5 mr-1" />
-                                                <span>{language === 'bg' ? 'PDF' : 'PDF'}</span>
-                                              </div>
-                                            )}
-                                          </div>
-                                          
-                                          {/* Book description with improved typography */}
-                                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2 flex-grow leading-relaxed">
-                                            {book.description}
-                                          </p>
-                                          
-                                          {/* Book features */}
-                                          {book.features && book.features.length > 0 && (
-                                            <div className="mb-4">
-                                              <p className="text-xs uppercase tracking-wider font-medium text-gray-500 dark:text-gray-400 mb-2">
-                                                {translate("Акценти в книгата", "Book Highlights")}:
-                                              </p>
-                                              <ul className="space-y-1">
-                                                {book.features.slice(0, 2).map((feature, idx) => (
-                                                  <li key={idx} className="flex items-start text-sm text-gray-600 dark:text-gray-400">
-                                                    <CheckCircle className="h-3.5 w-3.5 mr-1.5 mt-0.5 flex-shrink-0 text-green-500 dark:text-green-400" />
-                                                    <span className="line-clamp-1">{feature}</span>
-                                                  </li>
-                                                ))}
-                                                {book.features.length > 2 && (
-                                                  <li className="text-xs text-gray-500 dark:text-gray-400 pl-5 italic">
-                                                    +{book.features.length - 2} {translate("още", "more")}
-                                                  </li>
-                                                )}
-                                              </ul>
-                                            </div>
-                                          )}
-                                          
-                                          {/* Rating and reviews */}
-                                          <div className="flex items-center mb-4">
-                                            <div className="flex text-yellow-400 mr-2">
-                                              <Star className="h-4 w-4 fill-current" />
-                                              <Star className="h-4 w-4 fill-current" />
-                                              <Star className="h-4 w-4 fill-current" />
-                                              <Star className="h-4 w-4 fill-current" />
-                                              <Star className="h-4 w-4 fill-current text-gray-300 dark:text-gray-600" />
-                                            </div>
-                                            <span className="text-xs text-gray-500 dark:text-gray-400">
-                                              (4.0) · {Math.floor(Math.random() * 50) + 10} {translate("ревюта", "reviews")}
-                                            </span>
-                                          </div>
-                                          
-                                          {/* Buttons only at the bottom */}
-                                          <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700/30 flex justify-between items-center">
-                                            {/* View button with refined styling */}
-                                            <Button
-                                              variant="outline"
-                                              size="sm"
-                                              className="rounded-full h-10 w-[45%]
-                                                bg-white dark:bg-gray-800 
-                                                border-gray-200 dark:border-gray-700
-                                                text-gray-700 dark:text-gray-300
-                                                hover:bg-gray-50 dark:hover:bg-gray-700
-                                                hover:border-gray-300 dark:hover:border-gray-600
-                                                transition-all duration-300 shadow-sm hover:shadow"
-                                              asChild
-                                            >
-                                              <Link href={`/shop/${book.id}`} className="flex items-center justify-center">
-                                                <Eye className="h-4 w-4 mr-2" />
-                                                <span>{translate("Преглед", "View")}</span>
-                                              </Link>
-                                            </Button>
-                                            
-                                            {/* Buy button with premium styling */}
-                                            <Button
-                                              size="sm"
-                                              className="rounded-full h-10 w-[50%]
-                                                bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 
-                                                border-green-600 hover:border-green-700
-                                                text-white shadow-sm hover:shadow
-                                                transition-all duration-300 transform hover:translate-y-[-2px]"
-                                              onClick={() => addToCart({
-                                                id: book.id,
-                                                title: book.title,
-                                                price: book.price || 0,
-                                                image: book.coverImage || '',
-                                                quantity: 1
-                                              })}
-                                            >
+                                          {/* Buy button with gradient styling */}
+                                          <Button
+                                            size="sm"
+                                            className="rounded-full h-10 w-[50%]
+                                              bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 
+                                              text-white hover:shadow-sm transition-all duration-300"
+                                            asChild
+                                          >
+                                            <Link href={`/shop/book/${book.id}`} onClick={(e) => e.stopPropagation()} className="flex items-center justify-center">
                                               <ShoppingCart className="h-4 w-4 mr-2" />
                                               {translate("Купи", "Buy")}
-                                            </Button>
-                                          </div>
+                                            </Link>
+                                          </Button>
                                         </div>
                                       </div>
                                     </div>
@@ -544,132 +967,130 @@ export default function ShopPage() {
                                 <motion.div 
                                   key={service.id}
                                   variants={itemVariants}
-                                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                                  className="group relative flex flex-col h-full overflow-hidden"
+                                  className="group relative flex flex-col h-full"
                                 >
-                                  {/* Premium service card with neumorphic styling */}
-                                  <div className="rounded-2xl h-full cursor-pointer transition-all duration-300
-                                    bg-gradient-to-br from-gray-50/30 via-white/40 to-gray-50/30 dark:from-gray-900/20 dark:via-gray-850/20 dark:to-gray-900/20
-                                    shadow-[6px_6px_12px_rgba(0,0,0,0.08),-6px_-6px_12px_rgba(255,255,255,0.8)] dark:shadow-[6px_6px_12px_rgba(0,0,0,0.3),-6px_-6px_12px_rgba(30,30,30,0.2)]
-                                    hover:shadow-[4px_4px_8px_rgba(0,0,0,0.06),-4px_-4px_8px_rgba(255,255,255,0.7)] dark:hover:shadow-[4px_4px_8px_rgba(0,0,0,0.25),-4px_-4px_8px_rgba(30,30,30,0.15)]
-                                    transform group-hover:scale-[1.02]
-                                    p-[3px]
-                                    border border-gray-200/60 dark:border-gray-700/40 group-hover:border-green-200/70 dark:group-hover:border-green-700/40
-                                    overflow-hidden">
+                                  {/* Card with double border hover effect - matching the style of featured content cards */}
+                                  <div className={cn(
+                                    "h-full p-[3px] select-none rounded-xl",
+                                    "bg-gradient-to-br from-white/90 via-purple-100/20 to-white/90 dark:from-gray-900/90 dark:via-purple-900/20 dark:to-gray-900/90",
+                                    "backdrop-blur-sm",
+                                    "shadow-[-5px_-5px_15px_rgba(255,255,255,0.8),_5px_5px_15px_rgba(0,0,0,0.08)]", 
+                                    "dark:shadow-[-5px_-5px_15px_rgba(20,20,30,0.1),_5px_5px_15px_rgba(0,0,0,0.2)]",
+                                    "transition-all duration-300", 
+                                    "hover:shadow-[-2px_-2px_10px_rgba(255,255,255,0.6),_2px_2px_10px_rgba(0,0,0,0.1),_0_8px_20px_rgba(0,0,0,0.05)]", 
+                                    "dark:hover:shadow-[-2px_-2px_10px_rgba(20,20,30,0.15),_2px_2px_10px_rgba(0,0,0,0.3),_0_8px_20px_rgba(0,0,0,0.15)]",
+                                    "border-2 border-purple-100/30 dark:border-purple-900/30 hover:border-purple-300 dark:hover:border-purple-700",
+                                    "relative overflow-hidden cursor-pointer"
+                                  )}>
                                     
-                                    {/* Inner container with gradient effect */}
-                                    <div className="bg-white dark:bg-gray-800 rounded-xl h-full overflow-hidden border border-gray-100/50 dark:border-gray-800/50">
+                                    {/* Inner container with its own border - creates nested effect */}
+                                    <div className={cn(
+                                      "h-full w-full flex flex-col bg-white/90 dark:bg-gray-900/90 rounded-lg",
+                                      "border border-purple-100/30 dark:border-purple-900/30 hover:border-purple-300/50 dark:hover:border-purple-700/50",
+                                      "shadow-[inset_1px_1px_2px_rgba(0,0,0,0.01),inset_-1px_-1px_2px_rgba(255,255,255,0.25)]",
+                                      "dark:shadow-[inset_1px_1px_2px_rgba(0,0,0,0.05),inset_-1px_-1px_2px_rgba(255,255,255,0.05)]"
+                                    )}>
+                                      {/* Corner decoration element with enhanced styling */}
+                                      <div className="absolute top-0 right-0 w-32 h-32 rounded-bl-3xl -z-1 
+                                        bg-gradient-to-bl from-purple-100/40 to-transparent dark:from-purple-900/20
+                                        group-hover:from-purple-200/60 dark:group-hover:from-purple-800/40
+                                        transition-colors duration-300" />
                                       
                                       {/* Service image with enhanced styling */}
-                                      <div className="relative w-full h-52 overflow-hidden">
+                                      <div className="relative w-full h-52 overflow-hidden rounded-t-lg">
                                         {service.image ? (
                                           <div className="absolute inset-0">
                                             <Image
                                               src={service.image}
                                               alt={service.title}
                                               fill
-                                              className="object-cover transition-all duration-700 group-hover:scale-110"
+                                              className="object-cover transition-all duration-500 group-hover:scale-[1.03]"
                                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                                             />
                                             
-                                            {/* Enhanced image overlay effects */}
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                                            <div className="absolute inset-0 backdrop-blur-[1px] opacity-0 group-hover:opacity-40 transition-all duration-700"></div>
+                                            {/* Improved image overlay effect */}
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                                             
-                                            {/* Additional glowing effect on hover */}
-                                            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-blue-500/5 dark:from-green-500/10 dark:to-blue-500/10 opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
-                                            
-                                            {/* Subtle vignette */}
+                                            {/* Enhanced vignette */}
                                             <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)] dark:shadow-[inset_0_0_20px_rgba(0,0,0,0.4)] pointer-events-none"></div>
                                           </div>
                                         ) : (
-                                          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-green-50 to-white dark:from-gray-900 dark:to-gray-800">
-                                            <Flower className="h-20 w-20 text-green-500/40 transition-transform duration-500 group-hover:scale-110 group-hover:text-green-500/60" />
+                                          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-50 to-white dark:from-gray-900 dark:to-gray-800">
+                                            <Flower className="h-20 w-20 text-purple-500/40 group-hover:scale-110 transition-transform duration-300" />
                                           </div>
                                         )}
                                       </div>
                                       
                                       {/* Service details with refined styling */}
-                                      <div className="relative p-5 lg:p-6 z-10 flex flex-col flex-grow">
-                                        {/* Subtle gradient overlay */}
-                                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-gray-50/10 dark:from-gray-800/10 dark:to-gray-900/10 pointer-events-none"></div>
+                                      <div className="p-5 lg:p-6 flex flex-col flex-grow">
+                                        {/* Category badge for package vs individual */}
+                                        <span className="inline-flex items-center mb-2.5 text-sm font-medium mr-2 px-3 py-1 rounded-full
+                                          bg-purple-100/80 dark:bg-purple-900/40 text-purple-700 dark:text-purple-400 border border-purple-400/20 dark:border-purple-800/40">
+                                          {service.category === 'package' ? (language === 'bg' ? 'Пакет' : 'Package') : 
+                                           service.category === 'individual' ? (language === 'bg' ? 'Индивидуална' : 'Individual') : 
+                                           service.category}
+                                        </span>
                                         
-                                        {/* Content relative to overlay */}
-                                        <div className="relative z-10">
-                                          {/* Category badge for package vs individual */}
+                                        {/* Featured badge if applicable */}
+                                        {service.featured && (
                                           <span className="inline-flex items-center mb-2.5 text-sm font-medium mr-2 px-3 py-1 rounded-full
-                                            bg-purple-100/80 dark:bg-purple-900/40 text-purple-700 dark:text-purple-400 border border-purple-400/20 dark:border-purple-800/40
-                                            backdrop-blur-sm transform group-hover:translate-x-1 transition-transform duration-300">
-                                            {service.category === 'package' ? (language === 'bg' ? 'Пакет' : 'Package') : 
-                                             service.category === 'individual' ? (language === 'bg' ? 'Индивидуална' : 'Individual') : 
-                                             service.category}
+                                            bg-amber-100/80 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 border border-amber-400/20 dark:border-amber-800/40">
+                                            <Sparkles className="h-3.5 w-3.5 mr-1" />
+                                            {language === 'bg' ? 'Препоръчана' : 'Featured'}
                                           </span>
+                                        )}
+                                        
+                                        {/* Service title with premium typography */}
+                                        <h3 className="font-bold text-xl leading-6 text-[#171717] dark:text-white mb-2 
+                                          tracking-tight line-clamp-2 group-hover:text-purple-700 dark:group-hover:text-purple-400 transition-colors duration-300">
+                                          {service.title}
+                                        </h3>
+                                        
+                                        {/* Price display under headline */}
+                                        <div className="flex items-center mb-3">
+                                          <span className="font-semibold text-gray-700 dark:text-gray-300">
+                                            {service.price?.toFixed(2)} лв.
+                                          </span>
+                                        </div>
+                                        
+                                        {/* Service details with badges */}
+                                        <div className="flex items-center gap-1.5 mb-3.5 w-full">
+                                          <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
+                                            bg-gray-100/80 dark:bg-gray-700/50 text-sm text-gray-700 dark:text-gray-300">
+                                            <Clock className="h-3.5 w-3.5 mr-1 text-gray-500 dark:text-gray-400" />
+                                            <span>{service.duration}</span>
+                                          </div>
                                           
-                                          {/* Featured badge if applicable */}
-                                          {service.featured && (
-                                            <span className="inline-flex items-center mb-2.5 text-sm font-medium mr-2 px-3 py-1 rounded-full
-                                              bg-amber-100/80 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 border border-amber-400/20 dark:border-amber-800/40
-                                              backdrop-blur-sm">
-                                              <Sparkles className="h-3.5 w-3.5 mr-1" />
-                                              {language === 'bg' ? 'Препоръчана' : 'Featured'}
-                                            </span>
+                                          {/* Popular badge if applicable */}
+                                          {service.popular && (
+                                            <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
+                                              bg-red-50/80 dark:bg-red-900/30 text-sm text-red-700 dark:text-red-400 
+                                              border border-red-200/50 dark:border-red-800/40">
+                                              <Flower className="h-3.5 w-3.5 mr-1" />
+                                              <span>{language === 'bg' ? 'Популярна' : 'Popular'}</span>
+                                            </div>
                                           )}
                                           
-                                          {/* Service title with premium typography */}
-                                          <h3 className="font-bold text-xl leading-6 text-gray-900 dark:text-white mb-2 
-                                            tracking-tight group-hover:text-purple-700 dark:group-hover:text-purple-400 
-                                            transition-colors duration-300 line-clamp-2">
-                                            {service.title}
-                                          </h3>
-                                          
-                                          {/* Price display under headline */}
-                                          <div className="flex items-center mb-3">
-                                            <span className="font-semibold text-gray-700 dark:text-gray-300">
-                                              {service.price?.toFixed(2)} лв.
-                                            </span>
-                                          </div>
-                                          
-                                          {/* Service details with badges */}
-                                          <div className="flex items-center gap-1.5 mb-3.5 w-full">
+                                          {/* MVP badge if applicable */}
+                                          {service.mvp && (
                                             <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
-                                              bg-gray-100/80 dark:bg-gray-700/50 text-sm text-gray-700 dark:text-gray-300 
-                                              backdrop-blur-sm shadow-sm transform group-hover:translate-y-[-2px] transition-all duration-300">
-                                              <Clock className="h-3.5 w-3.5 mr-1 text-gray-500 dark:text-gray-400" />
-                                              <span>{service.duration}</span>
+                                              bg-blue-50/80 dark:bg-blue-900/30 text-sm text-blue-700 dark:text-blue-400 
+                                              border border-blue-200/50 dark:border-blue-800/40">
+                                              <Star className="h-3.5 w-3.5 mr-1" />
+                                              <span>{language === 'bg' ? 'Топ Избор' : 'Top Pick'}</span>
                                             </div>
-                                            
-                                            {/* Popular badge if applicable */}
-                                            {service.popular && (
-                                              <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
-                                                bg-red-50/80 dark:bg-red-900/30 text-sm text-red-700 dark:text-red-400 
-                                                backdrop-blur-sm shadow-sm border border-red-200/50 dark:border-red-800/40
-                                                transform group-hover:translate-y-[-2px] transition-all duration-300">
-                                                <Flower className="h-3.5 w-3.5 mr-1" />
-                                                <span>{language === 'bg' ? 'Популярна' : 'Popular'}</span>
-                                              </div>
-                                            )}
-                                            
-                                            {/* MVP badge if applicable */}
-                                            {service.mvp && (
-                                              <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
-                                                bg-blue-50/80 dark:bg-blue-900/30 text-sm text-blue-700 dark:text-blue-400 
-                                                backdrop-blur-sm shadow-sm border border-blue-200/50 dark:border-blue-800/40
-                                                transform group-hover:translate-y-[-2px] transition-all duration-300">
-                                                <Star className="h-3.5 w-3.5 mr-1" />
-                                                <span>{language === 'bg' ? 'Топ Избор' : 'Top Pick'}</span>
-                                              </div>
-                                            )}
-                                          </div>
-                                          
-                                          {/* Service description with improved typography */}
-                                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2 flex-grow leading-relaxed">
-                                            {service.description}
-                                          </p>
-                                          
-                                          {/* Service features for packages */}
-                                          {service.includes && service.includes.length > 0 && (
-                                            <div className="mb-4">
-                                              <p className="text-xs uppercase tracking-wider font-medium text-gray-500 dark:text-gray-400 mb-2">
+                                          )}
+                                        </div>
+                                        
+                                        {/* Service description with improved typography */}
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2 flex-grow leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-300">
+                                          {service.description}
+                                        </p>
+                                        
+                                        {/* Service features for packages */}
+                                        {service.includes && service.includes.length > 0 && (
+                                          <div className="mb-4 bg-purple-50/50 dark:bg-purple-900/10 rounded-lg p-2.5 border border-purple-100/50 dark:border-purple-800/20 group-hover:bg-purple-50/80 dark:group-hover:bg-purple-900/20 transition-colors duration-300">
+                                              <p className="text-xs uppercase tracking-wider font-medium text-purple-600 dark:text-purple-400 mb-1.5">
                                                 {translate("Включва", "Includes")}:
                                               </p>
                                               <ul className="space-y-1">
@@ -686,50 +1107,47 @@ export default function ShopPage() {
                                                 )}
                                               </ul>
                                             </div>
-                                          )}
+                                        )}
+                                        
+                                        {/* Buttons at the bottom */}
+                                        <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700/30 flex justify-between items-center">
+                                          {/* Details button with refined styling */}
+                                          <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className="rounded-full h-10 w-[45%]
+                                              bg-white dark:bg-gray-800 
+                                              border-gray-200 dark:border-gray-700
+                                              text-gray-700 dark:text-gray-300
+                                              group-hover:bg-purple-50 dark:group-hover:bg-purple-900/20
+                                              group-hover:border-purple-300 dark:group-hover:border-purple-700
+                                              transition-all duration-300"
+                                            asChild
+                                          >
+                                            <Link href={`/services/${service.id}`} className="flex items-center justify-center">
+                                              <Eye className="h-4 w-4 mr-2" />
+                                              <span>{translate("Детайли", "Details")}</span>
+                                            </Link>
+                                          </Button>
                                           
-                                          {/* Buttons only at the bottom */}
-                                          <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700/30 flex justify-between items-center">
-                                            {/* Details button with refined styling */}
-                                            <Button
-                                              variant="outline"
-                                              size="sm"
-                                              className="rounded-full h-10 w-[45%]
-                                                bg-white dark:bg-gray-800 
-                                                border-gray-200 dark:border-gray-700
-                                                text-gray-700 dark:text-gray-300
-                                                hover:bg-gray-50 dark:hover:bg-gray-700
-                                                hover:border-gray-300 dark:hover:border-gray-600
-                                                transition-all duration-300 shadow-sm hover:shadow"
-                                              asChild
-                                            >
-                                              <Link href={`/services/${service.id}`} className="flex items-center justify-center">
-                                                <Eye className="h-4 w-4 mr-2" />
-                                                <span>{translate("Детайли", "Details")}</span>
-                                              </Link>
-                                            </Button>
-                                            
-                                            {/* Book button with premium styling */}
-                                            <Button
-                                              size="sm"
-                                              className="rounded-full h-10 w-[50%]
-                                                bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 
-                                                border-purple-600 hover:border-purple-700
-                                                text-white shadow-sm hover:shadow
-                                                transition-all duration-300 transform hover:translate-y-[-2px]"
-                                              onClick={() => addToCart({
-                                                id: service.id,
-                                                title: service.title,
-                                                price: service.price || 0,
-                                                image: service.image || '',
-                                                quantity: 1,
-                                                isService: true
-                                              })}
-                                            >
-                                              <CalendarDays className="h-4 w-4 mr-2" />
-                                              {translate("Резервирай", "Book")}
-                                            </Button>
-                                          </div>
+                                          {/* Book button with simplified styling */}
+                                          <Button
+                                            size="sm"
+                                            className="rounded-full h-10 w-[50%]
+                                              bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 
+                                              text-white hover:shadow-sm transition-all duration-300"
+                                            onClick={() => addToCart({
+                                              id: service.id,
+                                              title: service.title,
+                                              price: service.price || 0,
+                                              image: service.image || '',
+                                              quantity: 1,
+                                              isService: true
+                                            })}
+                                          >
+                                            <CalendarDays className="h-4 w-4 mr-2" />
+                                            {translate("Резервирай", "Book")}
+                                          </Button>
                                         </div>
                                       </div>
                                     </div>

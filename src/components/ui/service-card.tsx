@@ -82,7 +82,7 @@ export function ServiceCard({ service, className, isBookmarked = false, onBookma
   };
   
   return (
-    <div className="flex flex-col h-full min-h-[500px] group relative overflow-hidden rounded-xl transition-all duration-300 bg-white dark:bg-gray-800/50 shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1)] hover:shadow-[0px_4px_16px_rgba(22,163,74,0.15),_0px_8px_24px_rgba(22,163,74,0.15)] dark:shadow-[0px_4px_16px_rgba(0,0,0,0.2)] border-l-4 border-blue-500 dark:border-blue-600">
+    <div className="flex flex-col h-full min-h-[450px] group relative overflow-hidden rounded-xl transition-all duration-300 bg-white dark:bg-gray-800/50 shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1)] hover:shadow-[0px_4px_16px_rgba(22,163,74,0.15),_0px_8px_24px_rgba(22,163,74,0.15)] dark:shadow-[0px_4px_16px_rgba(0,0,0,0.2)] border-l-4 border-blue-500 dark:border-blue-600">
       {/* Featured badge */}
       {service.featured && (
         <div className="absolute top-4 right-4 z-30">
@@ -113,11 +113,11 @@ export function ServiceCard({ service, className, isBookmarked = false, onBookma
       )}
       
       {/* Service image */}
-      <div className="relative p-6 pt-14 pb-2 h-[280px] flex items-center justify-center bg-gradient-to-br from-gray-50/50 to-gray-100/50 dark:from-gray-800/30 dark:to-gray-900/30">
+      <div className="relative p-6 pt-14 pb-2 h-[220px] flex items-center justify-center bg-gradient-to-br from-gray-50/50 to-gray-100/50 dark:from-gray-800/30 dark:to-gray-900/30">
         <div className="absolute inset-0 opacity-50 pointer-events-none"></div>
         
         {/* Fixed sizing container for consistent behavior */}
-        <div className="w-[200px] h-[160px] relative">
+        <div className="w-[180px] h-[140px] relative">
           <div className="w-full h-full transform transition-all duration-500 group-hover:translate-y-[-8px] group-hover:rotate-1 shadow-[0px_10px_20px_rgba(0,0,0,0.2)] rounded-md overflow-hidden">
             <Image
               src={service.coverImage || fallbackImage}
@@ -160,28 +160,28 @@ export function ServiceCard({ service, className, isBookmarked = false, onBookma
       </div>
       
       {/* Service details */}
-      <div className="flex flex-col flex-grow p-5 backdrop-blur-sm rounded-b-xl bg-gradient-to-b from-white to-gray-50 dark:from-gray-800/80 dark:to-gray-900/80">
-        <div className="flex items-start justify-between mb-2">
+      <div className="flex flex-col flex-grow p-4 backdrop-blur-sm rounded-b-xl bg-gradient-to-b from-white to-gray-50 dark:from-gray-800/80 dark:to-gray-900/80">
+        <div className="flex items-start justify-between mb-1.5">
           <h3 className="font-bold text-gray-900 dark:text-white text-base">{service.title}</h3>
           <span className="font-bold text-base ml-2 text-blue-600 dark:text-blue-400">{service.price?.toFixed(0)}{language === 'en' ? ' BGN' : 'лв'}</span>
         </div>
         
-        <div className="flex items-center gap-2 mb-2">
+        <div className="flex items-center gap-2 mb-1.5">
           <Clock className="h-3.5 w-3.5 text-gray-500" />
           <span className="text-xs text-gray-600 dark:text-gray-300">{service.duration}</span>
         </div>
         
-        <p className="text-xs text-gray-600 dark:text-gray-300 mb-3 line-clamp-2 flex-grow">
+        <p className="text-xs text-gray-600 dark:text-gray-300 mb-2 line-clamp-2 flex-grow">
           {service.description}
         </p>
         
         {/* For packages, show included items */}
         {service.category === 'package' && service.includes && service.includes.length > 0 && (
-          <div className="mt-2 mb-3">
+          <div className="mt-1 mb-2">
             <p className="text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">
               {language === 'en' ? 'Includes:' : 'Включва:'}
             </p>
-            <ul className="text-xs text-gray-600 dark:text-gray-300 list-disc pl-4 space-y-1">
+            <ul className="text-xs text-gray-600 dark:text-gray-300 list-disc pl-4 space-y-0.5">
               {service.includes.slice(0, 2).map((item, index) => (
                 <li key={index} className="line-clamp-1">{item}</li>
               ))}
