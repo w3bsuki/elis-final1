@@ -1,49 +1,36 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { 
-  ChevronLeft, 
-  ChevronRight, 
-  Menu, 
-  X, 
-  Globe, 
-  BookOpen, 
   UserRound, 
+  BookOpen, 
   Sparkles, 
   Mail,
-  Home,
-  ShoppingBag,
-  ArrowRight
+  Home
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { NavigationProps } from "./types";
-import { motion, AnimatePresence } from "framer-motion";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { SocialLinks } from "./SocialLinks";
+import { motion } from "framer-motion";
 import { NavItem } from './NavItem';
 import { useSafeLanguage } from "@/lib/LanguageContext";
-import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { useTheme } from "next-themes";
+import { BookType, ServiceType } from "./types";
 
-interface MobileNavigationProps extends NavigationProps {
-  isMenuOpen: boolean | string;
-  setIsMenuOpen: (value: boolean | string) => void;
-  headerHeight: number;
+interface MobileNavigationProps {
+  books: BookType[];
+  services: ServiceType[];
+  onBookClick: (book: BookType, e: React.MouseEvent) => void;
+  onServiceClick: (service: ServiceType, e: React.MouseEvent) => void;
+  onLinkClick?: () => void;
 }
 
 export function MobileNavigation({ 
-  isMenuOpen, 
-  setIsMenuOpen, 
-  headerHeight,
   books,
   services,
   onBookClick,
-  onServiceClick 
+  onServiceClick,
+  onLinkClick
 }: MobileNavigationProps) {
   const { language } = useSafeLanguage();
   const pathname = usePathname();
@@ -52,6 +39,7 @@ export function MobileNavigation({
 
   // Navigation translations
   const navTranslations = {
+    home: language === 'bg' ? 'Начало' : 'Home',
     about: language === 'bg' ? 'За мен' : 'About',
     books: language === 'bg' ? 'Книги' : 'Books',
     services: language === 'bg' ? 'Услуги' : 'Services',
@@ -60,35 +48,10 @@ export function MobileNavigation({
   };
 
   // Animation variants - optimized for smoother transitions
-  const menuVariants = {
-    closed: {
-      opacity: 0,
-      y: -5, // More subtle movement
-      transition: {
-        duration: 0.15, // Faster transition
-        ease: "easeInOut",
-        when: "afterChildren",
-        staggerChildren: 0.03, // Faster staggering
-        staggerDirection: -1
-      }
-    },
-    open: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.2,
-        ease: "easeOut",
-        when: "beforeChildren",
-        staggerChildren: 0.03, // Faster staggering
-        staggerDirection: 1
-      }
-    }
-  };
-
   const itemVariants = {
     closed: { 
       opacity: 0, 
-      x: -5, // More subtle movement
+      x: -5,
       transition: { duration: 0.1, ease: "easeIn" }
     },
     open: { 
@@ -98,120 +61,39 @@ export function MobileNavigation({
     }
   };
 
-  // Close the menu when path changes
-  useEffect(() => {
-    if (isMenuOpen) {
-      setIsMenuOpen(false);
+  const handleNavItemClick = () => {
+    if (onLinkClick) {
+      onLinkClick();
     }
-  }, [pathname, setIsMenuOpen, isMenuOpen]);
+  };
 
   return (
-    <>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className={cn(
-          "lg:hidden",
-          "relative",
-          "hover:bg-primary/5 dark:hover:bg-primary/10", // More subtle hover
-          "active:scale-[0.97] transition-transform duration-150", // Smoother animation
-          "rounded-full" // Rounded button for better touch target
-        )}
-        aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-      >
-        <AnimatePresence mode="wait">
-          {isMenuOpen ? (
-            <motion.div
-              key="close"
-              initial={{ scale: 0.8, opacity: 0, rotate: -90 }}
-              animate={{ scale: 1, opacity: 1, rotate: 0 }}
-              exit={{ scale: 0.8, opacity: 0, rotate: 90 }}
-              transition={{ duration: 0.15, ease: "easeInOut" }}
-            >
-              <X className="h-5 w-5" />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="menu"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ duration: 0.15, ease: "easeInOut" }}
-            >
-              <Menu className="h-5 w-5" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </Button>
-
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            variants={menuVariants}
-            initial="closed"
-            animate="open"
-            exit="closed"
-            className={cn(
-              "fixed inset-x-0 top-[var(--header-height)]",
-              "bg-background/95 backdrop-blur-lg", 
-              "border-b border-green-200/60 dark:border-green-950/60",
-              "shadow-lg",
-              "lg:hidden z-50",
-              "overflow-auto", 
-              "max-h-[calc(100vh-var(--header-height))]"
-            )}
-            style={{ 
-              '--header-height': `${headerHeight}px`,
-              backgroundImage: isDarkMode
-                ? 'linear-gradient(to bottom, rgba(20, 83, 45, 0.15), rgba(20, 83, 45, 0.05))'
-                : 'linear-gradient(to bottom, rgba(240, 253, 244, 0.9), rgba(240, 253, 244, 0.7))'
-            } as any}
+    <nav className="mx-auto w-full" role="navigation" aria-label="Mobile navigation">
+      <ul className="space-y-1">
+        {[
+          { href: "/", label: navTranslations.home, icon: Home },
+          { href: "/about", label: navTranslations.about, icon: UserRound },
+          { href: "/shop", label: navTranslations.books, icon: BookOpen },
+          { href: "/services", label: navTranslations.services, icon: Sparkles },
+          { href: "/blog", label: navTranslations.blog, icon: Mail },
+          { href: "/contact", label: navTranslations.contact, icon: Mail }
+        ].map((item) => (
+          <motion.li 
+            key={item.href}
+            variants={itemVariants}
+            className="overflow-hidden"
           >
-            <div className="container mx-auto px-4 py-4">
-              <nav className="mx-auto max-w-md w-full">
-                <motion.ul 
-                  className="space-y-1" // Tighter spacing
-                  variants={menuVariants}
-                >
-                  {[
-                    { href: "/about", label: navTranslations.about, icon: UserRound },
-                    { href: "/shop", label: navTranslations.books, icon: BookOpen },
-                    { href: "/shop/services", label: navTranslations.services, icon: Sparkles },
-                    { href: "/blog", label: navTranslations.blog, icon: Mail },
-                    { href: "/contact", label: navTranslations.contact, icon: Mail }
-                  ].map((item) => (
-                    <motion.li 
-                      key={item.href}
-                      variants={itemVariants}
-                      className="overflow-hidden" // Prevents layout shifts during animation
-                    >
-                      <NavItem
-                        href={item.href}
-                        label={item.label}
-                        icon={item.icon}
-                        className="w-full justify-start px-4 py-3 rounded-md"
-                      />
-                    </motion.li>
-                  ))}
-                </motion.ul>
-                
-                <motion.div 
-                  variants={itemVariants}
-                  className={cn(
-                    "mt-6 flex items-center gap-4 justify-center", // Better spacing
-                    "border-t border-border/30 pt-4 mt-4", // Lighter border
-                    "bg-gradient-to-b from-transparent to-background/30" // Subtle gradient
-                  )}
-                >
-                  <ThemeToggle />
-                  <LanguageSwitcher />
-                </motion.div>
-              </nav>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+            <NavItem
+              href={item.href}
+              label={item.label}
+              icon={item.icon}
+              className="w-full justify-start px-4 py-3 rounded-md"
+              onClick={handleNavItemClick}
+              aria-current={pathname === item.href ? 'page' : undefined}
+            />
+          </motion.li>
+        ))}
+      </ul>
+    </nav>
   );
 } 

@@ -165,6 +165,18 @@ export default function Header({ containedMode }: HeaderProps) {
     setIsServicePreviewOpen(true);
   }, []);
   
+  // Force close mobile menu on ESC key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isMenuOpen]);
+  
   // Calculate background opacity based on scroll position
   const bgOpacity = scrollProgress / 15;
   
@@ -173,13 +185,16 @@ export default function Header({ containedMode }: HeaderProps) {
       ref={headerRef}
       id="header-wrapper"
       className={cn(
-        containedMode ? "relative" : "fixed top-0 left-0 right-0",
-        "z-50 w-full",
+        "w-full",
+        "z-50",
         "transition-all duration-200",
         isScrolled ? "backdrop-blur-md" : "backdrop-blur-none",
-        isScrolled ? (isDarkMode ? "border-b border-green-950/30" : "border-b border-green-200/70") : "",
-        containedMode ? "bg-background/95" : ""
+        isScrolled && !containedMode ? (isDarkMode ? "border-b border-green-950/30" : "border-b border-green-200/70") : "",
+        containedMode ? "bg-background/5" : "",
+        "sticky top-0 left-0 right-0"
       )}
+      aria-label="Site header"
+      role="banner"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{
@@ -192,19 +207,25 @@ export default function Header({ containedMode }: HeaderProps) {
         backgroundColor: !containedMode && isScrolled 
           ? `rgba(var(--background-rgb), ${bgOpacity})` 
           : '',
-        backgroundImage: isDarkMode
+        backgroundImage: !containedMode && isDarkMode
           ? 'linear-gradient(to bottom, rgba(20, 83, 45, 0.15), rgba(20, 83, 45, 0.05))'
-          : 'linear-gradient(to bottom, rgba(240, 253, 244, 0.9), rgba(240, 253, 244, 0.7))',
-        boxShadow: isScrolled 
+          : !containedMode ? 'linear-gradient(to bottom, rgba(240, 253, 244, 0.9), rgba(240, 253, 244, 0.7))' : '',
+        boxShadow: !containedMode && isScrolled 
           ? isDarkMode
              ? `0 1px 3px rgba(0,0,0,${bgOpacity * 0.2}), 0 1px 2px rgba(20, 83, 45, 0.1)` 
              : `0 1px 3px rgba(0,0,0,${bgOpacity * 0.1}), 0 1px 2px rgba(20, 83, 45, 0.05)` 
           : 'none',
+        position: 'sticky', // Enforce sticky across all browsers
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 50
       }}
     >
       <div className={cn(
         CONTAINER_WIDTH_CLASSES, 
-        containedMode ? "px-2" : "px-4 sm:px-6 lg:px-8"
+        "px-4 sm:px-6 lg:px-8 mx-auto",
+        "pt-2"
       )}>
         <div className={cn(
           "flex w-full items-center justify-between relative gap-4 sm:gap-6",
@@ -231,6 +252,8 @@ export default function Header({ containedMode }: HeaderProps) {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.2 }}
+            role="navigation"
+            aria-label="Main navigation"
           >
             <DesktopNavigation 
               books={books} 
@@ -247,26 +270,105 @@ export default function Header({ containedMode }: HeaderProps) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
           >
+            <div className="lg:hidden">
+              <ThemeToggle />
+            </div>
+            
+            <div className="lg:hidden">
+              <LanguageSwitcher />
+            </div>
+            
             <ShopButton />
-            <MobileNavigation 
-              isMenuOpen={isMenuOpen}
-              setIsMenuOpen={setIsMenuOpen}
-              headerHeight={headerHeight}
-              books={books}
-              services={services}
-              onBookClick={handleBookClick}
-              onServiceClick={handleServiceClick}
-            />
+            
+            {/* Mobile menu button - improved accessibility */}
+            <motion.button
+              type="button"
+              className={cn(
+                "lg:hidden p-2 rounded-lg",
+                "text-gray-700 dark:text-gray-300",
+                "hover:bg-gray-100 dark:hover:bg-gray-800",
+                "focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1"
+              )}
+              aria-expanded={isMenuOpen ? "true" : "false"}
+              aria-controls="mobile-menu"
+              aria-label={isMenuOpen ? "Close main menu" : "Open main menu"}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className="sr-only">{isMenuOpen ? "Close menu" : "Open menu"}</span>
+              <svg
+                className={`w-6 h-6 transition-transform duration-300 ${isMenuOpen ? "rotate-90" : "rotate-0"}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                {isMenuOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </motion.button>
           </motion.div>
         </div>
       </div>
 
+      {/* Mobile Navigation - Improved accessibility */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            id="mobile-menu"
+            className="lg:hidden absolute left-0 right-0 top-full"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            style={{ 
+              zIndex: 40,
+              boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)" 
+            }}
+          >
+            <div className={cn(
+              "bg-white dark:bg-gray-900 px-4 py-3",
+              "border-b border-gray-200 dark:border-gray-800"
+            )}>
+              <MobileNavigation 
+                books={books} 
+                services={services}
+                onBookClick={(book, e) => {
+                  handleBookClick(book, e);
+                  setIsMenuOpen(false); // Ensure menu closes after navigation
+                }}
+                onServiceClick={(service, e) => {
+                  handleServiceClick(service, e);
+                  setIsMenuOpen(false); // Ensure menu closes after navigation
+                }}
+                onLinkClick={() => setIsMenuOpen(false)} // Close menu when any link is clicked
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Service Preview Dialog */}
-      <ServicePreviewDialog
-        isOpen={isServicePreviewOpen}
-        onClose={() => setIsServicePreviewOpen(false)}
-        service={selectedService}
-      />
+      {selectedService && (
+        <ServicePreviewDialog
+          service={selectedService}
+          open={isServicePreviewOpen}
+          onOpenChange={setIsServicePreviewOpen}
+        />
+      )}
     </motion.header>
   );
 } 

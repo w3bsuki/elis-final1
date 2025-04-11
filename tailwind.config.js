@@ -51,6 +51,13 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+      fontFamily: {
+        sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
+        serif: ["var(--font-serif)", "Georgia", "serif"],
+        mono: ["var(--font-geist-mono)", "monospace"],
+        playfair: ["var(--font-playfair)", "serif"],
+        handwriting: ["var(--font-caveat)", "'Caveat'", "'Kalam'", "'Architects Daughter'", "'Comic Neue'", "cursive"],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
@@ -91,6 +98,10 @@ module.exports = {
           '50%': { transform: 'translateY(-10px)' },
           '100%': { transform: 'translateY(0px)' },
         },
+        'spin-slow': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -101,6 +112,7 @@ module.exports = {
         "text-shimmer": "text-shimmer 2.5s ease-out infinite alternate",
         "pulse-slow": "pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "float": "float 3s ease-in-out infinite",
+        "spin-slow": "spin-slow 20s linear infinite",
       },
       typography: (theme) => ({
         DEFAULT: {

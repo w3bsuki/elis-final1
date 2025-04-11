@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Facebook, Instagram, Twitter } from "lucide-react";
+import { Facebook, Instagram } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const socialMediaLinks = [
@@ -14,11 +14,6 @@ const socialMediaLinks = [
     name: "Instagram",
     href: "https://instagram.com/authorELIS",
     icon: Instagram,
-  },
-  {
-    name: "Twitter",
-    href: "https://twitter.com/authorELIS",
-    icon: Twitter,
   }
 ];
 
@@ -37,23 +32,34 @@ const nestedGlassStyle = cn(
 export function SocialLinks() {
   const linkStyles = cn(
     nestedGlassStyle,
-    "rounded-lg flex items-center justify-center h-10 w-10"
+    "rounded-full flex items-center justify-center h-8 w-8 text-gray-600 dark:text-gray-300 hover:text-[#4267B2] dark:hover:text-[#4267B2]"
+  );
+
+  const instagramStyles = cn(
+    nestedGlassStyle,
+    "rounded-full flex items-center justify-center h-8 w-8 text-gray-600 dark:text-gray-300 hover:text-[#E1306C] dark:hover:text-[#E1306C]"
   );
 
   return (
     <div className="flex items-center gap-2">
-      {socialMediaLinks.map((link) => (
-        <Link 
-          key={link.name}
-          href={link.href} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className={linkStyles}
-          aria-label={link.name}
-        >
-          <link.icon className="h-5 w-5" />
-        </Link>
-      ))}
+      <Link 
+        href={socialMediaLinks[0].href} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className={linkStyles}
+        aria-label={socialMediaLinks[0].name}
+      >
+        <Facebook className="h-4 w-4" />
+      </Link>
+      <Link 
+        href={socialMediaLinks[1].href} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className={instagramStyles}
+        aria-label={socialMediaLinks[1].name}
+      >
+        <Instagram className="h-4 w-4" />
+      </Link>
     </div>
   );
 } 

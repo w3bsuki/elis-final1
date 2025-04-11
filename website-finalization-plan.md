@@ -1,241 +1,196 @@
-# ELIS WEBSITE FINALIZATION PLAN
+# Website Finalization Plan for ELIS Author Portfolio
 
-## PRIORITY ORDER CHECKLIST (MORNING TO EVENING)
+## Overview
+This plan outlines the final improvements needed to prepare the ELIS author portfolio website for delivery to the customer tonight. We'll focus on enhancing the home page first, then address other pages and backend components as needed. The goal is to create a polished, accessible, and user-friendly website that showcases the author's work effectively.
 
-### PHASE 1: FRONTEND AUDIT & FIXES (2-3 HOURS)
-- [x] Run full site audit (check all pages for consistency, links, UI issues)
-  - Site uses Next.js with a mix of Pages Router and App Router
-  - Navigation structure includes desktop and mobile versions with dropdown menus
-  - Shop page has filter functionality with comprehensive filter options
-  - Main components include Header with navigation, shop filters, card components
-- [ ] Fix all navigation links and routing issues
-  - [x] Verified navigation components in desktop and mobile views
-  - [ ] Need to verify all links are working correctly and pointing to the right pages
-- [ ] Standardize button styles across the entire site
-  - [x] Component uses shadcn/ui button components with variants
-  - [x] Consistent theme with neumorphic design in many places
-  - [ ] Need to standardize button variants across components
-- [ ] Fix filter functionality on shop page
-  - [x] Filter mechanics are in place and working
-  - [x] Filters include search, categories, and sorting
-  - [ ] Need to verify all filter combinations and reset functionality
-- [ ] Complete responsive design fixes
-  - [ ] Test on mobile, tablet, and desktop breakpoints
-  - [ ] Fix any overflow issues or text wrapping problems
-  - [ ] Ensure all cards and grids work properly on mobile
+## CRITICAL ITEMS FOR TONIGHT'S DELIVERY
 
-### PHASE 2: COMPONENT STANDARDIZATION (2 HOURS)
-- [ ] Create/update design system in a central file
-  - [x] Found existing shadcn/ui components with consistent design system
-  - [ ] Need to document all color values, shadow values, border-radius values
-  - [ ] Need to document component variations and when to use them
-- [ ] Refactor Card components
-  - [x] Found multiple card implementations: Card, FlipCard, ProductCard
-  - [x] Card components follow neumorphic design pattern
-  - [ ] Need to create a single reusable Card component with variants
-  - [ ] Need to move styling to shared utility classes
-- [ ] Standardize image handling
-  - [x] Found OptimizedImage component with lazy loading
-  - [x] AspectRatio component from Radix UI being used
-  - [ ] Need to ensure consistent image containers with proper aspect ratios
-  - [ ] Need to standardize fallback images/placeholders
-- [ ] Optimize component props and interfaces
-  - [ ] Clean up unnecessary props
-  - [ ] Add proper TypeScript interfaces for all components
+### Header (Priority: HIGH)
+- [x] Fix header positioning for consistent cross-page behavior
+- [x] Add proper ARIA labels to all navigation items
+- [x] Ensure mobile menu closes properly after navigation
+- [ ] Fix theme toggle button accessibility and contrast
 
-### PHASE 3: BACKEND INTEGRATION (3-4 HOURS)
-- [ ] Set up database connection
-  - [x] Found Supabase integration is already configured
-  - [x] SQL schema exists with tables for orders, contacts, etc.
-  - [ ] Need to verify connection in development environment
-  - [ ] Need to ensure RLS policies are properly configured
-- [ ] Implement order processing system
-  - [x] API endpoint for orders exists at `/api/orders`
-  - [x] Order validation is implemented
-  - [x] Success/failure handling is in place
-  - [ ] Need to test full order flow
-- [ ] Build checkout functionality
-  - [x] Checkout form exists with customer info fields
-  - [x] Form validation is implemented
-  - [x] Order confirmation process exists
-  - [x] Payment options include Cash on Delivery and potentially card payments
-  - [ ] Need to test the checkout process end-to-end
-- [ ] Integrate user accounts (if applicable)
-  - [x] No user authentication appears to be implemented yet
-  - [x] User authentication not needed for MVP as guest checkout is supported
+### Hero Section (Priority: HIGH)
+- [x] Optimize author avatar loading and size
+- [x] Refine spacing between elements for visual harmony
+- [x] Improve CTA buttons for better conversion
+- [x] Fix any responsive issues on mobile devices
 
-### PHASE 4: PERFORMANCE & CLEANUP (2 HOURS)
-- [x] Run performance audit
-  - [x] Found service worker implementation for offline capability
-  - [x] Found OptimizedImage hook for image optimization
-  - [x] Found performance optimization in next.config.mjs
-  - [x] Development server works well, will check Lighthouse in production
-- [ ] Fix any console errors or warnings
-  - [x] Found error handling for database connection issues
-  - [x] Found error boundaries for component failures
-  - [ ] Need to check console for current errors
-- [ ] Clean up unused code
-  - [ ] Need to identify and remove commented-out code
-  - [ ] Need to identify and delete unused files and imports
-  - [ ] Need to address any TODO comments in the codebase
-- [ ] Refactor any complex components
-  - [x] Error handling components are well structured
-  - [ ] Checkout page is large (961 lines) and needs refactoring
-  - [ ] Shop page is large (699 lines) and needs refactoring
+### Featured Content & Books (Priority: HIGH)
+- [ ] Ensure book cards display correctly across all devices
+- [x] Fix any image loading issues or distortions
+- [ ] Implement basic favorites functionality with local storage
 
-### PHASE 5: TESTING & FINAL POLISH (2 HOURS)
-- [ ] Complete end-to-end testing
-  - [x] Development server works correctly
-  - [ ] Test all user flows (browsing, adding to cart, checkout)
-  - [ ] Test on multiple browsers (Chrome, Firefox, Safari)
-  - [ ] Verify mobile functionality
-- [ ] Accessibility checks
-  - [ ] Run accessibility audit tools
-  - [ ] Fix contrast issues
-  - [ ] Add missing alt text
-  - [ ] Test keyboard navigation
-- [ ] Final UI polish
-  - [ ] Check all animations and transitions
-  - [ ] Add any missing loading states
-  - [ ] Fix any remaining design inconsistencies
+### Basic SEO & Metadata (Priority: HIGH)
+- [x] Update meta titles and descriptions for all pages
+- [x] Add proper Open Graph tags for social sharing
+- [x] Ensure all pages have proper canonical URLs
 
-### PHASE 6: DEPLOYMENT (1-2 HOURS)
-- [ ] Prepare for deployment
-  - [x] Found deploy.sh script for automated deployment
-  - [x] Found vercel.json with proper Next.js configuration
-  - [ ] Need to address build errors related to Windows symlink permissions
-- [ ] Set up environment variables
-  - [x] Found Supabase connection variables in documentation
-  - [ ] Need to verify all necessary environment variables are set
-- [ ] Deploy to hosting
-  - [x] Vercel deployment is configured
-  - [ ] Need to test deployment process
-- [ ] Post-deployment checks
-  - [ ] Verify all pages load correctly
-  - [ ] Test all functionality in production
-  - [ ] Check performance metrics
+### Critical Accessibility (Priority: HIGH)
+- [x] Fix keyboard navigation throughout the site
+- [x] Address color contrast issues
+- [x] Add proper focus management
+- [x] Ensure all interactive elements are accessible
 
-## SPECIFIC COMPONENT FIXES
+## DETAILED IMPLEMENTATION PLAN
 
-### NAVBAR
-- [ ] Fix mobile menu toggle animation
-- [ ] Ensure active page is properly highlighted
-- [ ] Add smooth transitions between pages
+### 1. Header Improvements
 
-### HERO SECTION
-- [ ] Finalize responsive layout adjustments
-- [ ] Ensure proper image loading and performance
-- [ ] Fix any text overflow issues on mobile
+#### Technical Enhancements
+- [x] Fix header positioning to ensure consistent behavior across all pages
+  - Ensure fixed header works correctly on all pages (not just home)
+  - Fix z-index issues to prevent content overlapping header
+- [x] Optimize header transitions and animations for smoother scrolling experience
+  - Reduce jank during scroll transitions
+  - Optimize backdrop blur for better performance
+- [x] Ensure proper mobile responsiveness for all header elements
+  - Fix mobile menu toggle visibility and positioning
+  - Ensure dropdowns work correctly on touch devices
+- [x] Add proper ARIA labels to all navigation items
+  - Add aria-expanded to dropdown toggles
+  - Add aria-current to active navigation items
 
-### PRODUCT CARDS
-- [ ] Standardize all card shadows and borders
-- [ ] Ensure consistent hover effects
-- [ ] Fix alignment of prices and buttons
+#### Visual Refinements
+- [ ] Refine the header's backdrop blur and transparency effects
+  - Make blur more subtle on scroll
+  - Improve dark/light mode contrast
+- [x] Ensure proper spacing between navigation items
+  - Add consistent spacing between items (16px)
+  - Improve dropdown menu alignment
+- [x] Improve visual feedback for hover/focus states
+  - Add subtle hover animations
+  - Enhance focus indicators
+- [ ] Enhance the logo's prominence and visibility
+  - Adjust logo size across breakpoints
+  - Improve contrast against backgrounds
 
-### FILTERS & SEARCH
-- [x] Found comprehensive filter implementation
-- [ ] Verify reset functionality
-- [ ] Ensure mobile-friendly filter UI
+### 2. Hero Section Enhancements
 
-### CHECKOUT PROCESS
-- [x] Found full validation implementation
-- [x] Found proper error handling
-- [x] Found success/thank you page with order details
-- [ ] Test mobile-friendly checkout steps
+#### Content Improvements
+- [ ] Review and optimize author biography text
+  - Make content more concise and impactful
+  - Ensure translations flow naturally in both languages
+- [ ] Ensure all translations are accurate and natural-sounding
+  - Review Bulgarian text with native speakers if possible
+  - Check for any untranslated text
+- [x] Improve CTA buttons for better conversion
+  - Clarify button text for better action orientation
+  - Improve button contrast and visibility
+- [x] Add subtle animations to engage users
+  - Add staggered entrance animations for text elements
+  - Implement subtle hover effects on interactive elements
 
-## TECH STACK REVIEW
-- [x] Next.js routing and configuration
-  - Using a mix of Pages Router and App Router
-  - Performance optimizations in next.config.mjs
-- [x] React component structure
-  - Well-organized component structure with atomic design principles
-  - Components divided into UI, layout, and section categories
-- [x] State management approach (Context/Redux)
-  - Using React Context for global state (cart, language)
-  - Clean hooks for component-specific state
-- [x] Styling system (Tailwind/CSS Modules)
-  - Using Tailwind CSS with shadcn/ui component system
-  - Consistent styling patterns throughout
-- [x] API integration patterns
-  - Proper API routes in pages/api
-  - Clean error handling for API requests
-- [x] Data fetching approach (SWR/React Query)
-  - Using custom hooks for data fetching
-  - Client-side data fetching with proper loading states
+#### Technical Enhancements
+- [x] Optimize image loading with proper next/image implementation
+  - Add priority loading for hero images
+  - Implement correct sizing and quality parameters
+- [x] Add proper keyboard navigation for improved accessibility
+  - Ensure all interactive elements are keyboard accessible
+  - Add skip links for accessibility
+- [x] Improve responsive behavior for different screen sizes
+  - Fix avatar sizing on mobile
+  - Adjust text sizing across breakpoints
+- [x] Optimize book carousel for better performance
+  - Implement proper lazy loading
+  - Optimize animation performance
 
-## DEPLOYMENT CHECKLIST
-- [x] SEO optimization
-  - Found metadata configuration
-  - Proper heading structure observed
-  - Sitemap likely generated by Next.js
-- [x] Analytics integration
-  - Found Google Tag Manager integration
-- [x] Error logging setup
-  - Found comprehensive error handling components
-- [ ] Environment variable configuration
-  - Need to verify all environment variables
-- [x] Build script optimization
-  - Found optimized standalone output configuration
-- [x] Security headers configuration
-  - Found security headers in vercel.json
+#### Visual Refinements
+- [x] Refine spacing between avatar, headline, and subheading
+  - Reduce spacing between elements for better visual cohesion
+  - Ensure consistent vertical rhythm
+- [x] Enhance the visual hierarchy to better guide users' attention
+  - Increase contrast for primary headings
+  - Add subtle visual cues to guide eye movement
+- [x] Improve color contrast for better accessibility
+  - Ensure text meets WCAG AA contrast requirements
+  - Fix any low-contrast UI elements
+- [ ] Add subtle background patterns or effects for visual interest
+  - Implement light, non-distracting patterns
+  - Add subtle gradient effects
 
-## CONTACT/SUPPORT
-- If getting stuck on any phase, prioritize:
-  1. UI/UX completion
-  2. Basic checkout functionality
-  3. Deployment with MVP features
+### 3. Featured Content & Books Section
 
-## POST-LAUNCH PLAN
-- Monitor analytics and user behavior
-- Collect initial feedback
-- Plan Phase 2 enhancements based on user data
-- Schedule regular maintenance updates
+#### Content Improvements
+- [ ] Review and enhance book descriptions
+  - Make descriptions more concise and compelling
+  - Ensure consistent length across books
+- [ ] Ensure consistent formatting for book information
+  - Standardize price display format
+  - Unify information layout across books
+- [ ] Add "favorite" or "bookmark" functionality for books
+  - Implement local storage for saving favorites
+  - Add visual indication for favorited items
 
-## SUMMARY OF AUDIT FINDINGS
+#### Technical Enhancements
+- [x] Implement lazy loading for book images
+  - Use next/image with loading="lazy"
+  - Add proper image sizing and quality
+- [x] Add proper keyboard navigation for book cards
+  - Ensure cards are focusable
+  - Add keyboard shortcuts for key actions
+- [x] Optimize image sizes and formats for faster loading
+  - Convert images to WebP format
+  - Implement responsive image sizes
+- [x] Implement proper structured data for books (Schema.org)
+  - Add Book schema for better SEO
+  - Include price, author, and publication info
 
-1. **Overall Structure**:
-   - Well-structured Next.js application with a mix of Pages Router and App Router
-   - Clear component organization with a focus on reusability
-   - Comprehensive error handling and performance optimization
+#### Visual Refinements
+- [x] Refine book card design for better visual appeal
+  - Add subtle shadows and depth
+  - Improve border radius consistency
+- [x] Improve hover and focus states for interactive elements
+  - Add scale animations on hover
+  - Implement clear focus indicators
+- [x] Ensure consistent spacing and alignment
+  - Standardize card padding and margins
+  - Align text and action elements
+- [x] Add subtle animations or transitions for book cards
+  - Implement staggered entrance animations
+  - Add smooth transition effects
 
-2. **Frontend Components**:
-   - Strong neumorphic design system consistently applied
-   - Comprehensive UI components based on shadcn/ui
-   - Multiple card implementations that need standardization
-   - Responsive design with proper mobile considerations
+## Priority Implementation Order
+1. Fix critical functional issues in header and hero section ✓
+   - Header positioning and mobile responsiveness
+   - Hero section image loading and spacing
+2. Implement SEO and metadata improvements ✓
+   - Update meta tags on all pages
+   - Add Open Graph and Twitter card data
+3. Address critical accessibility issues ✓
+   - Fix keyboard navigation ✓
+   - Add proper ARIA attributes ✓
+   - Ensure sufficient color contrast ✓
+4. Optimize performance
+   - Optimize image loading ✓
+   - Reduce JavaScript bundle size
+5. Polish visual design
+   - Refine spacing and alignment ✓
+   - Add subtle animations ✓
+6. Final testing and review
+   - Cross-browser testing
+   - Mobile device testing
 
-3. **Backend Integration**:
-   - Supabase integration is in place and configured
-   - API endpoints for order processing are implemented
-   - Checkout flow is complete with form validation
-   - Database schema is well-defined with proper RLS policies
+## Timeline (Tonight)
+- **1 hour**: Header and hero section improvements ✓
+- **30 minutes**: Books section enhancements ✓
+- **30 minutes**: SEO and metadata implementation ✓
+- **30 minutes**: Critical accessibility fixes ✓
+- **30 minutes**: Performance optimization
+- **30 minutes**: Visual polish and refinements
+- **30 minutes**: Final testing and debugging
 
-4. **Performance & Optimization**:
-   - Service worker for offline capability
-   - Image optimization with proper lazy loading
-   - Next.js configuration optimized for performance
-   - Large components need refactoring (checkout, shop pages)
+## Implementation Approach
+1. Start with fixing the most visible issues first (header, hero) ✓
+2. Focus on functional improvements before visual refinements ✓
+3. Prioritize cross-device compatibility
+4. Address accessibility in parallel with visual improvements ✓
+5. Test continuously throughout the implementation process
 
-5. **Deployment**:
-   - Vercel deployment is configured
-   - Build process has issues with Windows symlinks
-   - Security headers are properly configured
-
-## NEXT STEPS PRIORITY
-
-1. **Critical Path**:
-   - Fix Windows symlink issues for successful build
-   - Test core user flows (browse, search, filter, add to cart, checkout)
-   - Verify all navigation links work correctly
-
-2. **Important Improvements**:
-   - Standardize button styles and card components
-   - Refactor large components (checkout and shop pages)
-   - Implement consistent image containers and fallbacks
-
-3. **Optional Enhancements**:
-   - Clean up unused code and imports
-   - Improve accessibility with proper ARIA attributes
-   - Enhance mobile-specific UI elements
-
-The website is in good shape with a solid foundation. The focus should be on fixing any critical issues first, then improving standardization and reducing technical debt, before finally adding polish and enhancements. 
+## Success Criteria
+- All critical items marked as completed
+- Website loads and functions correctly on all target devices
+- Navigation and interactive elements work as expected
+- Visual design is polished and professional
+- Basic accessibility requirements are met ✓
+- SEO fundamentals are implemented ✓ 

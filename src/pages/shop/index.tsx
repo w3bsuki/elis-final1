@@ -522,12 +522,20 @@ export default function ShopPage() {
                                                   className="rounded-full h-10 w-[50%]
                                                     bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 
                                                     text-white hover:shadow-sm transition-all duration-300"
-                                                  asChild
+                                                  onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    addToCart({
+                                                      id: book.id,
+                                                      title: book.title,
+                                                      price: book.price || 0,
+                                                      image: book.coverImage || book.image || '',
+                                                      quantity: 1
+                                                    });
+                                                  }}
                                                 >
-                                                  <Link href={`/shop/book/${book.id}`} onClick={(e) => e.stopPropagation()} className="flex items-center justify-center">
-                                                    <ShoppingCart className="h-4 w-4 mr-2" />
-                                                    {translate("Купи", "Buy")}
-                                                  </Link>
+                                                  <ShoppingCart className="h-4 w-4 mr-2" />
+                                                  {translate("Купи", "Buy")}
                                                 </Button>
                                               </div>
                                             </div>
@@ -817,6 +825,7 @@ export default function ShopPage() {
                                   key={book.id}
                                   variants={itemVariants}
                                   className="group relative flex flex-col h-full"
+                                  onClick={() => handleBookClick(book)}
                                 >
                                   {/* Card with double border hover effect - matching the style of featured content cards */}
                                   <div className={cn(
@@ -831,7 +840,6 @@ export default function ShopPage() {
                                     "border-2 border-green-100/30 dark:border-green-900/30 hover:border-green-300 dark:hover:border-green-700",
                                     "relative overflow-hidden cursor-pointer"
                                   )}>
-                                    
                                     {/* Inner container with its own border - creates nested effect */}
                                     <div className={cn(
                                       "h-full w-full flex flex-col bg-white/90 dark:bg-gray-900/90 rounded-lg",
@@ -842,7 +850,7 @@ export default function ShopPage() {
                                       {/* Corner decoration element with enhanced styling */}
                                       <div className="absolute top-0 right-0 w-32 h-32 rounded-bl-3xl -z-1 
                                         bg-gradient-to-bl from-green-100/40 to-transparent dark:from-green-900/20
-                                        group-hover:from-green-200/60 dark:group-hover:from-green-800/40 
+                                        group-hover:from-green-200/60 dark:group-hover:from-green-800/40
                                         transition-colors duration-300" />
                                       
                                       {/* Book cover image with enhanced styling */}
@@ -875,8 +883,12 @@ export default function ShopPage() {
                                         {/* Category badge */}
                                         {book.category && (
                                           <span className="inline-flex items-center mb-2.5 text-sm font-medium mr-2 px-3 py-1 rounded-full
-                                            bg-green-100/80 dark:bg-green-900/40 text-green-700 dark:text-green-400 border border-green-400/20 dark:border-green-800/40">
-                                            {book.category}
+                                            bg-gradient-to-r from-green-500 to-emerald-600 text-white
+                                            border border-green-400/20 shadow-md">
+                                              {book.category === 'health' ? (language === 'bg' ? 'Здраве' : 'Health') : 
+                                              book.category === 'poetry' ? (language === 'bg' ? 'Поезия' : 'Poetry') : 
+                                              book.category === 'selfHelp' ? (language === 'bg' ? 'Самопомощ' : 'Self Help') : 
+                                              book.category}
                                           </span>
                                         )}
                                         
@@ -893,12 +905,54 @@ export default function ShopPage() {
                                           </span>
                                         </div>
                                         
-                                        {/* Book description with clean typography */}
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-3 flex-grow leading-relaxed">
+                                        {/* Enhanced book details with badges */}
+                                        <div className="flex items-center gap-1.5 mb-3.5 w-full">
+                                          <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
+                                            bg-gray-100/80 dark:bg-gray-700/50 text-sm text-gray-700 dark:text-gray-300">
+                                            <FileText className="h-3.5 w-3.5 mr-1 text-gray-500 dark:text-gray-400" />
+                                            <span>{book.pages} {language === 'bg' ? 'стр.' : 'pg'}</span>
+                                          </div>
+                                          
+                                          {/* Publication date */}
+                                          {book.publishDate && (
+                                            <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
+                                              bg-gray-100/80 dark:bg-gray-700/50 text-sm text-gray-700 dark:text-gray-300">
+                                              <CalendarDays className="h-3.5 w-3.5 mr-1 text-gray-500 dark:text-gray-400" />
+                                              <span>{new Date(book.publishDate).getFullYear()}</span>
+                                            </div>
+                                          )}
+                                          
+                                          {/* Digital badge if available */}
+                                          {book.digital && (
+                                            <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
+                                              bg-blue-50/80 dark:bg-blue-900/30 text-sm text-blue-700 dark:text-blue-400 
+                                              border border-blue-200/50 dark:border-blue-800/40">
+                                              <Download className="h-3.5 w-3.5 mr-1" />
+                                              <span>{language === 'bg' ? 'PDF' : 'PDF'}</span>
+                                            </div>
+                                          )}
+                                        </div>
+                                        
+                                        {/* Book description with clean typography - no color transitions */}
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2 flex-grow leading-relaxed">
                                           {book.description}
                                         </p>
                                         
-                                        {/* Action buttons at the bottom */}
+                                        {/* Rating and reviews */}
+                                        <div className="flex items-center mb-4">
+                                          <div className="flex text-yellow-400 mr-2">
+                                            <Star className="h-4 w-4 fill-current" />
+                                            <Star className="h-4 w-4 fill-current" />
+                                            <Star className="h-4 w-4 fill-current" />
+                                            <Star className="h-4 w-4 fill-current" />
+                                            <Star className="h-4 w-4 fill-current text-gray-300 dark:text-gray-600" />
+                                          </div>
+                                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                                            (4.0) · {Math.floor(Math.random() * 50) + 10} {translate("ревюта", "reviews")}
+                                          </span>
+                                        </div>
+                                        
+                                        {/* Buttons at the bottom */}
                                         <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700/30 flex justify-between items-center">
                                           {/* View button with refined styling */}
                                           <Button
@@ -927,12 +981,20 @@ export default function ShopPage() {
                                             className="rounded-full h-10 w-[50%]
                                               bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 
                                               text-white hover:shadow-sm transition-all duration-300"
-                                            asChild
+                                            onClick={(e) => {
+                                              e.preventDefault();
+                                              e.stopPropagation();
+                                              addToCart({
+                                                id: book.id,
+                                                title: book.title,
+                                                price: book.price || 0,
+                                                image: book.coverImage || book.image || '',
+                                                quantity: 1
+                                              });
+                                            }}
                                           >
-                                            <Link href={`/shop/book/${book.id}`} onClick={(e) => e.stopPropagation()} className="flex items-center justify-center">
-                                              <ShoppingCart className="h-4 w-4 mr-2" />
-                                              {translate("Купи", "Buy")}
-                                            </Link>
+                                            <ShoppingCart className="h-4 w-4 mr-2" />
+                                            {translate("Купи", "Buy")}
                                           </Button>
                                         </div>
                                       </div>

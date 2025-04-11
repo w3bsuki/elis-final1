@@ -19,6 +19,7 @@ interface NavItemProps {
   inactiveClassName?: string;
   variant?: 'default' | 'ghost' | 'outline' | 'secondary';
   size?: 'default' | 'sm' | 'lg' | 'icon';
+  'aria-current'?: 'page' | 'step' | 'location' | 'date' | 'time' | boolean;
 }
 
 export function NavItem({
@@ -53,6 +54,7 @@ export function NavItem({
     "hover:text-primary dark:hover:text-primary",
     "hover:border-primary/20 dark:hover:border-primary/20"
   ),
+  'aria-current': ariaCurrent,
 }: NavItemProps) {
   const pathname = usePathname();
   const isActive = isActiveProp ?? (href ? pathname === href || (href !== '/' && pathname.startsWith(href)) : false);
@@ -63,13 +65,23 @@ export function NavItem({
     className
   );
 
+  // Handle keyboard navigation
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (onClick) {
+        onClick(e as unknown as React.MouseEvent);
+      }
+    }
+  };
+
   const content = (
     <div className="flex items-center gap-2 w-full">
       {Icon && (
         <div className={cn(
           "transition-transform duration-300",
           isActive && "scale-105"
-        )}>
+        )} aria-hidden="true">
           <Icon className={cn(
             "h-4 w-4 flex-shrink-0",
             isActive ? "text-primary" : "text-foreground/70"
@@ -81,15 +93,24 @@ export function NavItem({
     </div>
   );
 
+  // Determine aria-current value
+  const ariaCurrentValue = ariaCurrent !== undefined 
+    ? ariaCurrent 
+    : isActive ? 'page' : undefined;
+
   if (href) {
     return (
       <Link 
         href={href} 
         className={cn(
           combinedClassName,
-          "no-underline hover:no-underline focus:no-underline"
+          "no-underline hover:no-underline focus:no-underline",
+          "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
         )}
         onClick={onClick}
+        onKeyDown={handleKeyDown}
+        aria-current={ariaCurrentValue}
+        role="menuitem"
       >
         {content}
       </Link>
@@ -103,6 +124,9 @@ export function NavItem({
       size={size}
       className={combinedClassName}
       onClick={onClick}
+      onKeyDown={handleKeyDown}
+      aria-current={ariaCurrentValue}
+      role="menuitem"
     >
       {content}
     </Button>

@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { ArrowRight, CreditCard, Banknote } from "lucide-react";
+import { motion } from "framer-motion";
 import {
   Form,
   FormControl,
@@ -342,31 +343,68 @@ export default function CheckoutForm({ onSubmit, loading = false }: CheckoutForm
         </div>
 
         <div className="sticky bottom-0 z-10 pt-4 pb-2 bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm">
-          <Button 
-            type="submit" 
-            disabled={loading}
-            className="w-full h-12 text-base font-medium rounded-xl bg-gradient-to-r from-primary to-primary/90
-              shadow-[2px_2px_4px_rgba(0,0,0,0.08),-2px_-2px_4px_rgba(255,255,255,0.7)]
-              dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.15)]
-              hover:shadow-[1px_1px_2px_rgba(0,0,0,0.04),-1px_-1px_2px_rgba(255,255,255,0.6)]
-              dark:hover:shadow-[1px_1px_2px_rgba(0,0,0,0.1),-1px_-1px_2px_rgba(30,30,30,0.05)]
-              transition-all duration-200"
-          >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-                {translate("Обработване...", "Processing...")}
-              </span>
-            ) : (
-              <span className="flex items-center justify-center gap-2">
-                {translate("Завърши поръчката", "Complete Order")}
-                <ArrowRight className="w-5 h-5" />
-              </span>
-            )}
-          </Button>
+          <div className="px-[2px] py-[2px] overflow-hidden">
+            <motion.button
+              type="submit"
+              disabled={loading}
+              className="w-full h-12 text-base font-semibold rounded-xl
+                bg-gradient-to-r from-green-500 to-green-600
+                text-white
+                disabled:opacity-70 disabled:cursor-not-allowed
+                relative overflow-hidden transform-gpu"
+              whileHover={{ 
+                background: "linear-gradient(to right, #22c55e, #16a34a)",
+              }}
+              whileTap={{ y: 1 }}
+              transition={{ 
+                type: "tween", 
+                duration: 0.2
+              }}
+            >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  {translate("Обработване...", "Processing...")}
+                </span>
+              ) : (
+                <motion.div 
+                  className="flex items-center justify-center gap-2"
+                  initial={false}
+                >
+                  {translate("Завърши поръчката", "Complete Order")}
+                  <motion.div
+                    initial={{ x: 0 }}
+                    whileHover={{ x: 2 }}
+                    transition={{ type: "tween", duration: 0.2 }}
+                  >
+                    <ArrowRight className="w-5 h-5" />
+                  </motion.div>
+                </motion.div>
+              )}
+              
+              {/* Inner shine effect */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                initial={{ x: "-100%" }}
+                whileHover={{ x: "100%" }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+              />
+              
+              {/* Button border glow */}
+              <motion.div 
+                className="absolute inset-0 -z-10 opacity-0 rounded-xl"
+                initial={{ opacity: 0 }}
+                whileHover={{ 
+                  opacity: 1,
+                  boxShadow: "inset 0 0 0 1px rgba(34, 197, 94, 0.4), 0 0 0 1px rgba(34, 197, 94, 0.1)"
+                }}
+                transition={{ duration: 0.2 }}
+              />
+            </motion.button>
+          </div>
         </div>
       </form>
     </Form>
