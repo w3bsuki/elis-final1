@@ -224,151 +224,225 @@ export const Testimonials = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative z-0 py-12">
-      {/* Decorative background elements */}
-      <motion.div 
-        style={{ y: y1 }} 
-        className="absolute -top-1/2 -right-1/4 w-1/2 h-1/2 rounded-full bg-blue-200/20 dark:bg-blue-900/10 blur-3xl -z-10"
-      />
-      <motion.div 
-        style={{ y: y2 }} 
-        className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_400px_at_50%_300px,rgba(59,130,246,0.08),transparent)] -z-10"
-      />
+    <div ref={containerRef} className="relative z-0 py-12 md:py-20">
+      {/* Improved decorative background elements */}
+      <div className="absolute right-[10%] top-[10%] w-[600px] h-[600px] bg-gradient-to-br from-blue-300/40 via-indigo-200/40 to-sky-300/40 rounded-full blur-[120px] -z-10 animate-pulse-slow"></div>
+      <div className="absolute left-[5%] bottom-[20%] w-[500px] h-[500px] bg-gradient-to-tr from-indigo-200/40 via-blue-300/40 to-sky-200/40 rounded-full blur-[120px] -z-10 animate-pulse-slower"></div>
       
-      {/* Enhanced Testimonials Container with nested neumorphic styling - now includes header */}
-      <div className="rounded-2xl p-[5px] mb-12
-          bg-gradient-to-br from-gray-200/80 via-white/90 to-gray-100/80 
-          dark:from-gray-800/80 dark:via-gray-900/90 dark:to-gray-800/80
-          shadow-[6px_6px_12px_rgba(0,0,0,0.1),-6px_-6px_12px_rgba(255,255,255,0.9)]
-          dark:shadow-[6px_6px_12px_rgba(0,0,0,0.3),-6px_-6px_12px_rgba(30,30,30,0.2)]
+      {/* Main container with glass morphism */}
+      <div className="w-full h-full flex flex-col rounded-none
+          bg-gradient-to-br from-white/85 via-white/90 to-white/85 
+          dark:from-gray-900/95 dark:via-gray-900/90 dark:to-gray-900/95
+          border border-white/30 dark:border-white/10
+          shadow-[0_10px_30px_rgba(0,0,0,0.15)]
+          dark:shadow-[0_10px_30px_rgba(0,0,0,0.4)]
           overflow-hidden">
         
-        {/* Inner container with gradient and shadow effects */}
-        <div className="bg-gradient-to-br from-blue-50/30 via-white/40 to-blue-50/30 dark:from-blue-900/20 dark:via-gray-900/20 dark:to-blue-900/20 p-8 rounded-xl relative">
-          {/* Inner shadow effect */}
-          <div className="absolute inset-1 bg-white/30 dark:bg-gray-900/30 rounded-lg backdrop-blur-sm shadow-inner pointer-events-none"></div>
+        {/* Inner container with enhanced gradients */}
+        <div className="bg-gradient-to-br from-blue-50/50 via-transparent to-indigo-50/50 
+            dark:from-blue-900/30 dark:via-transparent dark:to-indigo-900/30 
+            px-8 py-12 md:py-16 relative flex-grow flex flex-col">
           
-          {/* Section header with badge headline style */}
-          <div className="text-center mb-10 relative z-10">
-            {/* Enhanced header with special badge styling */}
-            <div className="inline-flex flex-col items-center justify-center">
-              {/* Main title with badge-like appearance */}
-              <div className="relative inline-flex items-center justify-center mb-4">
-                {/* Decorative gradient blob behind the title */}
-                <div className="absolute -z-10 w-full h-full scale-150 bg-gradient-to-br from-blue-400/20 via-sky-300/10 to-indigo-400/5 dark:from-blue-400/10 dark:via-sky-300/5 dark:to-indigo-400/5 blur-2xl rounded-full"></div>
-                
-                {/* Badge container */}
-                <div className="bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-900
-                  px-5 py-3 rounded-xl
-                  shadow-[4px_4px_10px_rgba(0,0,0,0.1),-4px_-4px_10px_rgba(255,255,255,0.9),inset_1px_1px_1px_rgba(255,255,255,0.8),inset_-1px_-1px_1px_rgba(0,0,0,0.05)]
-                  dark:shadow-[4px_4px_10px_rgba(0,0,0,0.3),-4px_-4px_10px_rgba(30,30,30,0.2),inset_1px_1px_1px_rgba(50,50,50,0.1),inset_-1px_-1px_1px_rgba(0,0,0,0.1)]
-                  flex items-center gap-3 border border-blue-200/50 dark:border-blue-800/30">
-                  
-                  {/* Left icon with enhanced styling - smaller */}
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-sky-300/20 blur-xl rounded-full"></div>
-                    <div className="rounded-full p-2
-                      bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800
-                      shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8),inset_1px_1px_1px_rgba(255,255,255,0.8),inset_-1px_-1px_1px_rgba(0,0,0,0.05)]
-                      dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1),inset_1px_1px_1px_rgba(50,50,50,0.1),inset_-1px_-1px_1px_rgba(0,0,0,0.1)]
-                      border border-blue-100/50 dark:border-blue-800/30 relative">
-                      <MessageCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
-                    </div>
-                  </div>
-                  
-                  {/* Title with text color changed to black - smaller */}
-                  <div className="flex flex-col items-start">
-                    <h2 className="text-xl md:text-2xl font-bold font-serif antialiased relative
-                      text-gray-900 dark:text-white
-                      flex items-center gap-2">
-                      {translate("Какво казват читателите", "What Readers Say")}
-                      {/* Add second icon */}
-                      <div className="rounded-full p-2
-                        bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800
-                        shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8),inset_1px_1px_1px_rgba(255,255,255,0.8),inset_-1px_-1px_1px_rgba(0,0,0,0.05)]
-                        dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1),inset_1px_1px_1px_rgba(50,50,50,0.1),inset_-1px_-1px_1px_rgba(0,0,0,0.1)]
-                        border border-blue-100/50 dark:border-blue-800/30 relative">
-                        <Quote className="w-5 h-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
-                      </div>
-                    </h2>
-                    {/* Remove underline by commenting it out */}
-                    {/* <div className="h-0.5 w-3/4 mx-auto bg-gradient-to-r from-gray-500 to-gray-400 dark:from-gray-400 dark:to-gray-300 rounded-full mt-1"></div> */}
-                  </div>
+          {/* Accent gradients */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.2),transparent_50%)] pointer-events-none"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(79,70,229,0.2),transparent_50%)] pointer-events-none"></div>
+          
+          {/* Content Container */}
+          <div className="relative z-10 max-w-7xl mx-auto w-full">
+            {/* Section header */}
+            <div className="text-center mb-14 md:mb-20 relative z-10">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="inline-flex flex-col items-center justify-center"
+              >
+                {/* Section badge with improved styling */}
+                <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-100 to-blue-50 dark:from-blue-900/50 dark:to-blue-900/30 rounded-full mb-5 border border-blue-200/60 dark:border-blue-800/40 shadow-lg backdrop-blur-sm">
+                  <MessageCircle className="h-4 w-4 text-blue-700 dark:text-blue-300" />
+                  <span className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                    {language === 'bg' ? "Отзиви" : "Testimonials"}
+                  </span>
                 </div>
-              </div>
-              
-              {/* Description text */}
-              <div className="max-w-2xl mx-auto mb-5">
-                <p className="text-gray-700 dark:text-gray-300 text-base sm:text-lg antialiased leading-relaxed">
+                
+                <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 
+                  bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400
+                  bg-clip-text text-transparent drop-shadow-sm">
+                  {translate("Какво казват читателите", "What Readers Say")}
+                </h2>
+                
+                <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
                   {translate(
                     "Присъединете се към глобална мрежа от читатели, които вече са открили своя път към по-добър живот.",
                     "Join a global network of readers who have already discovered their path to a better life."
                   )}
                 </p>
-              </div>
-              
-              {/* Enhanced instruction badge with glow effect */}
-              <div className="relative inline-flex">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-sky-300/20 to-blue-400/20 dark:from-blue-400/10 dark:via-sky-300/10 dark:to-blue-400/10 blur-xl rounded-full -z-10"></div>
-                <div className="inline-flex items-center gap-2 px-6 py-2.5
-                  rounded-full bg-gradient-to-br from-blue-50 to-white dark:from-gray-800 dark:to-gray-900
-                  text-base text-blue-700 dark:text-blue-400 
-                  border border-blue-100/50 dark:border-blue-800/30 
-                  shadow-[2px_2px_4px_rgba(0,0,0,0.05),-2px_-2px_4px_rgba(255,255,255,0.8),inset_1px_1px_1px_rgba(255,255,255,0.8),inset_-1px_-1px_1px_rgba(0,0,0,0.05)]
-                  dark:shadow-[2px_2px_4px_rgba(0,0,0,0.2),-2px_-2px_4px_rgba(30,30,30,0.1),inset_1px_1px_1px_rgba(50,50,50,0.1),inset_-1px_-1px_1px_rgba(0,0,0,0.1)]">
-                  <Star className="w-5 h-5 fill-amber-500 text-amber-500" />
-                  {translate("Оценен с 5 звезди от 1000+ читатели", "Rated 5 stars by 1000+ readers")}
+                
+                {/* Enhanced rating badge */}
+                <div className="mt-6 flex items-center gap-2 px-5 py-2.5 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-full shadow-md border border-blue-100/60 dark:border-blue-800/40">
+                  <div className="flex gap-0.5">
+                    {Array(5).fill(0).map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-amber-500 text-amber-500" />
+                    ))}
+                  </div>
+                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                    {translate("Оценен с 5 звезди от 1000+ читатели", "Rated 5 stars by 1000+ readers")}
+                  </span>
                 </div>
-              </div>
+              </motion.div>
             </div>
-          </div>
-          
-          {/* Testimonials Grid */}
-          <div className="relative z-10">
-            <Carousel
-              opts={{
-                loop: true,
-              }}
-              plugins={[plugin.current]}
-              onMouseLeave={() => plugin.current.play()}
-              className="lg:-mx-4 relative before:absolute before:top-0 before:bottom-0 before:left-0 before:z-10 before:w-24 sm:before:w-36 before:bg-gradient-to-r before:from-white/90 dark:before:from-gray-900/90 before:to-transparent after:absolute after:top-0 after:right-0 after:bottom-0 after:z-10 after:w-24 sm:after:w-36 after:bg-gradient-to-l after:from-white/90 dark:after:from-gray-900/90 after:to-transparent"
-            >
-              <CarouselContent>
-                {testimonials.map((testimonial, index) => (
-                  <CarouselItem key={index} className="basis-auto pl-4 md:basis-1/2 lg:basis-1/3">
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                      className="transform transition-all duration-300"
-                    >
-                      <TestimonialCard 
-                        testimonial={testimonial} 
-                        getSourceColor={getSourceColor} 
-                      />
-                    </motion.div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
-          </div>
-          
-          {/* Add header for view all testimonials with button */}
-          <div className="mt-12 pt-6 border-t border-blue-200/30 dark:border-blue-800/30 relative z-10">
-            <div className="flex justify-center">
+
+            {/* Testimonials Carousel */}
+            <div className="relative z-10">
+              <Carousel
+                opts={{
+                  loop: true,
+                }}
+                plugins={[plugin.current]}
+                onMouseLeave={() => plugin.current.play()}
+                className="lg:-mx-4 relative before:absolute before:top-0 before:bottom-0 before:left-0 before:z-10 before:w-24 sm:before:w-36 before:bg-gradient-to-r before:from-white/90 dark:before:from-gray-900/90 before:to-transparent after:absolute after:top-0 after:right-0 after:bottom-0 after:z-10 after:w-24 sm:after:w-36 after:bg-gradient-to-l after:from-white/90 dark:after:from-gray-900/90 after:to-transparent"
+              >
+                <CarouselContent>
+                  {testimonials.map((testimonial, index) => (
+                    <CarouselItem key={index} className="basis-auto pl-4 md:basis-1/2 lg:basis-1/3">
+                      <motion.div
+                        variants={{
+                          hidden: { opacity: 0, y: 30 },
+                          visible: {
+                            opacity: 1,
+                            y: 0,
+                            transition: { 
+                              type: "spring", 
+                              stiffness: 80, 
+                              damping: 12,
+                              mass: 0.5 
+                            }
+                          }
+                        }}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-50px" }}
+                        className="h-full"
+                      >
+                        <Card className="h-[340px] overflow-hidden rounded-xl 
+                          bg-white/50 dark:bg-gray-800/50
+                          backdrop-blur-md
+                          border border-white/40 dark:border-gray-700/60
+                          shadow-[0_15px_30px_rgba(0,0,0,0.1)]
+                          dark:shadow-[0_15px_30px_rgba(0,0,0,0.3)]
+                          hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] 
+                          dark:hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]
+                          hover:border-blue-300 dark:hover:border-blue-500
+                          transition-all duration-500 ease-out relative"
+                        >
+                          <div className="h-full w-full flex flex-col p-5 relative overflow-hidden">
+                            {/* Background accent */}
+                            <div className="absolute top-0 right-0 w-56 h-56 bg-gradient-to-bl from-blue-100/60 to-transparent dark:from-blue-900/30 rounded-bl-[100px] -z-1" />
+                            
+                            {/* Header with avatar and info */}
+                            <div className="flex justify-between items-start mb-4 relative z-10">
+                              <div className="flex gap-4 items-start">
+                                <div className="relative">
+                                  <Avatar className="size-16 rounded-full 
+                                    border-2 border-blue-100/60 dark:border-blue-800/60
+                                    shadow-[0_0_15px_rgba(59,130,246,0.25)]
+                                    dark:shadow-[0_0_15px_rgba(59,130,246,0.15)]
+                                    p-0.5 bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-gray-900"
+                                  >
+                                    <AvatarImage
+                                      src={testimonial.avatar}
+                                      alt={testimonial.name}
+                                      width={64}
+                                      height={64}
+                                      loading="lazy"
+                                    />
+                                  </Avatar>
+                                  <div className="absolute -bottom-1 -right-1 
+                                    bg-white dark:bg-gray-900 
+                                    rounded-full p-0.5 
+                                    shadow-[0_2px_6px_rgba(0,0,0,0.1)]
+                                    dark:shadow-[0_2px_6px_rgba(0,0,0,0.25)]"
+                                  >
+                                    <div className={`text-xs px-2 py-1 rounded-full font-medium ${getSourceColor(testimonial.source)}`}>
+                                      {testimonial.source}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div>
+                                  <p className="font-bold text-lg text-gray-900 dark:text-white">{testimonial.name}</p>
+                                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                                    {testimonial.role}
+                                  </p>
+                                  <div className="inline-flex gap-0.5 
+                                    p-1 rounded-full 
+                                    bg-gradient-to-br from-amber-50 to-amber-100/30 dark:from-amber-900/20 dark:to-amber-950/10
+                                    shadow-[0_1px_3px_rgba(0,0,0,0.05)]
+                                    dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]"
+                                  >
+                                    {Array(5).fill(0).map((_, i) => (
+                                      <Star key={i} className="size-3 fill-amber-500 text-amber-500" />
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {/* Comment section first */}
+                            <div className="mb-3">
+                              <div className="bg-white/70 dark:bg-gray-800/70
+                                py-3 px-4 rounded-xl w-full overflow-hidden
+                                shadow-[0_2px_10px_rgba(0,0,0,0.03)]
+                                dark:shadow-[0_2px_10px_rgba(0,0,0,0.1)]
+                                backdrop-blur-sm
+                                border border-white/40 dark:border-gray-700/40
+                                relative"
+                              >
+                                <Quote className="absolute right-3 top-3 h-10 w-10 text-blue-100 dark:text-blue-900/30 opacity-60" />
+                                <p className="text-gray-700 dark:text-gray-300 relative z-10 text-sm italic leading-relaxed line-clamp-4">
+                                  "{testimonial.content}"
+                                </p>
+                              </div>
+                            </div>
+                            
+                            {/* Book badge directly below comment */}
+                            <div className="flex justify-center mt-auto mb-4">
+                              <div className="inline-flex items-center gap-2 
+                                px-5 py-2 rounded-full 
+                                bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500
+                                text-sm font-medium text-white
+                                shadow-md hover:shadow-lg
+                                transition-all duration-300
+                                border border-blue-400/30 dark:border-blue-400/20
+                                hover:border-blue-300/60 dark:hover:border-blue-300/40"
+                              >
+                                <BookOpen className="size-4" />
+                                {testimonial.book}
+                              </div>
+                            </div>
+                          </div>
+                        </Card>
+                      </motion.div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+            </div>
+            
+            {/* View all testimonials button */}
+            <div className="mt-14 text-center">
               <Link 
                 href="/testimonials" 
-                className="inline-flex items-center gap-2 
-                  px-6 py-2.5 rounded-full 
-                  bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-500 dark:to-blue-600
-                  text-white font-medium 
-                  border border-blue-400/30 dark:border-blue-400/20
-                  shadow-lg hover:shadow-xl
-                  transition-all duration-300"
+                className="inline-flex items-center justify-center px-8 py-3 rounded-full 
+                  bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 
+                  hover:from-blue-700 hover:via-indigo-700 hover:to-blue-800
+                  text-white font-medium
+                  shadow-lg hover:shadow-xl 
+                  transition-all duration-300
+                  border border-blue-500/20 hover:border-blue-300/60"
               >
                 {translate("Вижте всички отзиви", "View All Testimonials")}
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="ml-2 w-5 h-5" />
               </Link>
             </div>
           </div>

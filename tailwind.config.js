@@ -90,13 +90,20 @@ module.exports = {
           '100%': { backgroundPosition: '0%' },
         },
         'pulse-slow': {
-          '0%, 100%': { opacity: 0.4 },
-          '50%': { opacity: 0.8 },
+          '0%, 100%': { opacity: '0.8' },
+          '50%': { opacity: '0.4' }
         },
-        'float': {
-          '0%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
-          '100%': { transform: 'translateY(0px)' },
+        'pulse-slower': {
+          '0%, 100%': { opacity: '0.7' },
+          '50%': { opacity: '0.3' }
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0) rotate(0)' },
+          '50%': { transform: 'translateY(-20px) rotate(5deg)' }
+        },
+        'float-slow': {
+          '0%, 100%': { transform: 'translateY(0) rotate(0)' },
+          '50%': { transform: 'translateY(-10px) rotate(-5deg)' }
         },
         'spin-slow': {
           '0%': { transform: 'rotate(0deg)' },
@@ -111,8 +118,18 @@ module.exports = {
         "shine": "shine 3s ease infinite",
         "text-shimmer": "text-shimmer 2.5s ease-out infinite alternate",
         "pulse-slow": "pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        "float": "float 3s ease-in-out infinite",
+        "pulse-slower": "pulse-slower 5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "float": "float 6s ease-in-out infinite",
+        "float-slow": "float-slow 7s ease-in-out infinite",
         "spin-slow": "spin-slow 20s linear infinite",
+      },
+      animationDelay: {
+        '500': '500ms',
+        '1000': '1000ms',
+        '1500': '1500ms',
+        '2000': '2000ms',
+        '2500': '2500ms',
+        '3000': '3000ms',
       },
       typography: (theme) => ({
         DEFAULT: {
@@ -151,5 +168,15 @@ module.exports = {
   plugins: [
     require("tailwindcss-animate"),
     require('@tailwindcss/typography'),
+    require('tailwind-scrollbar')({ nocompatible: true }),
+    function({ addUtilities, theme, variants }) {
+      const animationDelays = theme('animationDelay', {})
+      const utilities = Object.entries(animationDelays).map(([key, value]) => {
+        return {
+          [`.animation-delay-${key}`]: { animationDelay: value },
+        }
+      })
+      addUtilities(utilities, variants('animationDelay'))
+    },
   ],
 } 

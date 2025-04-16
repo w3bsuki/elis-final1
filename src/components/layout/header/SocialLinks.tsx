@@ -3,63 +3,61 @@
 import Link from "next/link";
 import { Facebook, Instagram } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 const socialMediaLinks = [
   {
     name: "Facebook",
     href: "https://facebook.com/authorELIS",
     icon: Facebook,
+    color: "#4267B2"
   },
   {
     name: "Instagram",
     href: "https://instagram.com/authorELIS",
     icon: Instagram,
+    color: "#E1306C"
   }
 ];
 
-// Define the nestedGlassStyle for consistency
-const nestedGlassStyle = cn(
-  "border border-border/70", 
-  "shadow-inner", 
-  "bg-clip-padding backdrop-filter backdrop-blur-sm bg-background/75", 
-  "text-foreground", 
-  "transition-all duration-200 ease-in-out", 
-  "hover:bg-background/85 hover:shadow-sm hover:border-border", 
-  "active:bg-background/95 active:scale-[0.98] active:shadow-inner",
-  "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 dark:focus-visible:ring-offset-background"
-);
-
 export function SocialLinks() {
-  const linkStyles = cn(
-    nestedGlassStyle,
-    "rounded-full flex items-center justify-center h-8 w-8 text-gray-600 dark:text-gray-300 hover:text-[#4267B2] dark:hover:text-[#4267B2]"
-  );
-
-  const instagramStyles = cn(
-    nestedGlassStyle,
-    "rounded-full flex items-center justify-center h-8 w-8 text-gray-600 dark:text-gray-300 hover:text-[#E1306C] dark:hover:text-[#E1306C]"
-  );
-
   return (
-    <div className="flex items-center gap-2">
-      <Link 
-        href={socialMediaLinks[0].href} 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className={linkStyles}
-        aria-label={socialMediaLinks[0].name}
-      >
-        <Facebook className="h-4 w-4" />
-      </Link>
-      <Link 
-        href={socialMediaLinks[1].href} 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className={instagramStyles}
-        aria-label={socialMediaLinks[1].name}
-      >
-        <Instagram className="h-4 w-4" />
-      </Link>
+    <div className="flex items-center gap-3">
+      {socialMediaLinks.map((social) => (
+        <motion.div
+          key={social.name}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <Link 
+            href={social.href} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className={cn(
+              "flex items-center justify-center rounded-full",
+              "w-10 h-10",
+              "bg-white/90 dark:bg-gray-800/90",
+              "border border-gray-200 dark:border-gray-700",
+              "shadow-sm hover:shadow",
+              "text-gray-600 dark:text-gray-300",
+              "transition-colors duration-200"
+            )}
+            aria-label={social.name}
+            style={{ 
+              color: "currentColor",
+              WebkitTapHighlightColor: "transparent"
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.color = social.color;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "currentColor";
+            }}
+          >
+            <social.icon className="h-5 w-5" />
+          </Link>
+        </motion.div>
+      ))}
     </div>
   );
 } 

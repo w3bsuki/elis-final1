@@ -187,20 +187,21 @@ export default function Header({ containedMode }: HeaderProps) {
       className={cn(
         "w-full",
         "z-50",
-        "transition-all duration-200",
-        isScrolled ? "backdrop-blur-md" : "backdrop-blur-none",
-        isScrolled && !containedMode ? (isDarkMode ? "border-b border-green-950/30" : "border-b border-green-200/70") : "",
-        containedMode ? "bg-background/5" : "",
+        "transition-all duration-300",
+        isScrolled ? "backdrop-blur-xl" : "backdrop-blur-none",
+        isScrolled && !containedMode ? (isDarkMode ? "border-b border-green-950/40" : "border-b border-green-200/80") : "",
+        containedMode ? "bg-background/10" : "",
         "sticky top-0 left-0 right-0"
       )}
       aria-label="Site header"
       role="banner"
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
       transition={{
         type: "spring",
-        stiffness: 260,
-        damping: 20
+        stiffness: 300,
+        damping: 25,
+        delay: 0.1
       }}
       style={{
         // Dynamic background with smooth opacity transition based on scroll and subtle green gradient
@@ -208,12 +209,12 @@ export default function Header({ containedMode }: HeaderProps) {
           ? `rgba(var(--background-rgb), ${bgOpacity})` 
           : '',
         backgroundImage: !containedMode && isDarkMode
-          ? 'linear-gradient(to bottom, rgba(20, 83, 45, 0.15), rgba(20, 83, 45, 0.05))'
-          : !containedMode ? 'linear-gradient(to bottom, rgba(240, 253, 244, 0.9), rgba(240, 253, 244, 0.7))' : '',
+          ? 'linear-gradient(to bottom, rgba(20, 83, 45, 0.2), rgba(20, 83, 45, 0.05))'
+          : !containedMode ? 'linear-gradient(to bottom, rgba(240, 253, 244, 0.95), rgba(240, 253, 244, 0.8))' : '',
         boxShadow: !containedMode && isScrolled 
           ? isDarkMode
-             ? `0 1px 3px rgba(0,0,0,${bgOpacity * 0.2}), 0 1px 2px rgba(20, 83, 45, 0.1)` 
-             : `0 1px 3px rgba(0,0,0,${bgOpacity * 0.1}), 0 1px 2px rgba(20, 83, 45, 0.05)` 
+             ? `0 2px 8px rgba(0,0,0,${bgOpacity * 0.3}), 0 1px 3px rgba(20, 83, 45, 0.15)` 
+             : `0 2px 8px rgba(0,0,0,${bgOpacity * 0.15}), 0 1px 3px rgba(20, 83, 45, 0.1)` 
           : 'none',
         position: 'sticky', // Enforce sticky across all browsers
         top: 0,
@@ -229,29 +230,28 @@ export default function Header({ containedMode }: HeaderProps) {
       )}>
         <div className={cn(
           "flex w-full items-center justify-between relative gap-4 sm:gap-6",
-          containedMode ? "py-3 px-3" : (isScrolled ? "py-2 px-3 h-14" : "py-3 px-4 h-16"),
-          "transition-all duration-200"
+          containedMode ? "py-3 px-3" : (isScrolled ? "py-2 px-3 h-16" : "py-3 px-4 h-16"),
+          "transition-all duration-300 ease-in-out"
         )}>
           {/* Left side */}
           <motion.div 
-            className="flex items-center gap-2 sm:gap-3"
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
+            className="flex items-center gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
           >
             <Logo isScrolled={isScrolled} />
-            <div className="hidden lg:flex items-center gap-2">
-              <ThemeToggle />
-              <LanguageSwitcher />
+            <div className="hidden md:block">
+              <SocialLinks />
             </div>
           </motion.div>
 
           {/* Middle */}
           <motion.div 
             className="hidden lg:flex flex-1 justify-center"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.2 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
             role="navigation"
             aria-label="Main navigation"
           >
@@ -265,17 +265,13 @@ export default function Header({ containedMode }: HeaderProps) {
 
           {/* Right side */}
           <motion.div 
-            className="flex items-center gap-2"
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
+            className="flex items-center gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="lg:hidden">
-              <ThemeToggle />
-            </div>
-            
-            <div className="lg:hidden">
-              <LanguageSwitcher />
+            <div className="md:hidden">
+              <SocialLinks />
             </div>
             
             <ShopButton />
@@ -286,18 +282,23 @@ export default function Header({ containedMode }: HeaderProps) {
               className={cn(
                 "lg:hidden p-2 rounded-lg",
                 "text-gray-700 dark:text-gray-300",
-                "hover:bg-gray-100 dark:hover:bg-gray-800",
-                "focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1"
+                "hover:bg-gray-100/80 dark:hover:bg-gray-800/90",
+                "focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1",
+                "border border-transparent hover:border-gray-200/70 dark:hover:border-gray-700/70",
+                "transition-all duration-200",
+                isMenuOpen ? "bg-gray-100/70 dark:bg-gray-800/70" : ""
               )}
               aria-expanded={isMenuOpen ? "true" : "false"}
               aria-controls="mobile-menu"
               aria-label={isMenuOpen ? "Close main menu" : "Open main menu"}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
               <span className="sr-only">{isMenuOpen ? "Close menu" : "Open menu"}</span>
               <svg
-                className={`w-6 h-6 transition-transform duration-300 ${isMenuOpen ? "rotate-90" : "rotate-0"}`}
+                className={`w-6 h-6 transition-all duration-300 ease-in-out ${isMenuOpen ? "rotate-90 scale-110" : "rotate-0"}`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -330,18 +331,24 @@ export default function Header({ containedMode }: HeaderProps) {
           <motion.div
             id="mobile-menu"
             className="lg:hidden absolute left-0 right-0 top-full"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0, height: 0, y: -20 }}
+            animate={{ opacity: 1, height: "auto", y: 0 }}
+            exit={{ opacity: 0, height: 0, y: -10 }}
+            transition={{ 
+              duration: 0.3, 
+              type: "spring", 
+              stiffness: 300, 
+              damping: 25 
+            }}
             style={{ 
               zIndex: 40,
-              boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)" 
+              boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)" 
             }}
           >
             <div className={cn(
-              "bg-white dark:bg-gray-900 px-4 py-3",
-              "border-b border-gray-200 dark:border-gray-800"
+              "bg-white/95 dark:bg-gray-900/95 backdrop-blur-md px-4 py-3",
+              "border-b border-gray-200/80 dark:border-gray-800/80",
+              "transition-all duration-300"
             )}>
               <MobileNavigation 
                 books={books} 
