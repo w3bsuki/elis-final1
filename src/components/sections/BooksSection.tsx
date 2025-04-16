@@ -163,6 +163,25 @@ const featuredBooks = [
       textClass: "text-black dark:text-white",
       borderClass: "border-blue-200 dark:border-blue-700/50"
     }
+  },
+  {
+    id: "3",
+    title: "Вдъхновения - 1",
+    description: "Сборник с вдъхновяващи мисли и поетични текстове. Идеален спътник в моменти на несигурност, предлагащ утеха и насърчение.",
+    coverImage: "/images/books/vdahnovenia-kniga-1.png",
+    price: "0.00",
+    pages: 176,
+    publishDate: "2021", 
+    topics: ["Поезия", "Вдъхновение", "Емоционално здраве"],
+    author: "Елена Петрова",
+    quote: "Всеки ден носи нови възможности за вдъхновение и растеж.",
+    badge: {
+      text: { en: "Free Book", bg: "Безплатна книга" },
+      icon: <span className="text-sm text-black dark:text-white font-bold">🎁</span>,
+      bgClass: "from-rose-100 to-rose-50 dark:from-rose-800/40 dark:to-rose-900/20",
+      textClass: "text-black dark:text-white",
+      borderClass: "border-rose-200 dark:border-rose-700/50"
+    }
   }
 ];
 
@@ -516,11 +535,12 @@ export default function BooksSection() {
       if (currentX <= -totalWidth / 3) {
         x.set(0);
       } else {
-        // Move 0.25px per frame for slower scrolling (right to left direction)
-        x.set(currentX - 0.25);
+        // Move 0.5px per frame for smoother scrolling (right to left direction)
+        // Using larger increment to reduce number of frames needing processing
+        x.set(currentX - 0.5);
       }
       
-      // Continue animation if not paused
+      // Continue animation if not paused - use a lower frame rate to improve performance
       if (!isPaused) {
         animationId = requestAnimationFrame(animate);
       }
@@ -584,10 +604,10 @@ export default function BooksSection() {
                 className="inline-flex flex-col items-center justify-center"
               >
                 {/* Section badge with improved styling */}
-                <div className="flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-amber-100 to-amber-50 dark:from-amber-900/50 dark:to-amber-900/30 rounded-full mb-3 border border-amber-200/60 dark:border-amber-800/40 shadow-md backdrop-blur-sm">
-                  <Book className="h-3.5 w-3.5 text-amber-700 dark:text-amber-300" />
-                  <span className="text-xs font-medium text-amber-800 dark:text-amber-200">
-                    {language === 'en' ? "Resources" : "Ресурси"}
+                <div className="flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-amber-100 to-amber-50 dark:from-amber-900/50 dark:to-amber-900/30 rounded-full mb-3 border border-amber-200/60 dark:border-amber-800/40 shadow-md backdrop-blur-sm transform hover:scale-105 transition-all duration-300">
+                  <BookMarked className="h-4.5 w-4.5 text-amber-700 dark:text-amber-300" />
+                  <span className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                    {language === 'en' ? "Books" : "Книги"}
                   </span>
                 </div>
                 
@@ -605,7 +625,7 @@ export default function BooksSection() {
               </motion.div>
             </div>
 
-            {/* Featured books section - Grid of 3 featured books with more compact cards */}
+            {/* Featured books section - Grid of 4 featured books with improved aspect ratio */}
             <motion.div 
               variants={{
                 hidden: { opacity: 0 },
@@ -620,7 +640,7 @@ export default function BooksSection() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 relative z-10 mb-5 md:mb-6"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 relative z-10 mb-5 md:mb-6"
             >
               {featuredBooks.map((book, index) => (
                 <motion.div 
@@ -641,8 +661,8 @@ export default function BooksSection() {
                   whileHover={{ y: -5, transition: { duration: 0.3 } }}
                   className="h-full group"
                 >
-                  {/* Card with glass morphism styling - reduced height */}
-                  <div className="rounded-lg overflow-hidden h-[320px]
+                  {/* Card with glass morphism styling - improved height and aspect ratio */}
+                  <div className="rounded-lg overflow-hidden h-[380px]
                     bg-white/50 dark:bg-gray-800/50
                     backdrop-blur-md
                     border border-white/40 dark:border-gray-700/60
@@ -652,29 +672,13 @@ export default function BooksSection() {
                     dark:group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.4)]
                     transition-all duration-500 ease-out relative">
                     
-                    {/* Using FlipCard for the book */}
-                    <FlipCard
-                      frontImage={book.coverImage}
-                      frontTitle={book.title}
-                      frontSubtitle=""
-                      frontIcon={<BookOpen className="h-3.5 w-3.5" />}
-                      frontFooter={book.price + " лв."}
-                      triggerMode="hover"
-                      onCtaClick={() => handleBookDetails(book)}
-                      backComponent={
-                        <EnhancedFlipCardBack
-                          book={book}
-                          translate={translate}
-                          onCtaClick={() => handleBookDetails(book)}
-                        />
-                      }
-                      className="h-full"
-                      frontClassName="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm"
-                      backClassName="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm"
-                    />
-                    
-                    {/* Badge positioned on top of the card - smaller badge */}
-                    <div className="absolute top-3 right-3 z-20">
+                    {/* Badge positioned correctly inside the card */}
+                    <motion.div 
+                      className="absolute top-3 right-3 z-20"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.2 }}
+                    >
                       <div className={cn(
                         "flex items-center gap-1.5 px-2.5 py-1",
                         "rounded-full",
@@ -682,13 +686,86 @@ export default function BooksSection() {
                         book.badge.textClass,
                         "border",
                         book.badge.borderClass,
-                        "shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300",
-                        "text-xs font-semibold backdrop-blur-sm"
+                        "shadow-md text-xs font-semibold backdrop-blur-sm"
                       )}>
                         {book.badge.icon}
                         <span className="whitespace-nowrap">{translate(book.badge.text.bg, book.badge.text.en)}</span>
                       </div>
-                    </div>
+                    </motion.div>
+                    
+                    {/* Using FlipCard for the book with improved aspect ratio */}
+                    <FlipCard
+                      frontImage={book.coverImage}
+                      frontTitle={book.title}
+                      frontSubtitle=""
+                      frontIcon={<BookOpen className="h-3.5 w-3.5" />}
+                      frontFooter={book.price === "0.00" ? translate("Безплатно", "Free") : book.price + " лв."}
+                      triggerMode="hover"
+                      onCtaClick={() => handleBookDetails(book)}
+                      backComponent={
+                        <div className="h-full w-full flex flex-col bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-xl p-5 relative overflow-hidden">
+                          {/* Decorative gradient */}
+                          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-green-300/40 via-emerald-200/30 to-transparent dark:from-green-700/40 dark:via-emerald-800/30 rounded-bl-3xl" />
+                          <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-green-300/40 via-emerald-200/30 to-transparent dark:from-green-700/40 dark:via-emerald-800/30 rounded-tr-3xl" />
+                          
+                          {/* Book info section with better space utilization */}
+                          <div className="mb-3 flex gap-2 text-xs text-gray-700 dark:text-gray-300">
+                            <span className="flex items-center gap-1">
+                              <BookOpen className="h-3 w-3 text-green-600 dark:text-green-400" />
+                              {book.pages} {translate("стр.", "pages")}
+                            </span>
+                            <span>•</span>
+                            <span className="flex items-center gap-1">
+                              <Clock className="h-3 w-3 text-green-600 dark:text-green-400" />
+                              {book.publishDate}
+                            </span>
+                          </div>
+                          
+                          {/* Book quote as a highlight */}
+                          <div className="mb-4 pl-3 border-l-2 border-green-500">
+                            <p className="text-sm text-gray-700 dark:text-gray-300 italic">
+                              "{book.quote}"
+                            </p>
+                            <p className="text-right mt-2 text-gray-900 dark:text-gray-100 text-xs font-medium">
+                              — {book.author}
+                            </p>
+                          </div>
+                          
+                          {/* Topics with badges */}
+                          <div className="flex flex-wrap gap-1.5 mb-3">
+                            {book.topics.map((topic, index) => (
+                              <span key={index} className="inline-block px-2.5 py-0.5 bg-gradient-to-r from-green-100/90 to-emerald-100/90 dark:from-green-900/60 dark:to-emerald-900/50 text-green-800 dark:text-green-300 rounded-full text-xs font-medium border border-green-200/90 dark:border-green-800/60 shadow-sm backdrop-blur-sm">
+                                {topic}
+                              </span>
+                            ))}
+                          </div>
+                          
+                          {/* Description - focus on readability */}
+                          <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-4 mb-auto">
+                            {book.description}
+                          </p>
+                          
+                          {/* Action button */}
+                          <div className="mt-4 flex justify-between items-center">
+                            <span className="text-lg font-bold text-gray-900 dark:text-white">
+                              {book.price === "0.00" ? translate("Безплатно", "Free") : book.price + " лв."}
+                            </span>
+                            
+                            <button
+                              onClick={() => handleBookDetails(book)}
+                              className="py-2 px-3 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 
+                                hover:from-green-600 hover:to-emerald-600 text-white text-sm font-medium 
+                                transition-all duration-300 shadow-md hover:shadow-lg transform hover:translate-y-[-1px]"
+                            >
+                              {translate("Детайли", "Details")}
+                            </button>
+                          </div>
+                        </div>
+                      }
+                      className="h-full"
+                      frontClassName="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm"
+                      backClassName="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm"
+                    />
                   </div>
                 </motion.div>
               ))}
@@ -761,13 +838,17 @@ export default function BooksSection() {
                     style={{ x }}
                     dragTransition={{ bounceStiffness: 300, bounceDamping: 30 }}
                     onDragStart={() => setIsPaused(true)}
+                    onHoverStart={() => setIsPaused(true)}
+                    onHoverEnd={() => setIsPaused(false)}
                   >
-                    {duplicatedBooks.map((book, index) => (
+                    {duplicatedBooks.slice(0, 15).map((book, index) => (
                       <div 
                         key={`${book.id}-${index}`}
-                        className="w-60 flex-shrink-0 group"
+                        className="w-72 flex-shrink-0 group"
+                        onMouseEnter={() => setIsPaused(true)}
+                        onMouseLeave={() => setIsPaused(false)}
                       >
-                        <div className="h-[280px] rounded-lg overflow-hidden
+                        <div className="h-[320px] rounded-lg overflow-hidden
                           bg-white/50 dark:bg-gray-800/50
                           backdrop-blur-md
                           border border-white/40 dark:border-gray-700/60
@@ -776,22 +857,89 @@ export default function BooksSection() {
                           group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.15)] 
                           dark:group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.4)]
                           transition-all duration-500 ease-out
-                          transform group-hover:translate-y-[-5px]">
-                          {/* Using FlipCard with better styling */}
+                          transform group-hover:translate-y-[-5px] relative">
+                          
+                          {/* Badge positioned correctly on each carousel item */}
+                          {book.featured && (
+                            <motion.div 
+                              className="absolute top-3 right-3 z-20"
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full 
+                                bg-gradient-to-r from-amber-100 to-amber-50 dark:from-amber-800/40 dark:to-amber-900/20
+                                text-black dark:text-white border border-amber-200 dark:border-amber-700/50
+                                shadow-md text-xs font-semibold backdrop-blur-sm">
+                                <Star className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                                <span className="whitespace-nowrap">{translate("Популярна", "Popular")}</span>
+                              </div>
+                            </motion.div>
+                          )}
+                          
+                          {!book.featured && book.price === "0.00" && (
+                            <motion.div 
+                              className="absolute top-3 right-3 z-20"
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full 
+                                bg-gradient-to-r from-rose-100 to-rose-50 dark:from-rose-800/40 dark:to-rose-900/20
+                                text-black dark:text-white border border-rose-200 dark:border-rose-700/50
+                                shadow-md text-xs font-semibold backdrop-blur-sm">
+                                <span className="text-sm text-black dark:text-white font-bold">🎁</span>
+                                <span className="whitespace-nowrap">{translate("Безплатна книга", "Free Book")}</span>
+                              </div>
+                            </motion.div>
+                          )}
+                          
+                          {/* Using FlipCard with simplified back for better readability */}
                           <FlipCard
                             frontImage={book.coverImage}
                             frontTitle={book.title}
                             frontSubtitle=""
                             frontIcon={<BookOpen className="h-3.5 w-3.5" />}
-                            frontFooter={book.price + " лв."}
+                            frontFooter={book.price === "0.00" ? translate("Безплатно", "Free") : book.price + " лв."}
                             triggerMode="hover"
                             onCtaClick={() => handleBookDetails(book)}
                             backComponent={
-                              <EnhancedFlipCardBack
-                                book={book}
-                                translate={translate}
-                                onCtaClick={() => handleBookDetails(book)}
-                              />
+                              <div className="h-full w-full flex flex-col bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-xl p-5 relative overflow-hidden">
+                                {/* Decorative gradient */}
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-green-300/40 via-emerald-200/30 to-transparent dark:from-green-700/40 dark:via-emerald-800/30 rounded-bl-3xl" />
+                                <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-green-300/40 via-emerald-200/30 to-transparent dark:from-green-700/40 dark:via-emerald-800/30 rounded-tr-3xl" />
+                                
+                                {/* Book quote as a highlight */}
+                                <div className="mb-4 pl-3 border-l-2 border-green-500">
+                                  <p className="text-sm text-gray-700 dark:text-gray-300 italic">
+                                    "{book.quote}"
+                                  </p>
+                                  <p className="text-right mt-2 text-gray-900 dark:text-gray-100 text-xs font-medium">
+                                    — {book.author}
+                                  </p>
+                                </div>
+                                
+                                {/* Description - focus on readability */}
+                                <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-4 mb-auto">
+                                  {book.description.substring(0, 150)}...
+                                </p>
+                                
+                                {/* Action button */}
+                                <div className="mt-4 flex justify-between items-center">
+                                  <span className="text-lg font-bold text-gray-900 dark:text-white">
+                                    {book.price === "0.00" ? translate("Безплатно", "Free") : book.price + " лв."}
+                                  </span>
+                                  
+                                  <button
+                                    onClick={() => handleBookDetails(book)}
+                                    className="py-2 px-3 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 
+                                      hover:from-green-600 hover:to-emerald-600 text-white text-sm font-medium 
+                                      transition-all duration-300 shadow-md hover:shadow-lg transform hover:translate-y-[-1px]"
+                                  >
+                                    {translate("Детайли", "Details")}
+                                  </button>
+                                </div>
+                              </div>
                             }
                             className="h-full"
                             frontClassName="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm"
@@ -810,6 +958,24 @@ export default function BooksSection() {
               {/* Gradient fade on the right - enhanced */}
               <div className="absolute right-0 top-0 w-20 h-full bg-gradient-to-l from-white to-transparent dark:from-gray-950 dark:to-transparent z-20 pointer-events-none"></div>
             </div>
+            
+            {/* View All CTA button */}
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.4 }}
+              className="flex justify-center mt-4"
+            >
+              <Link 
+                href="/shop/books"
+                className="group relative px-5 py-2.5 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium text-sm shadow-md 
+                  hover:shadow-lg transition-all duration-300 overflow-hidden flex items-center gap-2"
+              >
+                <span className="relative z-10">{translate("Вижте всички книги", "View all books")}</span>
+                <ArrowRight className="w-4 h-4 relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
+                <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-600 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+              </Link>
+            </motion.div>
           </div>
         </div>
       </div>
