@@ -507,7 +507,7 @@ export default function BooksSection() {
       const currentX = x.get();
       
       // Get the width of a book item (assuming all books have same width)
-      const bookItemWidth = 320; // Updated width to match wider cards
+      const bookItemWidth = 250; // Reduced width for more compact cards
       
       // Calculate the total width of all books
       const totalWidth = duplicatedBooks.length * bookItemWidth;
@@ -540,7 +540,7 @@ export default function BooksSection() {
   }, [isPaused, duplicatedBooks.length, x, carouselWidth, containerWidth]);
   
   return (
-    <div className="relative z-0 py-8 md:py-12">
+    <div className="relative z-0 py-4 md:py-6">
       {/* Book details dialog */}
       <BookDetailsDialog 
         book={selectedBook} 
@@ -550,23 +550,23 @@ export default function BooksSection() {
       />
       
       {/* Decorative background elements */}
-      <div className="absolute right-[10%] top-[10%] w-[600px] h-[600px] bg-gradient-to-br from-green-300/40 via-emerald-200/40 to-teal-300/40 rounded-full blur-[120px] -z-10 animate-pulse-slow"></div>
-      <div className="absolute left-[5%] bottom-[20%] w-[500px] h-[500px] bg-gradient-to-tr from-emerald-200/40 via-green-300/40 to-teal-200/40 rounded-full blur-[120px] -z-10 animate-pulse-slower"></div>
+      <div className="absolute right-[10%] top-[10%] w-[400px] h-[400px] bg-gradient-to-br from-green-300/40 via-emerald-200/40 to-teal-300/40 rounded-full blur-[120px] -z-10 animate-pulse-slow"></div>
+      <div className="absolute left-[5%] bottom-[20%] w-[300px] h-[300px] bg-gradient-to-tr from-emerald-200/40 via-green-300/40 to-teal-200/40 rounded-full blur-[120px] -z-10 animate-pulse-slower"></div>
       
       {/* Main container */}
-      <div className="w-full h-full flex flex-col rounded-2xl sm:rounded-3xl
+      <div className="w-full h-full flex flex-col rounded-xl sm:rounded-2xl
           bg-gradient-to-br from-white/80 via-white/90 to-white/80 
           dark:from-gray-900/80 dark:via-gray-900/85 dark:to-gray-900/80
           border border-white/40 dark:border-white/10
-          shadow-[0_20px_60px_-15px_rgba(0,0,0,0.25)]
-          dark:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)]
+          shadow-[0_15px_40px_-10px_rgba(0,0,0,0.25)]
+          dark:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.5)]
           overflow-hidden
           max-w-[1600px] mx-auto">
         
         {/* Inner container with enhanced gradients */}
         <div className="bg-gradient-to-br from-green-50/40 via-transparent to-emerald-50/40 
             dark:from-green-900/20 dark:via-transparent dark:to-emerald-900/20 
-            px-4 sm:px-5 md:px-6 lg:px-8 xl:px-10 py-8 md:py-10 lg:py-12 relative flex-grow flex flex-col">
+            px-3 sm:px-4 md:px-5 lg:px-6 py-4 md:py-5 lg:py-6 relative flex-grow flex flex-col">
           
           {/* Accent gradients */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(34,197,94,0.2),transparent_50%)] pointer-events-none"></div>
@@ -574,8 +574,8 @@ export default function BooksSection() {
           
           {/* Content Container */}
           <div className="relative z-10 w-full">
-            {/* Section header */}
-            <div className="text-center mb-8 md:mb-10 relative z-10">
+            {/* Section header - more compact */}
+            <div className="text-center mb-4 md:mb-5 relative z-10">
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -584,20 +584,20 @@ export default function BooksSection() {
                 className="inline-flex flex-col items-center justify-center"
               >
                 {/* Section badge with improved styling */}
-                <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-100 to-amber-50 dark:from-amber-900/50 dark:to-amber-900/30 rounded-full mb-5 border border-amber-200/60 dark:border-amber-800/40 shadow-lg backdrop-blur-sm">
-                  <Book className="h-4 w-4 text-amber-700 dark:text-amber-300" />
-                  <span className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                <div className="flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-amber-100 to-amber-50 dark:from-amber-900/50 dark:to-amber-900/30 rounded-full mb-3 border border-amber-200/60 dark:border-amber-800/40 shadow-md backdrop-blur-sm">
+                  <Book className="h-3.5 w-3.5 text-amber-700 dark:text-amber-300" />
+                  <span className="text-xs font-medium text-amber-800 dark:text-amber-200">
                     {language === 'en' ? "Resources" : "Ресурси"}
                   </span>
                 </div>
                 
-                <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 
                   bg-gradient-to-r from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400
                   bg-clip-text text-transparent drop-shadow-sm">
                   {language === 'en' ? "Featured Books" : "Препоръчани Книги"}
                 </h2>
                 
-                <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
                   {language === 'en' 
                     ? "Explore our curated collection of transformative books that will elevate your personal growth journey." 
                     : "Разгледайте нашата селекция от трансформиращи книги, които ще издигнат вашето лично пътуване за развитие."}
@@ -605,7 +605,7 @@ export default function BooksSection() {
               </motion.div>
             </div>
 
-            {/* Featured books section - Grid of 3 featured books with improved card design */}
+            {/* Featured books section - Grid of 3 featured books with more compact cards */}
             <motion.div 
               variants={{
                 hidden: { opacity: 0 },
@@ -620,7 +620,7 @@ export default function BooksSection() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 relative z-10 mb-10 md:mb-12"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 relative z-10 mb-5 md:mb-6"
             >
               {featuredBooks.map((book, index) => (
                 <motion.div 
@@ -638,18 +638,18 @@ export default function BooksSection() {
                       }
                     }
                   }}
-                  whileHover={{ y: -10, transition: { duration: 0.3 } }}
+                  whileHover={{ y: -5, transition: { duration: 0.3 } }}
                   className="h-full group"
                 >
-                  {/* Card with glass morphism styling */}
-                  <div className="rounded-xl overflow-hidden h-[420px]
+                  {/* Card with glass morphism styling - reduced height */}
+                  <div className="rounded-lg overflow-hidden h-[320px]
                     bg-white/50 dark:bg-gray-800/50
                     backdrop-blur-md
                     border border-white/40 dark:border-gray-700/60
-                    shadow-[0_15px_30px_rgba(0,0,0,0.1)]
-                    dark:shadow-[0_15px_30px_rgba(0,0,0,0.3)]
-                    group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] 
-                    dark:group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]
+                    shadow-[0_10px_20px_rgba(0,0,0,0.1)]
+                    dark:shadow-[0_10px_20px_rgba(0,0,0,0.3)]
+                    group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.15)] 
+                    dark:group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.4)]
                     transition-all duration-500 ease-out relative">
                     
                     {/* Using FlipCard for the book */}
@@ -657,7 +657,7 @@ export default function BooksSection() {
                       frontImage={book.coverImage}
                       frontTitle={book.title}
                       frontSubtitle=""
-                      frontIcon={<BookOpen className="h-4 w-4" />}
+                      frontIcon={<BookOpen className="h-3.5 w-3.5" />}
                       frontFooter={book.price + " лв."}
                       triggerMode="hover"
                       onCtaClick={() => handleBookDetails(book)}
@@ -673,17 +673,17 @@ export default function BooksSection() {
                       backClassName="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm"
                     />
                     
-                    {/* Badge positioned on top of the card - improved with better styling */}
-                    <div className="absolute top-5 right-5 z-20">
+                    {/* Badge positioned on top of the card - smaller badge */}
+                    <div className="absolute top-3 right-3 z-20">
                       <div className={cn(
-                        "flex items-center gap-2 px-4 py-2",
+                        "flex items-center gap-1.5 px-2.5 py-1",
                         "rounded-full",
                         `bg-gradient-to-r ${book.badge.bgClass}`,
                         book.badge.textClass,
                         "border",
                         book.badge.borderClass,
-                        "shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300",
-                        "text-sm font-semibold backdrop-blur-sm"
+                        "shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300",
+                        "text-xs font-semibold backdrop-blur-sm"
                       )}>
                         {book.badge.icon}
                         <span className="whitespace-nowrap">{translate(book.badge.text.bg, book.badge.text.en)}</span>
@@ -694,31 +694,31 @@ export default function BooksSection() {
               ))}
             </motion.div>
             
-            {/* Book Carousel Section with enhanced glass morphism */}
-            <div ref={containerRef} className="relative overflow-hidden py-8 mb-12">
-              <div className="rounded-xl overflow-hidden 
+            {/* Book Carousel Section with enhanced glass morphism - more compact */}
+            <div ref={containerRef} className="relative overflow-hidden py-4 mb-4">
+              <div className="rounded-lg overflow-hidden 
                 bg-white/40 dark:bg-gray-800/40
                 backdrop-blur-md
                 border border-white/40 dark:border-gray-700/60
-                shadow-[0_15px_35px_rgba(0,0,0,0.1)]
-                dark:shadow-[0_15px_35px_rgba(0,0,0,0.3)]
+                shadow-[0_10px_25px_rgba(0,0,0,0.1)]
+                dark:shadow-[0_10px_25px_rgba(0,0,0,0.3)]
                 relative">
                 
-                {/* Carousel header */}
-                <div className="flex justify-between items-center mb-8 p-5 relative z-10 border-b border-white/40 dark:border-gray-700/60 bg-gradient-to-r from-white/70 to-white/20 dark:from-gray-800/70 dark:to-gray-800/20">
-                  <div className="flex items-center gap-3">
-                    <div className="rounded-full p-2.5 bg-gradient-to-br from-green-400 to-emerald-500 text-white shadow-lg">
-                      <Library className="w-5 h-5" />
+                {/* Carousel header - more compact */}
+                <div className="flex justify-between items-center mb-4 p-3 relative z-10 border-b border-white/40 dark:border-gray-700/60 bg-gradient-to-r from-white/70 to-white/20 dark:from-gray-800/70 dark:to-gray-800/20">
+                  <div className="flex items-center gap-2">
+                    <div className="rounded-full p-1.5 bg-gradient-to-br from-green-400 to-emerald-500 text-white shadow-md">
+                      <Library className="w-4 h-4" />
                     </div>
-                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
+                    <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">
                       {translate("Всички книги", "All Books")}
                     </h3>
                   </div>
                   
-                  <div className="flex items-center gap-4">
-                    <div className="hidden md:flex items-center gap-2 text-gray-600 dark:text-gray-300">
-                      <BookOpen className="w-4 h-4 text-green-500" />
-                      <span className="text-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="hidden md:flex items-center gap-1.5 text-gray-600 dark:text-gray-300">
+                      <BookOpen className="w-3.5 h-3.5 text-green-500" />
+                      <span className="text-xs">
                         {translate(
                           "Задръжте или натиснете върху книга за повече информация",
                           "Hover or tap on a book for more information"
@@ -726,33 +726,33 @@ export default function BooksSection() {
                       </span>
                     </div>
                     
-                    {/* Pause/Play button */}
+                    {/* Pause/Play button - smaller */}
                     <button
                       onClick={() => setIsPaused(!isPaused)}
-                      className="relative overflow-hidden rounded-full w-10 h-10 
+                      className="relative overflow-hidden rounded-full w-8 h-8 
                         flex items-center justify-center 
                         bg-gradient-to-br from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700
                         text-white 
                         focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:ring-offset-2
-                        transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl
+                        transform hover:scale-105 transition-all duration-300 shadow-md hover:shadow-lg
                         after:content-[''] after:absolute after:top-0 after:left-0 after:right-0 after:bottom-0 
                         after:bg-gradient-to-br after:from-white/20 after:to-transparent after:rounded-full"
                       aria-label={isPaused ? translate("Възобнови въртенето", "Resume rotation") : translate("Паузирай въртенето", "Pause rotation")}
                     >
                       {isPaused ? (
-                        <Play className="h-4 w-4 relative z-10" />
+                        <Play className="h-3.5 w-3.5 relative z-10" />
                       ) : (
-                        <Pause className="h-4 w-4 relative z-10" />
+                        <Pause className="h-3.5 w-3.5 relative z-10" />
                       )}
                     </button>
                   </div>
                 </div>
                 
-                {/* Carousel with drag functionality */}
-                <div className="px-6 pb-8 relative overflow-hidden">
+                {/* Carousel with drag functionality - more compact */}
+                <div className="px-4 pb-4 relative overflow-hidden">
                   <motion.div
                     ref={carouselRef}
-                    className="flex gap-6 cursor-grab active:cursor-grabbing"
+                    className="flex gap-4 cursor-grab active:cursor-grabbing"
                     drag="x"
                     dragConstraints={{ 
                       left: -Math.max(0, carouselWidth - containerWidth + 40), 
@@ -765,24 +765,24 @@ export default function BooksSection() {
                     {duplicatedBooks.map((book, index) => (
                       <div 
                         key={`${book.id}-${index}`}
-                        className="w-72 flex-shrink-0 group"
+                        className="w-60 flex-shrink-0 group"
                       >
-                        <div className="h-[360px] rounded-xl overflow-hidden
+                        <div className="h-[280px] rounded-lg overflow-hidden
                           bg-white/50 dark:bg-gray-800/50
                           backdrop-blur-md
                           border border-white/40 dark:border-gray-700/60
-                          shadow-[0_15px_30px_rgba(0,0,0,0.1)]
-                          dark:shadow-[0_15px_30px_rgba(0,0,0,0.3)]
-                          group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] 
-                          dark:group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]
+                          shadow-[0_10px_20px_rgba(0,0,0,0.1)]
+                          dark:shadow-[0_10px_20px_rgba(0,0,0,0.3)]
+                          group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.15)] 
+                          dark:group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.4)]
                           transition-all duration-500 ease-out
-                          transform group-hover:translate-y-[-10px]">
+                          transform group-hover:translate-y-[-5px]">
                           {/* Using FlipCard with better styling */}
                           <FlipCard
                             frontImage={book.coverImage}
                             frontTitle={book.title}
                             frontSubtitle=""
-                            frontIcon={<BookOpen className="h-4 w-4" />}
+                            frontIcon={<BookOpen className="h-3.5 w-3.5" />}
                             frontFooter={book.price + " лв."}
                             triggerMode="hover"
                             onCtaClick={() => handleBookDetails(book)}
@@ -805,10 +805,10 @@ export default function BooksSection() {
               </div>
               
               {/* Gradient fade on the left - enhanced */}
-              <div className="absolute left-0 top-0 w-24 h-full bg-gradient-to-r from-white to-transparent dark:from-gray-950 dark:to-transparent z-20 pointer-events-none"></div>
+              <div className="absolute left-0 top-0 w-20 h-full bg-gradient-to-r from-white to-transparent dark:from-gray-950 dark:to-transparent z-20 pointer-events-none"></div>
               
               {/* Gradient fade on the right - enhanced */}
-              <div className="absolute right-0 top-0 w-24 h-full bg-gradient-to-l from-white to-transparent dark:from-gray-950 dark:to-transparent z-20 pointer-events-none"></div>
+              <div className="absolute right-0 top-0 w-20 h-full bg-gradient-to-l from-white to-transparent dark:from-gray-950 dark:to-transparent z-20 pointer-events-none"></div>
             </div>
           </div>
         </div>

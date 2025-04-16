@@ -90,8 +90,6 @@ const services: ServiceType[] = [
 export default function Header({ containedMode }: HeaderProps) {
   const { language } = useSafeLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean | string>(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0); // Track scroll progress
   const [headerHeight, setHeaderHeight] = useState(0);
   const headerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
@@ -102,32 +100,6 @@ export default function Header({ containedMode }: HeaderProps) {
   // Service preview states
   const [selectedService, setSelectedService] = useState<ServiceType | null>(null);
   const [isServicePreviewOpen, setIsServicePreviewOpen] = useState(false);
-  
-  // Handle scroll effect with debouncing for performance
-  useEffect(() => {
-    let ticking = false;
-    
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          // Calculate scroll progress percentage (0-15)
-          const scrollY = window.scrollY;
-          const progress = Math.min(scrollY / 100, 15);
-          
-          setIsScrolled(scrollY > 10);
-          setScrollProgress(progress);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-    
-    // Initial check
-    handleScroll();
-    
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
   
   // Update header height for mobile menu positioning
   useEffect(() => {
@@ -177,9 +149,6 @@ export default function Header({ containedMode }: HeaderProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isMenuOpen]);
   
-  // Calculate background opacity based on scroll position
-  const bgOpacity = scrollProgress / 15;
-  
   return (
     <motion.header
       ref={headerRef}
@@ -188,8 +157,7 @@ export default function Header({ containedMode }: HeaderProps) {
         "w-full",
         "z-50",
         "transition-all duration-300",
-        isScrolled ? "backdrop-blur-xl" : "backdrop-blur-none",
-        isScrolled && !containedMode ? (isDarkMode ? "border-b border-green-950/40" : "border-b border-green-200/80") : "",
+        "backdrop-blur-none",
         containedMode ? "bg-background/10" : "",
         "sticky top-0 left-0 right-0"
       )}
@@ -204,19 +172,10 @@ export default function Header({ containedMode }: HeaderProps) {
         delay: 0.1
       }}
       style={{
-        // Dynamic background with smooth opacity transition based on scroll and subtle green gradient
-        backgroundColor: !containedMode && isScrolled 
-          ? `rgba(var(--background-rgb), ${bgOpacity})` 
-          : '',
-        backgroundImage: !containedMode && isDarkMode
-          ? 'linear-gradient(to bottom, rgba(20, 83, 45, 0.2), rgba(20, 83, 45, 0.05))'
-          : !containedMode ? 'linear-gradient(to bottom, rgba(240, 253, 244, 0.95), rgba(240, 253, 244, 0.8))' : '',
-        boxShadow: !containedMode && isScrolled 
-          ? isDarkMode
-             ? `0 2px 8px rgba(0,0,0,${bgOpacity * 0.3}), 0 1px 3px rgba(20, 83, 45, 0.15)` 
-             : `0 2px 8px rgba(0,0,0,${bgOpacity * 0.15}), 0 1px 3px rgba(20, 83, 45, 0.1)` 
-          : 'none',
-        position: 'sticky', // Enforce sticky across all browsers
+        // Fully transparent background
+        backgroundColor: 'transparent',
+        boxShadow: 'none',
+        position: 'sticky',
         top: 0,
         left: 0,
         right: 0,
@@ -230,7 +189,7 @@ export default function Header({ containedMode }: HeaderProps) {
       )}>
         <div className={cn(
           "flex w-full items-center justify-between relative gap-4 sm:gap-6",
-          containedMode ? "py-3 px-3" : (isScrolled ? "py-2 px-3 h-16" : "py-3 px-4 h-16"),
+          containedMode ? "py-3 px-3" : "py-3 px-4 h-16",
           "transition-all duration-300 ease-in-out"
         )}>
           {/* Left side */}
@@ -240,7 +199,7 @@ export default function Header({ containedMode }: HeaderProps) {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
           >
-            <Logo isScrolled={isScrolled} />
+            <Logo isScrolled={false} />
             <div className="hidden md:block">
               <SocialLinks />
             </div>
