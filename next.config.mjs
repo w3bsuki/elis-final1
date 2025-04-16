@@ -35,8 +35,6 @@ const nextConfig = {
     // Enable the new optimistic transitions feature
     optimisticClientCache: true,
   },
-  // Optimize output
-  output: 'standalone',
   // Enable compression
   compress: true,
   // Configure compiler options for improved performance
@@ -51,11 +49,18 @@ const nextConfig = {
     position: 'bottom-right',
   },
   // Add support for internationalization (i18n)
+  // Commenting out i18n config as it's not supported in App Router
+  /* 
   i18n: {
     locales: ['bg', 'en'],
     defaultLocale: 'bg',
     localeDetection: false,
   },
+  */
+  // Commenting out standalone output to avoid symlink permission errors on Windows
+  /*
+  output: 'standalone',
+  */
   poweredByHeader: false,
 };
 
