@@ -14,20 +14,26 @@ import Image from "next/image";
 import { CarouselApi } from "@/components/ui/carousel";
 import { BookExcerptDialog } from "./BookExcerptDialog";
 
-// Component props type
+/**
+ * Hero Section component props
+ */
 export interface HeroSectionProps {
+  /** Optional className for custom styling */
   className?: string;
+  /** Whether to include the footer component */
   includeFooter?: boolean;
 }
 
-// Optimized animations - reduced complexity for better performance
+/**
+ * Animation configurations for various elements
+ */
 const ANIMATIONS = {
   container: {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: { 
-        staggerChildren: 0.05, 
+        staggerChildren: 0.08,
         delayChildren: 0.1, 
         duration: 0.3,
         ease: "easeOut"
@@ -39,27 +45,51 @@ const ANIMATIONS = {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.25, ease: "easeOut" }
+      transition: { duration: 0.3, ease: "easeOut" }
     }
   },
   carousel: {
     initial: { opacity: 0 },
     animate: { 
       opacity: 1,
-      transition: { duration: 0.4 }
+      transition: { duration: 0.6 }
     }
   },
   bookItem: {
     whileHover: { 
-      scale: 1.03, 
-      y: -4,
-      transition: { duration: 0.2, ease: "easeOut" }
+      scale: 1.03,
+      y: -5,
+      transition: { 
+        duration: 0.2,
+        ease: "easeOut",
+        type: "tween" 
+      }
     }
   }
 };
 
+/**
+ * Hero Book data structure
+ */
+interface HeroBook {
+  /** Unique identifier for the book */
+  id: string;
+  /** Book title */
+  title: string;
+  /** Path to cover image */
+  coverImage: string;
+  /** Badge type (new, bestseller, ebook, or null) */
+  badge: "new" | "bestseller" | "ebook" | null;
+  /** Book excerpt text */
+  excerpt: string;
+  /** Badge text - added by enhancedBooks transformation */
+  badgeText?: string | null;
+  /** Badge color - added by enhancedBooks transformation */
+  badgeColor?: string;
+}
+
 // Book images
-const heroBooks = [
+const heroBooks: HeroBook[] = [
   {
     id: "1",
     title: "Осъзнато хранене",
@@ -104,7 +134,10 @@ const heroBooks = [
   }
 ];
 
-export function HeroSection({ className, includeFooter = false }: HeroSectionProps) {
+/**
+ * HeroSection component renders the main hero area with book carousel
+ */
+export function HeroSection({ className, includeFooter = false }: HeroSectionProps): React.ReactElement {
   const { language } = useLanguage();
   const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
@@ -112,13 +145,14 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
   const isInView = useInView(ref, { once: true, amount: 0.2 });
   const isBookInView = useInView(bookRef, { once: true, amount: 0.5 });
   const shouldReduceMotion = useReducedMotion();
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
-  const [activeBookIndex, setActiveBookIndex] = useState(0);
-  const [selectedBook, setSelectedBook] = useState<typeof heroBooks[0] | null>(null);
+  const [activeBookIndex, setActiveBookIndex] = useState<number>(0);
+  const [selectedBook, setSelectedBook] = useState<HeroBook | null>(null);
+  const [isHoveringCarousel, setIsHoveringCarousel] = useState<boolean>(false);
   
   // Translate function
-  const translate = (bg: string, en: string) => language === 'en' ? en : bg;
+  const translate = (bg: string, en: string): string => language === 'en' ? en : bg;
   
   // Memoize the profile data to avoid unnecessary re-renders
   const profile = useMemo(() => {
@@ -168,7 +202,7 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
   // Enhanced books data with badge translations
   const enhancedBooks = useMemo(() => {
     return heroBooks.map(book => {
-      let badgeText = null;
+      let badgeText: string | null = null;
       let badgeColor = "";
       
       if (book.badge) {
@@ -192,7 +226,7 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
     });
   }, [language]);
 
-  // Auto-rotation for carousel
+  // Auto-rotation for carousel with pause on hover and reduced render frequency
   useEffect(() => {
     if (!carouselApi) return;
     
@@ -203,21 +237,24 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
     
     carouselApi.on("select", onSelect);
     
-    // Auto-rotation timer
+    // Auto-rotation timer with debounced interval for better performance
     let timer: NodeJS.Timeout;
     
-    if (!dialogOpen) {
+    if (!dialogOpen && !isHoveringCarousel) {
       timer = setInterval(() => {
-        carouselApi.scrollNext();
-      }, 3000);
+        // Only call scrollNext if the component is mounted and visible
+        if (document.visibilityState === "visible") {
+          carouselApi.scrollNext();
+        }
+      }, 5000); // Keep 5000ms for better user experience
     }
     
-    // Cleanup
+    // Clean up event listeners and timers
     return () => {
       carouselApi.off("select", onSelect);
       if (timer) clearInterval(timer);
     };
-  }, [carouselApi, dialogOpen]);
+  }, [carouselApi, dialogOpen, isHoveringCarousel]);
   
   // Manual button handlers for reliable navigation
   const handleNextBook = useCallback(() => {
@@ -248,7 +285,7 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
   }, [shouldReduceMotion]);
 
   // Handle book selection
-  const handleBookSelect = (book: typeof heroBooks[0]) => {
+  const handleBookSelect = (book: HeroBook) => {
     setSelectedBook(book);
     setDialogOpen(true);
   };
@@ -264,44 +301,48 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
 
   return (
     <div 
-      className="relative z-0 min-h-[100vh] h-screen mt-[-4rem] sm:mt-[-6rem] md:mt-[-8rem] lg:mt-[-10rem] !pt-0 flex items-center justify-center overflow-hidden"
+      className="relative z-0 min-h-[100vh] h-screen mt-[-4rem] sm:mt-[-6rem] md:mt-[-8rem] lg:mt-[-10rem] !pt-0 flex items-center justify-center overflow-hidden will-change-transform"
       ref={ref}
     >
       {/* Enhanced decorative background elements with animation */}
       <div className="absolute inset-0 -z-10 bg-gradient-to-br from-white/90 via-green-50/20 to-white/90 dark:from-gray-950/90 dark:via-green-950/10 dark:to-gray-950/90"></div>
-      <div className="absolute -top-[10%] left-[5%] w-[500px] h-[500px] sm:w-[600px] sm:h-[600px] md:w-[700px] md:h-[700px] bg-gradient-to-br from-green-200/30 via-emerald-200/30 to-teal-200/30 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 rounded-full blur-[100px] sm:blur-[150px] -z-10 animate-pulse-slow"></div>
-      <div className="absolute -bottom-[20%] right-[5%] w-[500px] h-[500px] sm:w-[600px] sm:h-[600px] md:w-[800px] md:h-[800px] bg-gradient-to-tr from-teal-200/30 via-green-200/30 to-emerald-200/30 dark:from-teal-900/20 dark:via-green-900/20 dark:to-emerald-900/20 rounded-full blur-[100px] sm:blur-[150px] -z-10 animate-pulse-slower"></div>
+      <div className="absolute -top-[10%] left-[5%] w-[500px] h-[500px] sm:w-[600px] sm:h-[600px] md:w-[700px] md:h-[700px] bg-gradient-to-br from-green-200/30 via-emerald-200/30 to-teal-200/30 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 rounded-full blur-[100px] sm:blur-[150px] -z-10 animate-pulse-slow will-change-opacity"></div>
+      <div className="absolute -bottom-[20%] right-[5%] w-[500px] h-[500px] sm:w-[600px] sm:h-[600px] md:w-[800px] md:h-[800px] bg-gradient-to-tr from-teal-200/30 via-green-200/30 to-emerald-200/30 dark:from-teal-900/20 dark:via-green-900/20 dark:to-emerald-900/20 rounded-full blur-[100px] sm:blur-[150px] -z-10 animate-pulse-slower will-change-opacity"></div>
       
       {/* Atmospheric accent patterns */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(16,185,129,0.1),transparent_45%)] dark:bg-[radial-gradient(circle_at_30%_20%,rgba(16,185,129,0.05),transparent_45%)] pointer-events-none -z-10"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(5,150,105,0.1),transparent_45%)] dark:bg-[radial-gradient(circle_at_70%_80%,rgba(5,150,105,0.05),transparent_45%)] pointer-events-none -z-10"></div>
       
-      {/* Main container - enhanced glass card with improved styling */}
+      {/* Main container with performance optimizations */}
       <div className="w-full h-full max-h-screen py-4 sm:py-6 md:py-8 lg:py-10 flex items-center justify-center px-0 sm:px-0 md:px-0 overflow-auto">
-        {/* Hero card with enhanced glass morphism */}
         <div 
           className="relative w-full max-w-[1600px] mx-auto rounded-2xl sm:rounded-3xl 
             bg-gradient-to-br from-white/80 via-white/90 to-white/80 
             dark:from-gray-900/80 dark:via-gray-900/85 dark:to-gray-900/80
-            backdrop-blur-md 
+            backdrop-blur-sm 
             border border-white/40 dark:border-white/10
-            shadow-[0_20px_60px_-15px_rgba(0,0,0,0.25)] 
-            dark:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)]
+            shadow-[0_20px_40px_-15px_rgba(0,0,0,0.2)] 
+            dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)]
             p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 flex flex-col items-center
-            max-h-[calc(100vh-2rem)] sm:max-h-[calc(100vh-3rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto"
+            max-h-[calc(100vh-2rem)] sm:max-h-[calc(100vh-3rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto
+            will-change-transform"
+          style={{
+            transform: "translateZ(0)",
+            backfaceVisibility: "hidden"
+          }}
         >
           {/* Inner decorative accents */}
           <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-gradient-to-bl from-green-100/30 to-transparent dark:from-green-900/20 rounded-bl-[300px] -z-1 pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-gradient-to-tr from-emerald-100/30 to-transparent dark:from-emerald-900/20 rounded-tr-[300px] -z-1 pointer-events-none"></div>
           
-          {/* Profile/Avatar with enhanced styling */}
+          {/* Avatar with optimized animations */}
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
             className="flex flex-col items-center mb-1 sm:mb-2 md:mb-3"
+            style={{ willChange: "transform, opacity" }}
           >
-            {/* Avatar Circle with enhanced styling */}
             <div
               onClick={() => setDialogOpen(true)}
               className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mb-1 sm:mb-2 rounded-full 
@@ -310,37 +351,38 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
                 shadow-[0_15px_35px_rgba(16,185,129,0.2)]
                 dark:shadow-[0_15px_35px_rgba(16,185,129,0.15)]
                 cursor-pointer flex items-center justify-center relative
-                transform transition-all duration-300 hover:scale-105"
+                transform transition-all duration-300 hover:scale-105 will-change-transform"
+              style={{ transform: "translateZ(0)" }}
             >
               <span className="text-white text-base sm:text-lg md:text-xl font-bold">EI</span>
               <div className="absolute -right-1 -bottom-1 w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7
                 bg-gradient-to-br from-teal-500 to-emerald-400 dark:from-teal-400 dark:to-emerald-300 
                 rounded-full border-3 border-white dark:border-gray-800 
                 shadow-lg flex items-center justify-center
-                animate-pulse-slow"
+                animate-pulse-slow will-change-opacity"
               >
                 <SendIcon className="h-2.5 w-2.5 sm:h-3 sm:w-3 md:h-3.5 md:w-3.5 text-white" />
               </div>
             </div>
             
-            {/* Name and title with improved typography */}
             <div className="text-center mb-0">
               <h3 className="font-bold text-sm sm:text-base md:text-lg text-gray-900 dark:text-white">{profile.name}</h3>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">{profile.title}</p>
             </div>
           </motion.div>
 
-          {/* Main Content: Headline, description, CTAs with enhanced styling */}
+          {/* Main Content with optimized animations */}
           <div className="flex flex-col items-center gap-1 sm:gap-2 md:gap-3 w-full">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
               className="text-[1.5rem] sm:text-[1.8rem] md:text-[2.5rem] lg:text-[3rem] xl:text-[3.5rem] 
                 font-extrabold tracking-tight leading-[1.05] text-center 
                 bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400
                 bg-clip-text text-transparent drop-shadow-sm
-                mb-1 sm:mb-1 md:mb-2 max-w-[96%] mx-auto"
+                mb-1 sm:mb-1 md:mb-2 max-w-[96%] mx-auto will-change-transform"
+              style={{ transform: "translateZ(0)" }}
             >
               {ui.transformHeading}
             </motion.h2>
@@ -348,18 +390,19 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-xs sm:text-sm md:text-base leading-relaxed text-gray-700 dark:text-gray-300 text-center max-w-4xl mb-1 sm:mb-2 md:mb-3"
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-xs sm:text-sm md:text-base leading-relaxed text-gray-700 dark:text-gray-300 text-center max-w-4xl mb-1 sm:mb-2 md:mb-3 will-change-transform"
+              style={{ transform: "translateZ(0)" }}
             >
               {ui.aboutText}
             </motion.p>
             
-            {/* CTA Buttons with enhanced styling */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="flex flex-wrap gap-2 justify-center mb-2 sm:mb-3 md:mb-4"
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="flex flex-wrap gap-2 justify-center mb-2 sm:mb-3 md:mb-4 will-change-transform"
+              style={{ transform: "translateZ(0)" }}
             >
               <Button 
                 asChild 
@@ -372,7 +415,7 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
                   transition-all duration-300 transform hover:-translate-y-0.5
                   text-[10px] sm:text-xs md:text-sm"
               >
-                <Link href="/books" className="flex items-center gap-1 sm:gap-1.5">
+                <Link href="/shop" className="flex items-center gap-1 sm:gap-1.5">
                   <BookIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4 flex-shrink-0" />
                   <span>{ui.exploreBooks}</span>
                   <ChevronRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4 ml-0.5 transition-transform duration-300 group-hover:translate-x-1" />
@@ -391,7 +434,7 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
                   transition-all duration-300 transform hover:-translate-y-0.5
                   text-[10px] sm:text-xs md:text-sm"
               >
-                <Link href="/services" className="flex items-center gap-1 sm:gap-1.5">
+                <Link href="/shop" className="flex items-center gap-1 sm:gap-1.5">
                   <HeartHandshake className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4 flex-shrink-0" />
                   <span>{ui.services}</span>
                   <ChevronRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4 ml-0.5 transition-transform duration-300 group-hover:translate-x-1" />
@@ -400,12 +443,13 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
             </motion.div>
           </div>
 
-          {/* Book carousel with modern styling */}
+          {/* Book carousel with optimized animations */}
           <motion.div 
             initial="initial"
             animate="animate"
             variants={ANIMATIONS.carousel}
-            className="w-full mt-1 sm:mt-2"
+            className="w-full mt-1 sm:mt-2 will-change-transform"
+            style={{ transform: "translateZ(0)" }}
           >
             <div className="flex items-center justify-between mb-1 sm:mb-2">
               <h3 className="text-base sm:text-lg md:text-xl font-bold 
@@ -454,6 +498,8 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
               shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] 
               dark:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.3)]
               py-2 sm:py-3"
+              onMouseEnter={() => setIsHoveringCarousel(true)}
+              onMouseLeave={() => setIsHoveringCarousel(false)}
             >
               <Carousel
                 setApi={setCarouselApi}
@@ -463,44 +509,49 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
                   loop: true,
                 }}
               >
-                <CarouselContent className="-ml-3 sm:-ml-4 md:-ml-5">
+                <CarouselContent className="-ml-3 sm:-ml-4 md:-ml-5 transform-gpu">
                   {enhancedBooks.map((book, index) => (
                     <CarouselItem key={book.id} className="pl-3 sm:pl-4 md:pl-5 basis-1/3 sm:basis-1/4 md:basis-1/5 xl:basis-1/6">
                       <motion.div
+                        layoutId={`book-${book.id}`}
                         whileHover={ANIMATIONS.bookItem.whileHover}
                         className={cn(
                           "relative aspect-[3/4] rounded-lg overflow-hidden cursor-pointer",
-                          "shadow-[0_15px_30px_-8px_rgba(0,0,0,0.25)] dark:shadow-[0_15px_30px_-8px_rgba(0,0,0,0.4)]"
+                          "shadow-[0_10px_25px_-8px_rgba(0,0,0,0.2)] dark:shadow-[0_10px_25px_-8px_rgba(0,0,0,0.3)]",
+                          "will-change-transform transform-gpu"
                         )}
+                        style={{
+                          transform: "translateZ(0)",
+                          backfaceVisibility: "hidden"
+                        }}
                         onClick={() => handleBookSelect(book)}
                       >
                         <Image
                           src={book.coverImage}
                           alt={book.title}
                           fill={true}
-                          className="object-cover"
+                          className="object-cover transform-gpu"
                           sizes="(max-width: 768px) 33vw, 25vw"
-                          loading={index < 4 ? "eager" : "lazy"}
-                          priority={index < 4}
+                          loading={index < 3 ? "eager" : "lazy"}
+                          priority={index < 3}
                         />
-                        {/* Enhanced overlay gradient */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-70 hover:opacity-80 transition-opacity duration-300"></div>
+                        {/* Simplified overlay gradient for better performance */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-70"></div>
                         {/* Badge with enhanced styling */}
                         {book.badgeText && (
-                          <div className={`absolute top-1 right-1 sm:top-1.5 sm:right-1.5 px-1 sm:px-1.5 py-0.5 rounded-full text-[8px] sm:text-xs font-medium text-white shadow-lg bg-gradient-to-r ${book.badgeColor}`}>
+                          <div className={`absolute top-1 right-1 sm:top-1.5 sm:right-1.5 px-1 sm:px-1.5 py-0.5 rounded-full text-[8px] sm:text-xs font-medium text-white bg-gradient-to-r ${book.badgeColor}`}>
                             {book.badgeText}
                           </div>
                         )}
-                        {/* Book title overlay with enhanced styling */}
+                        {/* Book title overlay with simplified styling for better performance */}
                         <div className="absolute inset-x-0 bottom-0 p-1.5 sm:p-2 text-white flex flex-col items-center justify-end">
-                          <h4 className="text-white font-bold text-[10px] sm:text-xs md:text-sm mb-1 drop-shadow-md text-center line-clamp-2">{book.title}</h4>
+                          <h4 className="text-white font-bold text-[10px] sm:text-xs md:text-sm mb-1 text-center line-clamp-2">{book.title}</h4>
                           <div className="flex gap-1">
                             <Button 
                               size="sm" 
                               className="h-6 rounded-full px-1.5 sm:px-2 py-0 sm:py-0.5
                                 bg-white/90 text-gray-900 
-                                hover:bg-white/100 
-                                shadow-md 
+                                hover:bg-white/100
                                 text-[8px] sm:text-[10px]"
                             >
                               <span>{ui.readTheBook}</span>
@@ -509,23 +560,29 @@ export function HeroSection({ className, includeFooter = false }: HeroSectionPro
                         </div>
                       </motion.div>
                       
-                      {/* Book title with enhanced styling */}
+                      {/* Book title with simplified styling */}
                       <h4 className="mt-1 text-center text-[10px] sm:text-xs md:text-sm font-semibold text-gray-900 dark:text-gray-100 line-clamp-1">{book.title}</h4>
                     </CarouselItem>
                   ))}
                 </CarouselContent>
               </Carousel>
               
-              {/* Add subtle gradient fades to carousel edges */}
-              <div className="absolute top-0 bottom-0 left-0 w-6 sm:w-8 md:w-10 bg-gradient-to-r from-white/90 dark:from-gray-800/90 to-transparent pointer-events-none"></div>
-              <div className="absolute top-0 bottom-0 right-0 w-6 sm:w-8 md:w-10 bg-gradient-to-l from-white/90 dark:from-gray-800/90 to-transparent pointer-events-none"></div>
+              {/* Add simplified gradient fades to carousel edges */}
+              <div className="absolute top-0 bottom-0 left-0 w-6 sm:w-8 md:w-10 bg-gradient-to-r from-white/80 dark:from-gray-800/80 to-transparent pointer-events-none"></div>
+              <div className="absolute top-0 bottom-0 right-0 w-6 sm:w-8 md:w-10 bg-gradient-to-l from-white/80 dark:from-gray-800/80 to-transparent pointer-events-none"></div>
             </div>
           </motion.div>
 
-          {/* Book excerpt dialog */}
+          {/* Book excerpt dialog with AnimatePresence for proper unmounting */}
           {selectedBook && (
             <BookExcerptDialog
-              book={selectedBook}
+              book={{
+                id: selectedBook.id,
+                title: selectedBook.title,
+                coverImage: selectedBook.coverImage,
+                excerpt: selectedBook.excerpt,
+                badge: selectedBook.badge || undefined
+              }}
               open={dialogOpen}
               onOpenChange={handleDialogOpenChange}
             />

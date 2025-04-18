@@ -63,43 +63,69 @@ export function BookingCalendar({
     setBookingData(prev => ({ ...prev, [name]: value }));
   };
   
-  // Get disabled dates (example - this would typically come from an API)
+  // Get disabled dates (optimized to be consistent)
   const getDisabledDates = () => {
-    // This is just an example - in a real app, this would be fetched from an API
+    // In a real app, fetch this from an API
     const disabledDates = [];
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
     
-    // Disable some random dates as an example
-    for (let i = 1; i <= 10; i++) {
-      const randomDays = Math.floor(Math.random() * 60) + 1;
-      const randomDate = new Date(today);
-      randomDate.setDate(today.getDate() + randomDays);
-      disabledDates.push(randomDate);
+    // Instead of random dates, use specific days of the week or patterns
+    // For demo: disable every Tuesday and Thursday for the next 2 months
+    const twoMonthsLater = new Date(today);
+    twoMonthsLater.setMonth(today.getMonth() + 2);
+    
+    for (let currentDate = new Date(today); currentDate <= twoMonthsLater; currentDate.setDate(currentDate.getDate() + 1)) {
+      // Tuesday is 2, Thursday is 4
+      if (currentDate.getDay() === 2 || currentDate.getDay() === 4) {
+        disabledDates.push(new Date(currentDate));
+      }
+      
+      // Also disable every 15th day of the month
+      if (currentDate.getDate() === 15) {
+        disabledDates.push(new Date(currentDate));
+      }
     }
     
     return disabledDates;
   };
   
-  // Get available time slots based on date (example - this would typically come from an API)
+  // Get available time slots based on date (optimized to be consistent)
   const getAvailableTimeSlots = (date?: Date) => {
     if (!date) return [];
     
-    // In a real app, this would be fetched from an API based on the selected date
+    // Common business hours slots
     const allTimeSlots = [
       "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
       "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
       "15:00", "15:30", "16:00", "16:30", "17:00"
     ];
     
-    // For demo purposes, let's simulate some slots being already booked
-    const bookedCount = Math.floor(Math.random() * 8);
-    const bookedIndices = new Set();
+    // In a real app, this would be fetched from an API
+    // For demo: use consistent pattern based on day of week/month instead of random
+    const unavailableSlots = [];
     
-    while (bookedIndices.size < bookedCount) {
-      bookedIndices.add(Math.floor(Math.random() * allTimeSlots.length));
+    // Monday: morning appointments unavailable
+    if (date.getDay() === 1) {
+      unavailableSlots.push("09:00", "09:30", "10:00", "10:30");
     }
     
-    return allTimeSlots.filter((_, index) => !bookedIndices.has(index));
+    // Wednesday: lunch time unavailable
+    if (date.getDay() === 3) {
+      unavailableSlots.push("12:00", "12:30", "13:00", "13:30");
+    }
+    
+    // Friday: afternoon unavailable
+    if (date.getDay() === 5) {
+      unavailableSlots.push("14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00");
+    }
+    
+    // First week of month: specific slots unavailable
+    if (date.getDate() <= 7) {
+      unavailableSlots.push("11:00", "15:00");
+    }
+    
+    return allTimeSlots.filter(slot => !unavailableSlots.includes(slot));
   };
   
   // Check if date and time are selected
@@ -473,7 +499,7 @@ export function BookingCalendar({
     }
   };
   
-  // Render step indicators
+  // Render step indicators - Optimized for clarity and accessibility
   const renderStepIndicators = () => {
     const steps = [
       { id: 'datetime', label: translate("Дата и час", "Date & Time") },
@@ -481,36 +507,62 @@ export function BookingCalendar({
       { id: 'confirmation', label: translate("Потвърждение", "Confirmation") }
     ];
     
+    const currentStepIndex = steps.findIndex(s => s.id === currentStep);
+    
     return (
       <div className="flex items-center justify-center mb-8">
         {steps.map((step, index) => (
           <React.Fragment key={step.id}>
+            {/* Step indicator */}
             <div 
               className={cn(
-                "flex flex-col items-center",
-                currentStep === step.id ? "opacity-100" : "opacity-60"
+                "flex flex-col items-center transition-all duration-300",
+                index <= currentStepIndex ? "opacity-100" : "opacity-60"
               )}
             >
+              {/* Circle indicator */}
               <div 
                 className={cn(
-                  "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium",
-                  currentStep === step.id 
-                    ? "bg-primary text-white" 
-                    : "bg-muted text-muted-foreground",
-                  steps.findIndex(s => s.id === currentStep) >= index && "bg-primary text-white"
+                  "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all",
+                  index < currentStepIndex 
+                    ? "bg-green-600 text-white" // Completed step
+                    : index === currentStepIndex
+                      ? "bg-primary text-white" // Current step
+                      : "bg-muted text-muted-foreground" // Future step
+                )}
+                aria-current={index === currentStepIndex ? "step" : undefined}
+              >
+                {/* Show checkmark for completed steps */}
+                {index < currentStepIndex ? (
+                  <Check className="h-4 w-4" />
+                ) : (
+                  index + 1
+                )}
+              </div>
+              
+              {/* Step label */}
+              <span 
+                className={cn(
+                  "text-xs mt-2 text-center font-medium transition-all duration-300",
+                  index === currentStepIndex ? "text-primary" : "text-muted-foreground"
                 )}
               >
-                {index + 1}
-              </div>
-              <span className="text-xs mt-1 text-center max-w-[80px]">{step.label}</span>
+                {step.label}
+              </span>
             </div>
             
+            {/* Connector line between steps */}
             {index < steps.length - 1 && (
               <div 
                 className={cn(
-                  "h-px w-12 mx-2 bg-muted",
-                  steps.findIndex(s => s.id === currentStep) > index && "bg-primary"
+                  "h-[2px] w-16 mx-2 transition-all duration-300",
+                  index < currentStepIndex
+                    ? "bg-green-600" // Past step connector
+                    : index === currentStepIndex
+                      ? "bg-primary" // Current step connector
+                      : "bg-muted" // Future step connector
                 )}
+                aria-hidden="true"
               />
             )}
           </React.Fragment>

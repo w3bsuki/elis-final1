@@ -22,18 +22,18 @@ const ANIMATIONS = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: -20 },
-    transition: { duration: 0.3, ease: "easeOut" }
+    transition: { duration: 0.25, ease: "easeOut" }
   },
   page: {
     initial: { opacity: 0, x: 20 },
     animate: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: -20 },
-    transition: { duration: 0.3, ease: "easeOut" }
+    transition: { duration: 0.25, ease: "easeOut" }
   },
   cover: {
     initial: { rotateY: 30, scale: 0.9, opacity: 0 },
     animate: { rotateY: 5, scale: 1, opacity: 1 },
-    transition: { type: "spring", stiffness: 100, damping: 15 }
+    transition: { type: "spring", stiffness: 120, damping: 15 }
   }
 };
 
@@ -103,36 +103,44 @@ export const BookExcerptDialog = memo(({ book, open, onOpenChange }: BookExcerpt
         
         <div className="flex-1 overflow-y-auto px-6 py-6">
           <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-8 items-start">
-            {/* Book cover with 3D effect */}
+            {/* Book cover with optimized 3D effect */}
             <div className="hidden md:block relative mx-auto w-full max-w-[200px] perspective">
               <motion.div 
                 {...ANIMATIONS.cover}
-                className="relative aspect-[2/3] w-full overflow-hidden rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.25)] border border-gray-200 dark:border-gray-700 transform hover:rotate-y-5 hover:scale-105 transition-all duration-500 preserve-3d book-shadow"
+                className="relative aspect-[2/3] w-full overflow-hidden rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.25)] border border-gray-200 dark:border-gray-700 transform hover:rotate-y-5 hover:scale-105 transition-all duration-500 preserve-3d book-shadow will-change-transform"
+                style={{ 
+                  transform: "translateZ(0)",
+                  backfaceVisibility: "hidden"
+                }}
               >
                 <Image
                   src={book.coverImage}
                   alt={book.title}
                   fill
                   priority
-                  className="object-cover"
+                  className="object-cover transform-gpu"
                   sizes="250px"
                 />
                 
-                {/* Book spine effect */}
+                {/* Book spine effect - simplified for performance */}
                 <div className="absolute left-0 top-0 bottom-0 w-[12px] bg-gradient-to-r from-black/60 to-transparent"></div>
                 
-                {/* Book cover shadow */}
-                <div className="absolute inset-0 shadow-[inset_0_0_30px_rgba(0,0,0,0.6)] rounded-lg pointer-events-none"></div>
+                {/* Book cover shadow - optimized for performance */}
+                <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] rounded-lg pointer-events-none"></div>
               </motion.div>
             </div>
             
-            {/* Excerpt content with page turning animation */}
+            {/* Excerpt content with optimized page turning animation */}
             <div className="relative min-h-[300px] md:min-h-[400px] flex flex-col">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={currentPage}
                   {...ANIMATIONS.page}
-                  className="prose prose-blue dark:prose-invert max-w-none flex-1"
+                  className="prose prose-blue dark:prose-invert max-w-none flex-1 will-change-transform"
+                  style={{ 
+                    transform: "translateZ(0)",
+                    backfaceVisibility: "hidden"
+                  }}
                 >
                   {getCurrentPageContent().map((paragraph, idx) => (
                     <p key={idx} className="text-gray-700 dark:text-gray-300 leading-relaxed mb-5 first-letter:text-3xl first-letter:font-serif first-letter:mr-1 first-letter:float-left first-letter:font-bold">
@@ -142,13 +150,13 @@ export const BookExcerptDialog = memo(({ book, open, onOpenChange }: BookExcerpt
                 </motion.div>
               </AnimatePresence>
               
-              {/* Page indicator */}
+              {/* Page indicator - simplified for performance */}
               <div className="flex items-center justify-center mt-4 space-x-2">
                 {Array.from({ length: maxPages }).map((_, idx) => (
                   <button 
                     key={idx}
                     onClick={() => setCurrentPage(idx)}
-                    className={`w-2 h-2 rounded-full transition-all ${
+                    className={`w-2 h-2 rounded-full transition-colors ${
                       currentPage === idx 
                         ? 'bg-blue-600 dark:bg-blue-400 scale-125' 
                         : 'bg-gray-300 dark:bg-gray-700'
@@ -191,22 +199,24 @@ export const BookExcerptDialog = memo(({ book, open, onOpenChange }: BookExcerpt
               className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white px-4 h-9 rounded-md shadow-md"
               asChild
             >
-              <Link href={`/books/${book.id}`} className="flex items-center gap-1.5">
+              <Link href="/shop" className="flex items-center gap-1.5">
                 <ShoppingBag className="h-4 w-4" />
-                {translate("Към книгата", "View Book")}
+                {translate("Към магазина", "View Shop")}
               </Link>
             </Button>
           </div>
         </DialogFooter>
         
-        {/* Add custom styles for the 3D book effect */}
+        {/* Optimized styles for the 3D book effect */}
         <style jsx global>{`
           .perspective {
             perspective: 1000px;
+            transform-style: preserve-3d;
           }
           
           .preserve-3d {
             transform-style: preserve-3d;
+            will-change: transform;
           }
           
           .book-shadow {
@@ -215,7 +225,7 @@ export const BookExcerptDialog = memo(({ book, open, onOpenChange }: BookExcerpt
           }
           
           .rotate-y-5 {
-            transform: rotateY(5deg);
+            transform: rotateY(5deg) translateZ(0);
           }
         `}</style>
       </DialogContent>

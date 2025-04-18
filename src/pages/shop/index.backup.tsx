@@ -7,26 +7,7 @@ import { shopBooks } from "@/lib/shop-data";
 import { services } from "@/data/services";
 import Link from "next/link";
 import Image from "next/image";
-import { 
-  ArrowDown, 
-  ArrowUp,
-  BookOpen, 
-  FileText, 
-  Users, 
-  X,
-  Layers,
-  Package,
-  CalendarDays,
-  ShoppingCart,
-  Clock,
-  Sparkles,
-  Download,
-  Eye,
-  Star,
-  ArrowRight,
-  CheckCircle,
-  Flower
-} from "lucide-react";
+import { BookOpen, ShoppingCart, Clock, Package, ArrowUp, Sparkles, Download, FileText, Eye, Star, User, ArrowRight, CheckCircle, CalendarDays, Users, Flower, ArrowDown, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/LanguageContext";
@@ -37,8 +18,6 @@ import { CONTAINER_WIDTH_CLASSES } from "@/lib/constants";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/router";
-import { BookCard } from "@/components/ui/book-card";
-import { ServiceCard } from "@/components/ui/service-card";
 
 export default function ShopPage() {
   const router = useRouter();
@@ -221,135 +200,6 @@ export default function ShopPage() {
     }
   };
 
-  // Helper function to get filter label text
-  const getFilterLabel = (key: string): string => {
-    switch (key) {
-      case "featured": return translate("Избрани", "Featured");
-      case "newReleases": return translate("Нови издания", "New Releases");
-      case "bestsellers": return translate("Бестселъри", "Bestsellers");
-      case "digital": return translate("Дигитални", "Digital");
-      case "individual": return translate("Индивидуални", "Individual");
-      case "package": return translate("Пакети", "Packages");
-      default: return key;
-    }
-  };
-  
-  // Reusable component for "no results found" message
-  const NoResultsFound = ({ type }: { type: 'books' | 'services' }) => (
-    <div className="text-center py-10">
-      <FileText className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-      <h3 className="text-lg font-medium text-gray-500 dark:text-gray-400">
-        {translate(
-          type === 'books' ? "Няма намерени книги" : "Няма намерени услуги",
-          type === 'books' ? "No books found" : "No services found"
-        )}
-      </h3>
-      <p className="text-gray-400 dark:text-gray-500 mt-1 max-w-md mx-auto">
-        {translate(
-          "Опитайте да промените филтрите или критериите за търсене",
-          "Try changing your search criteria or filters"
-        )}
-      </p>
-    </div>
-  );
-
-  // Reusable Books Grid component
-  const BooksGrid = () => (
-    <>
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-xl font-bold flex items-center">
-          <BookOpen className="w-4 h-4 mr-1.5" />
-          {translate("Книги", "Books")}
-        </h2>
-        <ShopFilters
-          filters={{
-            featured: activeFilters.featured,
-            newReleases: activeFilters.newReleases,
-            bestsellers: activeFilters.bestsellers,
-            digital: activeFilters.digital
-          }}
-          onChange={handleFilterChange}
-          isBooksTab={true}
-        />
-      </div>
-      
-      {filteredBooks.length > 0 ? (
-        <div
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-6xl mx-auto"
-        >
-          {filteredBooks.map((book) => (
-            <div 
-              key={book.id}
-              className="h-full max-w-[250px] mx-auto sm:max-w-full opacity-0 animate-fadeIn"
-              style={{animationDelay: `${book.id.charCodeAt(0) % 5 * 50}ms`, animationFillMode: 'forwards'}}
-            >
-              <BookCard 
-                book={book} 
-                onClick={() => handleBookClick(book)} 
-                isBookmarked={false}
-                onBookmarkToggle={() => {
-                  // Handle bookmark toggle (to be implemented)
-                  console.log('Bookmark toggled for book:', book.id);
-                }}
-                className="h-full"
-              />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <NoResultsFound type="books" />
-      )}
-    </>
-  );
-  
-  // Reusable Services Grid component
-  const ServicesGrid = () => (
-    <>
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-xl font-bold flex items-center">
-          <Users className="w-4 h-4 mr-1.5" />
-          {translate("Услуги", "Services")}
-        </h2>
-        <ShopFilters
-          filters={{
-            featured: activeFilters.featured,
-            individual: activeFilters.individual,
-            package: activeFilters.package
-          }}
-          onChange={handleFilterChange}
-          isBooksTab={false}
-        />
-      </div>
-      
-      {filteredServices.length > 0 ? (
-        <div 
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-6xl mx-auto"
-        >
-          {filteredServices.slice(0, 10).map((service, index) => (
-            <div 
-              key={service.id}
-              className="h-full max-w-[250px] mx-auto sm:max-w-full opacity-0 animate-fadeIn"
-              style={{animationDelay: `${index * 50}ms`, animationFillMode: 'forwards'}}
-            >
-              <ServiceCard 
-                service={service} 
-                onClick={() => handleServiceClick(service)}
-                isBookmarked={false}
-                onBookmarkToggle={() => {
-                  // Handle bookmark toggle (to be implemented)
-                  console.log('Bookmark toggled for service:', service.id);
-                }}
-                className="h-full"
-              />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <NoResultsFound type="services" />
-      )}
-    </>
-  );
-
   return (
     <>
       <Head>
@@ -478,7 +328,13 @@ export default function ShopPage() {
                       <TabsContent value="all">
                         <div className="mt-8">
                           {filteredBooks.length === 0 && filteredServices.length === 0 ? (
-                            <NoResultsFound type="all" />
+                            <div className="text-center py-10 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-inner">
+                              <Layers className="mx-auto h-12 w-12 text-gray-400" />
+                              <h3 className="mt-4 text-lg font-medium">{translate("Няма намерени резултати", "No results found")}</h3>
+                              <p className="mt-2 text-sm text-gray-500">
+                                {translate("Опитайте да промените критериите за търсене", "Try adjusting your search or filter criteria")}
+                              </p>
+                            </div>
                           ) : (
                             <div className="space-y-12">
                               {/* Books section */}
@@ -710,13 +566,13 @@ export default function ShopPage() {
                               {/* Services section */}
                               {filteredServices.length > 0 && (
                                 <div>
-                                  <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                      <Package className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                                  <div className="flex items-center justify-between mb-3">
+                                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-1.5">
+                                      <Package className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                                       {translate("Услуги", "Services")}
                                     </h2>
                                     <Badge 
-                                      className="rounded-full px-3 py-1.5 text-sm font-medium
+                                      className="rounded-full px-2 py-1 text-xs font-medium
                                         bg-blue-100 dark:bg-blue-900/50 
                                         text-blue-800 dark:text-blue-300 
                                         border border-blue-200 dark:border-blue-800/50"
@@ -729,7 +585,7 @@ export default function ShopPage() {
                                     variants={containerVariants}
                                     initial="hidden"
                                     animate="visible"
-                                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8"
+                                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5"
                                   >
                                     {filteredServices.slice(0, 4).map((service) => (
                                       <motion.div 
@@ -765,7 +621,7 @@ export default function ShopPage() {
                                               transition-colors duration-300" />
                                             
                                             {/* Service image with enhanced styling */}
-                                            <div className="relative w-full h-52 overflow-hidden rounded-t-lg">
+                                            <div className="relative w-full h-44 overflow-hidden rounded-t-lg">
                                               {service.image ? (
                                                 <div className="absolute inset-0">
                                                   <Image
@@ -776,23 +632,23 @@ export default function ShopPage() {
                                                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                                                   />
                                                   
-                                                  {/* Subtle image overlay effect */}
-                                                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                  {/* Improved image overlay effect */}
+                                                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                                                   
                                                   {/* Enhanced vignette */}
                                                   <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)] dark:shadow-[inset_0_0_20px_rgba(0,0,0,0.4)] pointer-events-none"></div>
                                                 </div>
                                               ) : (
                                                 <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-50 to-white dark:from-gray-900 dark:to-gray-800">
-                                                  <Flower className="h-20 w-20 text-purple-500/40" />
+                                                  <Flower className="h-20 w-20 text-purple-500/40 group-hover:scale-110 transition-transform duration-300" />
                                                 </div>
                                               )}
                                             </div>
                                             
                                             {/* Service details with refined styling */}
-                                            <div className="p-5 lg:p-6 flex flex-col flex-grow">
+                                            <div className="p-4 flex flex-col flex-grow">
                                               {/* Category badge for package vs individual */}
-                                              <span className="inline-flex items-center mb-2.5 text-sm font-medium mr-2 px-3 py-1 rounded-full
+                                              <span className="inline-flex items-center mb-2 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full
                                                 bg-purple-100/80 dark:bg-purple-900/40 text-purple-700 dark:text-purple-400 border border-purple-400/20 dark:border-purple-800/40">
                                                 {service.category === 'package' ? (language === 'bg' ? 'Пакет' : 'Package') : 
                                                  service.category === 'individual' ? (language === 'bg' ? 'Индивидуална' : 'Individual') : 
@@ -801,75 +657,75 @@ export default function ShopPage() {
                                               
                                               {/* Featured badge if applicable */}
                                               {service.featured && (
-                                                <span className="inline-flex items-center mb-2.5 text-sm font-medium mr-2 px-3 py-1 rounded-full
+                                                <span className="inline-flex items-center mb-2 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full
                                                   bg-amber-100/80 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 border border-amber-400/20 dark:border-amber-800/40">
-                                                  <Sparkles className="h-3.5 w-3.5 mr-1" />
+                                                  <Sparkles className="h-3 w-3 mr-1" />
                                                   {language === 'bg' ? 'Препоръчана' : 'Featured'}
                                                 </span>
                                               )}
                                               
                                               {/* Service title with clean typography - no color transitions */}
-                                              <h3 className="font-bold text-xl leading-6 text-[#171717] dark:text-white mb-2 
+                                              <h3 className="font-bold text-base leading-5 text-[#171717] dark:text-white mb-1 
                                                 tracking-tight line-clamp-2">
                                                 {service.title}
                                               </h3>
                                               
                                               {/* Price display under headline */}
-                                              <div className="flex items-center mb-3">
-                                                <span className="font-semibold text-gray-700 dark:text-gray-300">
+                                              <div className="flex items-center mb-1.5">
+                                                <span className="font-semibold text-sm text-gray-700 dark:text-gray-300">
                                                   {service.price?.toFixed(2)} лв.
                                                 </span>
                                               </div>
                                               
                                               {/* Service details with badges */}
-                                              <div className="flex items-center gap-1.5 mb-3.5 w-full">
-                                                <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
-                                                  bg-gray-100/80 dark:bg-gray-700/50 text-sm text-gray-700 dark:text-gray-300">
-                                                  <Clock className="h-3.5 w-3.5 mr-1 text-gray-500 dark:text-gray-400" />
+                                              <div className="flex items-center flex-wrap gap-1 mb-2 w-full">
+                                                <div className="inline-flex items-center shrink-0 px-2 py-0.5 rounded-md 
+                                                  bg-gray-100/80 dark:bg-gray-700/50 text-xs text-gray-700 dark:text-gray-300">
+                                                  <Clock className="h-3 w-3 mr-1 text-gray-500 dark:text-gray-400" />
                                                   <span>{service.duration}</span>
                                                 </div>
                                                 
                                                 {/* Popular badge if applicable */}
                                                 {service.popular && (
-                                                  <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
-                                                    bg-red-50/80 dark:bg-red-900/30 text-sm text-red-700 dark:text-red-400 
+                                                  <div className="inline-flex items-center shrink-0 px-2 py-0.5 rounded-md 
+                                                    bg-red-50/80 dark:bg-red-900/30 text-xs text-red-700 dark:text-red-400 
                                                     border border-red-200/50 dark:border-red-800/40">
-                                                    <Flower className="h-3.5 w-3.5 mr-1" />
+                                                    <Flower className="h-3 w-3 mr-1" />
                                                     <span>{language === 'bg' ? 'Популярна' : 'Popular'}</span>
                                                   </div>
                                                 )}
                                                 
                                                 {/* MVP badge if applicable */}
                                                 {service.mvp && (
-                                                  <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
-                                                    bg-blue-50/80 dark:bg-blue-900/30 text-sm text-blue-700 dark:text-blue-400 
+                                                  <div className="inline-flex items-center shrink-0 px-2 py-0.5 rounded-md 
+                                                    bg-blue-50/80 dark:bg-blue-900/30 text-xs text-blue-700 dark:text-blue-400 
                                                     border border-blue-200/50 dark:border-blue-800/40">
-                                                    <Star className="h-3.5 w-3.5 mr-1" />
+                                                    <Star className="h-3 w-3 mr-1" />
                                                     <span>{language === 'bg' ? 'Топ Избор' : 'Top Pick'}</span>
                                                   </div>
                                                 )}
                                               </div>
                                               
                                               {/* Service description with clean typography - no color transitions */}
-                                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2 flex-grow leading-relaxed">
+                                              <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 line-clamp-2 flex-grow leading-normal">
                                                 {service.description}
                                               </p>
                                               
                                               {/* Service features for packages - simplified styling */}
                                               {service.includes && service.includes.length > 0 && (
-                                                <div className="mb-4 bg-purple-50/50 dark:bg-purple-900/10 rounded-lg p-2.5 border border-purple-100/50 dark:border-purple-800/20">
-                                                    <p className="text-xs uppercase tracking-wider font-medium text-purple-600 dark:text-purple-400 mb-1.5">
+                                                <div className="mb-3 bg-purple-50/50 dark:bg-purple-900/10 rounded-lg p-2 border border-purple-100/50 dark:border-purple-800/20">
+                                                    <p className="text-xs uppercase tracking-wider font-medium text-purple-600 dark:text-purple-400 mb-1">
                                                       {translate("Включва", "Includes")}:
                                                     </p>
-                                                    <ul className="space-y-1">
+                                                    <ul className="space-y-0.5">
                                                       {service.includes.slice(0, 3).map((feature, idx) => (
-                                                        <li key={idx} className="flex items-start text-sm text-gray-600 dark:text-gray-400">
-                                                          <CheckCircle className="h-3.5 w-3.5 mr-1.5 mt-0.5 flex-shrink-0 text-purple-500 dark:text-purple-400" />
+                                                        <li key={idx} className="flex items-start text-xs text-gray-600 dark:text-gray-400">
+                                                          <CheckCircle className="h-3 w-3 mr-1 mt-0.5 flex-shrink-0 text-purple-500 dark:text-purple-400" />
                                                           <span className="line-clamp-1">{feature}</span>
                                                         </li>
                                                       ))}
                                                       {service.includes.length > 3 && (
-                                                        <li className="text-xs text-gray-500 dark:text-gray-400 pl-5 italic">
+                                                        <li className="text-xs text-gray-500 dark:text-gray-400 pl-4 italic">
                                                           +{service.includes.length - 3} {translate("още", "more")}
                                                         </li>
                                                       )}
@@ -878,22 +734,22 @@ export default function ShopPage() {
                                               )}
                                               
                                               {/* Buttons at the bottom */}
-                                              <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700/30 flex justify-between items-center">
+                                              <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700/30 flex justify-between items-center">
                                                 {/* Details button with refined styling */}
                                                 <Button
                                                   variant="outline"
                                                   size="sm"
-                                                  className="rounded-full h-10 w-[45%]
+                                                  className="rounded-full h-8 w-[45%]
                                                     bg-white dark:bg-gray-800 
                                                     border-gray-200 dark:border-gray-700
                                                     text-gray-700 dark:text-gray-300
                                                     group-hover:bg-purple-50 dark:group-hover:bg-purple-900/20
                                                     group-hover:border-purple-300 dark:group-hover:border-purple-700
-                                                    transition-all duration-300"
+                                                    transition-all duration-300 text-xs"
                                                   asChild
                                                 >
                                                   <Link href={`/services/${service.id}`} className="flex items-center justify-center">
-                                                    <Eye className="h-4 w-4 mr-2" />
+                                                    <Eye className="h-3 w-3 mr-1.5" />
                                                     <span>{translate("Детайли", "Details")}</span>
                                                   </Link>
                                                 </Button>
@@ -901,19 +757,19 @@ export default function ShopPage() {
                                                 {/* Book button with simplified styling */}
                                                 <Button
                                                   size="sm"
-                                                  className="rounded-full h-10 w-[50%]
+                                                  className="rounded-full h-8 w-[50%] text-xs
                                                     bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 
                                                     text-white hover:shadow-sm transition-all duration-300"
                                                   onClick={() => addToCart({
                                                     id: service.id,
                                                     title: service.title,
-                                                    price: service.price || 0,
-                                                    image: service.image || '',
+                                                    price: service.price,
+                                                    image: service.image,
                                                     quantity: 1,
-                                                    isService: true
+                                                    type: 'service'
                                                   })}
                                                 >
-                                                  <CalendarDays className="h-4 w-4 mr-2" />
+                                                  <ShoppingCart className="h-3 w-3 mr-1.5" />
                                                   {translate("Резервирай", "Book")}
                                                 </Button>
                                               </div>
@@ -950,7 +806,13 @@ export default function ShopPage() {
                       <TabsContent value="books">
                         <div className="mt-8">
                           {filteredBooks.length === 0 ? (
-                            <NoResultsFound type="books" />
+                            <div className="text-center py-10 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-inner">
+                              <BookOpen className="mx-auto h-12 w-12 text-gray-400" />
+                              <h3 className="mt-4 text-lg font-medium">{translate("Няма намерени книги", "No books found")}</h3>
+                              <p className="mt-2 text-sm text-gray-500">
+                                {translate("Опитайте да промените критериите за търсене", "Try adjusting your search or filter criteria")}
+                              </p>
+                            </div>
                           ) : (
                             <motion.div 
                               variants={containerVariants}
@@ -1023,11 +885,11 @@ export default function ShopPage() {
                                           <span className="inline-flex items-center mb-2.5 text-sm font-medium mr-2 px-3 py-1 rounded-full
                                             bg-gradient-to-r from-green-500 to-emerald-600 text-white
                                             border border-green-400/20 shadow-md">
-                                              {book.category === 'health' ? (language === 'bg' ? 'Здраве' : 'Health') : 
-                                              book.category === 'poetry' ? (language === 'bg' ? 'Поезия' : 'Poetry') : 
-                                              book.category === 'selfHelp' ? (language === 'bg' ? 'Самопомощ' : 'Self Help') : 
-                                              book.category}
-                                          </span>
+                                                {book.category === 'health' ? (language === 'bg' ? 'Здраве' : 'Health') : 
+                                                book.category === 'poetry' ? (language === 'bg' ? 'Поезия' : 'Poetry') : 
+                                                book.category === 'selfHelp' ? (language === 'bg' ? 'Самопомощ' : 'Self Help') : 
+                                                book.category}
+                                            </span>
                                         )}
                                         
                                         {/* Book title with clean typography - no color transitions */}
@@ -1149,7 +1011,13 @@ export default function ShopPage() {
                       <TabsContent value="services">
                         <div className="mt-8">
                           {filteredServices.length === 0 ? (
-                            <NoResultsFound type="services" />
+                            <div className="text-center py-10 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-inner">
+                              <Package className="mx-auto h-12 w-12 text-gray-400" />
+                              <h3 className="mt-4 text-lg font-medium">{translate("Няма намерени услуги", "No services found")}</h3>
+                              <p className="mt-2 text-sm text-gray-500">
+                                {translate("Опитайте да промените критериите за търсене", "Try adjusting your search or filter criteria")}
+                              </p>
+                            </div>
                           ) : (
                             <motion.div 
                               variants={containerVariants}
@@ -1191,7 +1059,7 @@ export default function ShopPage() {
                                         transition-colors duration-300" />
                                       
                                       {/* Service image with enhanced styling */}
-                                      <div className="relative w-full h-52 overflow-hidden rounded-t-lg">
+                                      <div className="relative w-full h-44 overflow-hidden rounded-t-lg">
                                         {service.image ? (
                                           <div className="absolute inset-0">
                                             <Image
@@ -1216,9 +1084,9 @@ export default function ShopPage() {
                                       </div>
                                       
                                       {/* Service details with refined styling */}
-                                      <div className="p-5 lg:p-6 flex flex-col flex-grow">
+                                      <div className="p-4 flex flex-col flex-grow">
                                         {/* Category badge for package vs individual */}
-                                        <span className="inline-flex items-center mb-2.5 text-sm font-medium mr-2 px-3 py-1 rounded-full
+                                        <span className="inline-flex items-center mb-2 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full
                                           bg-purple-100/80 dark:bg-purple-900/40 text-purple-700 dark:text-purple-400 border border-purple-400/20 dark:border-purple-800/40">
                                           {service.category === 'package' ? (language === 'bg' ? 'Пакет' : 'Package') : 
                                            service.category === 'individual' ? (language === 'bg' ? 'Индивидуална' : 'Individual') : 
@@ -1227,75 +1095,75 @@ export default function ShopPage() {
                                         
                                         {/* Featured badge if applicable */}
                                         {service.featured && (
-                                          <span className="inline-flex items-center mb-2.5 text-sm font-medium mr-2 px-3 py-1 rounded-full
+                                          <span className="inline-flex items-center mb-2 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full
                                             bg-amber-100/80 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 border border-amber-400/20 dark:border-amber-800/40">
-                                            <Sparkles className="h-3.5 w-3.5 mr-1" />
+                                            <Sparkles className="h-3 w-3 mr-1" />
                                             {language === 'bg' ? 'Препоръчана' : 'Featured'}
                                           </span>
                                         )}
                                         
-                                        {/* Service title with premium typography */}
-                                        <h3 className="font-bold text-xl leading-6 text-[#171717] dark:text-white mb-2 
-                                          tracking-tight line-clamp-2 group-hover:text-purple-700 dark:group-hover:text-purple-400 transition-colors duration-300">
+                                        {/* Service title with clean typography - no color transitions */}
+                                        <h3 className="font-bold text-base leading-5 text-[#171717] dark:text-white mb-1 
+                                          tracking-tight line-clamp-2">
                                           {service.title}
                                         </h3>
                                         
                                         {/* Price display under headline */}
-                                        <div className="flex items-center mb-3">
-                                          <span className="font-semibold text-gray-700 dark:text-gray-300">
+                                        <div className="flex items-center mb-1.5">
+                                          <span className="font-semibold text-sm text-gray-700 dark:text-gray-300">
                                             {service.price?.toFixed(2)} лв.
                                           </span>
                                         </div>
                                         
                                         {/* Service details with badges */}
-                                        <div className="flex items-center gap-1.5 mb-3.5 w-full">
-                                          <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
-                                            bg-gray-100/80 dark:bg-gray-700/50 text-sm text-gray-700 dark:text-gray-300">
-                                            <Clock className="h-3.5 w-3.5 mr-1 text-gray-500 dark:text-gray-400" />
+                                        <div className="flex items-center flex-wrap gap-1 mb-2 w-full">
+                                          <div className="inline-flex items-center shrink-0 px-2 py-0.5 rounded-md 
+                                            bg-gray-100/80 dark:bg-gray-700/50 text-xs text-gray-700 dark:text-gray-300">
+                                            <Clock className="h-3 w-3 mr-1 text-gray-500 dark:text-gray-400" />
                                             <span>{service.duration}</span>
                                           </div>
                                           
                                           {/* Popular badge if applicable */}
                                           {service.popular && (
-                                            <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
-                                              bg-red-50/80 dark:bg-red-900/30 text-sm text-red-700 dark:text-red-400 
+                                            <div className="inline-flex items-center shrink-0 px-2 py-0.5 rounded-md 
+                                              bg-red-50/80 dark:bg-red-900/30 text-xs text-red-700 dark:text-red-400 
                                               border border-red-200/50 dark:border-red-800/40">
-                                              <Flower className="h-3.5 w-3.5 mr-1" />
+                                              <Flower className="h-3 w-3 mr-1" />
                                               <span>{language === 'bg' ? 'Популярна' : 'Popular'}</span>
                                             </div>
                                           )}
                                           
                                           {/* MVP badge if applicable */}
                                           {service.mvp && (
-                                            <div className="inline-flex items-center shrink-0 px-2.5 py-1 rounded-md 
-                                              bg-blue-50/80 dark:bg-blue-900/30 text-sm text-blue-700 dark:text-blue-400 
+                                            <div className="inline-flex items-center shrink-0 px-2 py-0.5 rounded-md 
+                                              bg-blue-50/80 dark:bg-blue-900/30 text-xs text-blue-700 dark:text-blue-400 
                                               border border-blue-200/50 dark:border-blue-800/40">
-                                              <Star className="h-3.5 w-3.5 mr-1" />
+                                              <Star className="h-3 w-3 mr-1" />
                                               <span>{language === 'bg' ? 'Топ Избор' : 'Top Pick'}</span>
                                             </div>
                                           )}
                                         </div>
                                         
-                                        {/* Service description with improved typography */}
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2 flex-grow leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-300">
+                                        {/* Service description with clean typography - no color transitions */}
+                                        <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 line-clamp-2 flex-grow leading-normal">
                                           {service.description}
                                         </p>
                                         
-                                        {/* Service features for packages */}
+                                        {/* Service features for packages - simplified styling */}
                                         {service.includes && service.includes.length > 0 && (
-                                          <div className="mb-4 bg-purple-50/50 dark:bg-purple-900/10 rounded-lg p-2.5 border border-purple-100/50 dark:border-purple-800/20 group-hover:bg-purple-50/80 dark:group-hover:bg-purple-900/20 transition-colors duration-300">
-                                              <p className="text-xs uppercase tracking-wider font-medium text-purple-600 dark:text-purple-400 mb-1.5">
+                                          <div className="mb-3 bg-purple-50/50 dark:bg-purple-900/10 rounded-lg p-2 border border-purple-100/50 dark:border-purple-800/20">
+                                              <p className="text-xs uppercase tracking-wider font-medium text-purple-600 dark:text-purple-400 mb-1">
                                                 {translate("Включва", "Includes")}:
                                               </p>
-                                              <ul className="space-y-1">
+                                              <ul className="space-y-0.5">
                                                 {service.includes.slice(0, 3).map((feature, idx) => (
-                                                  <li key={idx} className="flex items-start text-sm text-gray-600 dark:text-gray-400">
-                                                    <CheckCircle className="h-3.5 w-3.5 mr-1.5 mt-0.5 flex-shrink-0 text-purple-500 dark:text-purple-400" />
+                                                  <li key={idx} className="flex items-start text-xs text-gray-600 dark:text-gray-400">
+                                                    <CheckCircle className="h-3 w-3 mr-1 mt-0.5 flex-shrink-0 text-purple-500 dark:text-purple-400" />
                                                     <span className="line-clamp-1">{feature}</span>
                                                   </li>
                                                 ))}
                                                 {service.includes.length > 3 && (
-                                                  <li className="text-xs text-gray-500 dark:text-gray-400 pl-5 italic">
+                                                  <li className="text-xs text-gray-500 dark:text-gray-400 pl-4 italic">
                                                     +{service.includes.length - 3} {translate("още", "more")}
                                                   </li>
                                                 )}
@@ -1304,44 +1172,45 @@ export default function ShopPage() {
                                         )}
                                         
                                         {/* Buttons at the bottom */}
-                                        <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700/30 flex justify-between items-center">
+                                        <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700/30 flex justify-between items-center">
                                           {/* Details button with refined styling */}
                                           <Button
                                             variant="outline"
                                             size="sm"
-                                            className="rounded-full h-10 w-[45%]
+                                            className="rounded-full h-8 w-[45%]
                                               bg-white dark:bg-gray-800 
                                               border-gray-200 dark:border-gray-700
                                               text-gray-700 dark:text-gray-300
                                               group-hover:bg-purple-50 dark:group-hover:bg-purple-900/20
                                               group-hover:border-purple-300 dark:group-hover:border-purple-700
-                                              transition-all duration-300"
-                                            asChild
-                                          >
-                                            <Link href={`/services/${service.id}`} className="flex items-center justify-center">
-                                              <Eye className="h-4 w-4 mr-2" />
-                                              <span>{translate("Детайли", "Details")}</span>
-                                            </Link>
-                                          </Button>
-                                          
-                                          {/* Book button with simplified styling */}
-                                          <Button
-                                            size="sm"
-                                            className="rounded-full h-10 w-[50%]
-                                              bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 
-                                              text-white hover:shadow-sm transition-all duration-300"
-                                            onClick={() => addToCart({
-                                              id: service.id,
-                                              title: service.title,
-                                              price: service.price || 0,
-                                              image: service.image || '',
-                                              quantity: 1,
-                                              isService: true
-                                            })}
-                                          >
-                                            <CalendarDays className="h-4 w-4 mr-2" />
-                                            {translate("Резервирай", "Book")}
-                                          </Button>
+                                              transition-all duration-300 text-xs"
+                                              asChild
+                                            >
+                                              <Link href={`/services/${service.id}`} className="flex items-center justify-center">
+                                                <Eye className="h-3 w-3 mr-1.5" />
+                                                <span>{translate("Детайли", "Details")}</span>
+                                              </Link>
+                                            </Button>
+                                            
+                                            {/* Book button with simplified styling */}
+                                            <Button
+                                              size="sm"
+                                              className="rounded-full h-8 w-[50%] text-xs
+                                                bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 
+                                                text-white hover:shadow-sm transition-all duration-300"
+                                              onClick={() => addToCart({
+                                                id: service.id,
+                                                title: service.title,
+                                                price: service.price,
+                                                image: service.image,
+                                                quantity: 1,
+                                                type: 'service'
+                                              })}
+                                            >
+                                              <ShoppingCart className="h-3 w-3 mr-1.5" />
+                                              {translate("Резервирай", "Book")}
+                                            </Button>
+                                          </div>
                                         </div>
                                       </div>
                                     </div>

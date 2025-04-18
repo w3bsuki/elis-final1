@@ -75,8 +75,8 @@ export function TimeSlotPicker({
             className={cn(
               "rounded-full font-medium transition-all duration-300",
               selectedTime === time 
-                ? "bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md hover:shadow-sm hover:from-blue-600 hover:to-indigo-700" 
-                : "border-blue-200/60 dark:border-blue-800/30 bg-white/80 dark:bg-gray-800/80 hover:bg-blue-50/70 dark:hover:bg-blue-900/20 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-sm"
+                ? "bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-md hover:shadow-sm hover:from-green-600 hover:to-emerald-700" 
+                : "border-green-200/60 dark:border-green-800/30 bg-white/80 dark:bg-gray-800/80 hover:bg-green-50/70 dark:hover:bg-green-900/20 hover:border-green-300 dark:hover:border-green-700 hover:shadow-sm"
             )}
             onClick={() => onTimeChange(time)}
           >
@@ -90,15 +90,15 @@ export function TimeSlotPicker({
   return (
     <div className={cn("w-full", className)}>
       <div className="mb-3 flex items-center gap-2">
-        <div className="rounded-full p-1.5 bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-          <Clock className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+        <div className="rounded-full p-1.5 bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+          <Clock className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
         </div>
         <span className="text-sm font-medium">
           {language === 'en' ? "Available Time Slots" : "Налични часове"}
         </span>
       </div>
       
-      <ScrollArea className="h-[200px] pr-4 rounded-xl border-2 border-blue-100/50 dark:border-blue-800/30 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-3 shadow-inner">
+      <ScrollArea className="h-[200px] pr-4 rounded-xl border-2 border-green-100/50 dark:border-green-800/30 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-3 shadow-inner">
         {renderTimeSlots()}
       </ScrollArea>
     </div>

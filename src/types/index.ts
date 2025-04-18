@@ -33,6 +33,7 @@ export interface Service {
   includes?: string[];
   relatedBookId?: string; // Reference to the book this service is related to
   image?: string;
+  previewUrl?: string; // URL to preview the service
 }
 
 // Author type

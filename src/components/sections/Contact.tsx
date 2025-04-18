@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useLanguage } from "@/lib/LanguageContext";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -37,101 +37,49 @@ const contactSchema = z.object({
   subject: z.string().optional(),
 });
 
+// Interface for contact form data
+interface ContactFormData {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
+// Interface for form errors
+interface FormErrors {
+  [key: string]: string;
+}
+
+// Interface for social media links
+interface SocialLink {
+  name: string;
+  icon: React.ReactNode;
+  url: string;
+  color: string;
+}
+
 export function Contact() {
   const { language } = useLanguage();
   const { toast } = useToast();
-  const translate = (bg, en) => language === 'bg' ? bg : en;
+  const translate = (bg: string, en: string): string => language === 'en' ? en : bg;
   
-  // Form states
-  const [contactForm, setContactForm] = useState({
+  // Form states - combined into single state object to reduce re-renders
+  const [contactForm, setContactForm] = useState<ContactFormData>({
     name: "",
     email: "",
     subject: "",
     message: "",
   });
-  const [contactStatus, setContactStatus] = useState("idle");
-  const [formErrors, setFormErrors] = useState({});
+  const [formState, setFormState] = useState<{
+    status: "idle" | "loading" | "success" | "error";
+    errors: FormErrors;
+  }>({
+    status: "idle",
+    errors: {},
+  });
   
-  // Contact form handling
-  const handleContactSubmit = async (e) => {
-    e.preventDefault();
-    setFormErrors({});
-    
-    try {
-      setContactStatus("loading");
-      
-      // Validate all fields
-      contactSchema.parse(contactForm);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Success
-      setContactStatus("success");
-      setContactForm({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      });
-      
-      // Reset success message after a delay
-      setTimeout(() => {
-        setContactStatus("idle");
-      }, 5000);
-    } catch (error) {
-      console.error("Contact form error:", error);
-      setContactStatus("error");
-      
-      // Extract and set validation errors
-      if (error instanceof z.ZodError) {
-        const errors = {};
-        error.errors.forEach((err) => {
-          if (err.path[0]) {
-            errors[err.path[0]] = err.message;
-          }
-        });
-        setFormErrors(errors);
-      }
-      
-      // Reset error state after a delay
-      setTimeout(() => {
-        setContactStatus("idle");
-      }, 5000);
-    }
-  };
-  
-  // Helper to handle contact form field changes
-  const handleContactInputChange = (e) => {
-    const { name, value } = e.target;
-    setContactForm(prev => ({ ...prev, [name]: value }));
-    
-    // Clear the specific error for this field when user starts typing
-    if (formErrors[name]) {
-      setFormErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
-    }
-  };
-  
-  // Handle calendar booking
-  const handleBookingComplete = (bookingData) => {
-    console.log("Booking completed:", bookingData);
-    
-    // Show success toast via useToast
-    toast.success({
-      title: translate("Консултацията е запазена", "Consultation Booked"),
-      description: translate(
-        "Ще получите имейл с потвърждение и детайли за консултацията.",
-        "You will receive an email with confirmation and details about the consultation."
-      )
-    });
-  };
-  
-  // Social media links
-  const socialLinks = [
+  // Memoize social links to prevent recreation on re-renders
+  const socialLinks: SocialLink[] = useMemo(() => [
     { 
       name: "Facebook", 
       icon: <Facebook className="h-5 w-5" />, 
@@ -156,7 +104,112 @@ export function Contact() {
       url: "https://youtube.com/authorELIS", 
       color: "bg-red-500 hover:bg-red-600" 
     }
-  ];
+  ], []);
+  
+  // Contact form handling with real-time validation
+  const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    try {
+      setFormState(prev => ({ ...prev, status: "loading" }));
+      
+      // Validate all fields
+      contactSchema.parse(contactForm);
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Success
+      setFormState({ status: "success", errors: {} });
+      setContactForm({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+      
+      // Reset success message after a delay
+      setTimeout(() => {
+        setFormState(prev => ({ ...prev, status: "idle" }));
+      }, 5000);
+    } catch (error) {
+      console.error("Contact form error:", error);
+      setFormState(prev => ({ ...prev, status: "error" }));
+      
+      // Extract and set validation errors
+      if (error instanceof z.ZodError) {
+        const errors: FormErrors = {};
+        error.errors.forEach((err) => {
+          if (err.path[0]) {
+            errors[err.path[0] as string] = err.message;
+          }
+        });
+        setFormState(prev => ({ ...prev, errors }));
+      }
+      
+      // Reset error state after a delay
+      setTimeout(() => {
+        setFormState(prev => ({ ...prev, status: "idle" }));
+      }, 5000);
+    }
+  };
+  
+  // Validate field in real-time as user types
+  const validateField = (name: string, value: string): string | null => {
+    try {
+      // Create a partial schema for just this field
+      const fieldSchema = z.object({ [name]: contactSchema.shape[name] });
+      fieldSchema.parse({ [name]: value });
+      return null;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const fieldError = error.errors.find(err => err.path[0] === name);
+        return fieldError?.message || null;
+      }
+      return null;
+    }
+  };
+  
+  // Helper to handle contact form field changes with real-time validation
+  const handleContactInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setContactForm(prev => ({ ...prev, [name]: value }));
+    
+    // Only validate if field is not empty (to avoid immediate errors when form first loads)
+    if (value.trim()) {
+      const error = validateField(name, value);
+      
+      setFormState(prev => ({
+        ...prev,
+        errors: {
+          ...prev.errors,
+          [name]: error || undefined
+        }
+      }));
+    } else {
+      // Clear error when field is emptied
+      setFormState(prev => {
+        const newErrors = { ...prev.errors };
+        delete newErrors[name];
+        return { ...prev, errors: newErrors };
+      });
+    }
+  };
+  
+  // Handle calendar booking - memoized to prevent recreation on re-renders
+  const handleBookingComplete = useCallback((bookingData: BookingData) => {
+    console.log("Booking completed:", bookingData);
+    
+    // Show success toast via useToast
+    toast({
+      title: translate("Консултацията е запазена", "Consultation Booked"),
+      description: translate(
+        "Ще получите имейл с потвърждение и детайли за консултацията.",
+        "You will receive an email with confirmation and details about the consultation."
+      ),
+      variant: "default",
+    });
+  }, [toast, translate]);
   
   return (
     <div className="relative z-0 py-12 md:py-20 overflow-hidden">
@@ -412,7 +465,7 @@ export function Contact() {
                             {translate("Изпратете съобщение", "Send a Message")}
                           </h3>
                           
-                          {contactStatus === "success" ? (
+                          {formState.status === "success" ? (
                             <div className="text-center py-8">
                               <div className="mx-auto w-20 h-20 mb-4 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center shadow-inner">
                                 <CheckCircle className="h-10 w-10 text-green-600 dark:text-green-400" />
@@ -439,7 +492,7 @@ export function Contact() {
                                       placeholder={translate("Вашето име", "Your name")}
                                       className={cn(
                                         "pl-11 h-12 border-2 rounded-lg shadow-sm bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm",
-                                        formErrors.name 
+                                        formState.errors.name 
                                           ? "border-red-500 focus:border-red-500 focus:ring-red-500" 
                                           : "border-green-200/60 dark:border-green-800/30 focus:border-green-400"
                                       )}
@@ -448,8 +501,8 @@ export function Contact() {
                                       <User className="h-5 w-5" />
                                     </div>
                                   </div>
-                                  {formErrors.name && (
-                                    <p className="mt-1 text-sm text-red-500">{formErrors.name}</p>
+                                  {formState.errors.name && (
+                                    <p className="mt-1 text-sm text-red-500">{formState.errors.name}</p>
                                   )}
                                 </div>
                                 
@@ -463,7 +516,7 @@ export function Contact() {
                                       placeholder={translate("Вашият имейл", "Your email")}
                                       className={cn(
                                         "pl-11 h-12 border-2 rounded-lg shadow-sm bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm",
-                                        formErrors.email 
+                                        formState.errors.email 
                                           ? "border-red-500 focus:border-red-500 focus:ring-red-500" 
                                           : "border-green-200/60 dark:border-green-800/30 focus:border-green-400"
                                       )}
@@ -472,8 +525,8 @@ export function Contact() {
                                       <Mail className="h-5 w-5" />
                                     </div>
                                   </div>
-                                  {formErrors.email && (
-                                    <p className="mt-1 text-sm text-red-500">{formErrors.email}</p>
+                                  {formState.errors.email && (
+                                    <p className="mt-1 text-sm text-red-500">{formState.errors.email}</p>
                                   )}
                                 </div>
                                 
@@ -501,7 +554,7 @@ export function Contact() {
                                       placeholder={translate("Вашето съобщение", "Your message")}
                                       className={cn(
                                         "pl-11 pt-8 border-2 h-32 rounded-lg shadow-sm bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm",
-                                        formErrors.message 
+                                        formState.errors.message 
                                           ? "border-red-500 focus:border-red-500 focus:ring-red-500" 
                                           : "border-green-200/60 dark:border-green-800/30 focus:border-green-400"
                                       )}
@@ -510,20 +563,20 @@ export function Contact() {
                                       <MessageSquare className="h-5 w-5" />
                                     </div>
                                   </div>
-                                  {formErrors.message && (
-                                    <p className="mt-1 text-sm text-red-500">{formErrors.message}</p>
+                                  {formState.errors.message && (
+                                    <p className="mt-1 text-sm text-red-500">{formState.errors.message}</p>
                                   )}
                                 </div>
                                 
                                 <Button
                                   type="submit"
-                                  disabled={contactStatus === "loading"}
+                                  disabled={formState.status === "loading"}
                                   className="w-full rounded-full bg-gradient-to-br from-green-600 to-teal-700 dark:from-green-500 dark:to-teal-600
                                   hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5
                                   text-white font-medium flex items-center justify-center gap-2 h-14
                                   border border-green-400/30 dark:border-green-400/20 shadow-lg"
                                 >
-                                  {contactStatus === "loading" ? (
+                                  {formState.status === "loading" ? (
                                     <span className="flex items-center">
                                       <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>

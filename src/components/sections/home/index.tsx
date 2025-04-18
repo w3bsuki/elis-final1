@@ -12,16 +12,29 @@ import { Footer } from "@/components/layout/Footer";
 import { cn } from "@/lib/utils";
 import { CONTAINER_WIDTH_CLASSES } from "@/lib/constants";
 
-// Component props type
+/**
+ * Component props interface
+ */
 export interface HomePageProps {
+  /**
+   * Whether to include the footer component
+   * @default true
+   */
   includeFooter?: boolean;
+  
+  /**
+   * Whether to render without container width constraints
+   * @default false
+   */
   noContainer?: boolean;
 }
 
 /**
- * HomePage component with optimized layout and better viewport fit
+ * Main HomePage component that renders all sections
+ * This component serves as the entry point for the homepage and coordinates the layout
+ * of all major sections.
  */
-export function HomePage({ includeFooter = true, noContainer = false }: HomePageProps) {
+export function HomePage({ includeFooter = true, noContainer = false }: HomePageProps): React.ReactElement {
   const { language } = useLanguage();
   
   return (
@@ -38,7 +51,7 @@ export function HomePage({ includeFooter = true, noContainer = false }: HomePage
       {/* Featured Content section */}
       <FeaturedContent />
       
-      {/* Main content sections */}
+      {/* Main content sections with proper vertical spacing */}
       <div className="space-y-24 py-12 md:py-20">
         <BooksSection />
         <ServicesSection />
@@ -46,7 +59,7 @@ export function HomePage({ includeFooter = true, noContainer = false }: HomePage
         <Contact />
       </div>
       
-      {/* Footer */}
+      {/* Footer section (conditionally rendered) */}
       {includeFooter && <Footer />}
     </div>
   );
