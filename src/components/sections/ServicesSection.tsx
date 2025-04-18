@@ -11,6 +11,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
+import { ServiceDetailsDialog } from '@/components/ui/service-details-dialog';
 
 // Fix the decorative background elements
 const BackgroundDecorations = () => (
@@ -123,8 +124,18 @@ export default function ServicesSection() {
   const { language } = useLanguage();
   const [hoveredService, setHoveredService] = useState<string | null>(null);
   
+  // Add dialog state
+  const [selectedService, setSelectedService] = useState<any | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  
   // Translate function - memoized
   const translate = useCallback((bg: string, en: string) => language === 'en' ? en : bg, [language]);
+  
+  // Handle opening service details dialog
+  const handleOpenServiceDialog = useCallback((service: any) => {
+    setSelectedService(service);
+    setDialogOpen(true);
+  }, []);
   
   // Container ref for visibility detection
   const containerRef = useRef<HTMLDivElement>(null);
@@ -247,15 +258,30 @@ export default function ServicesSection() {
                     <span className="text-lg font-bold text-gray-900 dark:text-white">{service.price} лв.</span>
                   </div>
                   
-                  <Link 
-                    href={`/services#${service.id}`}
+                  <button 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleOpenServiceDialog({
+                        id: service.id,
+                        title: service.title,
+                        description: service.description,
+                        coverImage: service.coverImage,
+                        price: parseFloat(service.price),
+                        duration: "60",
+                        category: "service",
+                        badges: service.includes,
+                        benefits: service.includes
+                      });
+                    }}
                     className="py-2 px-3 rounded-lg bg-gradient-to-r from-purple-500 to-indigo-500 
                       hover:from-purple-600 hover:to-indigo-600 text-white text-sm font-medium 
-                      transition-all duration-300 shadow-md hover:shadow-lg transform hover:translate-y-[-1px]"
+                      transition-all duration-300 shadow-md hover:shadow-lg transform hover:translate-y-[-1px]
+                      cursor-pointer"
                   >
                     {translate("Детайли", "Details")}
                     <ArrowRight className="ml-1 h-3 w-3 inline" />
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>
@@ -263,7 +289,7 @@ export default function ServicesSection() {
         </div>
       </motion.div>
     ));
-  }, [hoveredService, translate]);
+  }, [hoveredService, translate, handleOpenServiceDialog]);
   
   return (
     <div className="relative z-0 py-6 md:py-8" ref={containerRef}>
@@ -377,9 +403,33 @@ export default function ServicesSection() {
                 {/* Pricing cards grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                   {[
-                    { name: translate("Индивидуална", "Individual"), price: "85", duration: "50 мин.", icon: "👤", color: "purple" },
-                    { name: translate("Двойки", "Couples"), price: "120", duration: "90 мин.", icon: "👥", color: "indigo" },
-                    { name: translate("Арт Терапия", "Art Therapy"), price: "75", duration: "60 мин.", icon: "🎨", color: "fuchsia" }
+                    { 
+                      id: "individual",
+                      name: translate("Индивидуална", "Individual"), 
+                      price: "85", 
+                      duration: "50 мин.", 
+                      icon: "👤", 
+                      color: "purple",
+                      description: "Персонализирани сесии, фокусирани върху вашите специфични нужди и цели."
+                    },
+                    { 
+                      id: "couples",
+                      name: translate("Двойки", "Couples"), 
+                      price: "120", 
+                      duration: "90 мин.", 
+                      icon: "👥", 
+                      color: "indigo",
+                      description: "Подкрепа за двойки, които искат да подобрят комуникацията и да разрешат конфликти."
+                    },
+                    { 
+                      id: "art-therapy",
+                      name: translate("Арт Терапия", "Art Therapy"), 
+                      price: "75", 
+                      duration: "60 мин.", 
+                      icon: "🎨", 
+                      color: "fuchsia",
+                      description: "Творчески подход за изследване на емоции чрез различни арт форми."
+                    }
                   ].map((option, index) => (
                     <motion.div 
                       key={option.name}
@@ -438,21 +488,34 @@ export default function ServicesSection() {
                         </div>
                         
                         {/* Button - standardized to match Books section */}
-                        <Link href="/services">
-                          <Button 
-                            className={`w-full rounded-lg px-4 py-2 h-8 text-xs
-                                      ${option.color === 'indigo'
-                                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700'
-                                      : option.color === 'fuchsia' 
-                                        ? 'bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700' 
-                                        : `bg-gradient-to-r from-${option.color}-600 to-${option.color}-500 hover:from-${option.color}-700 hover:to-${option.color}-600`}
-                                      text-white border-0 shadow-md hover:shadow-lg 
-                                      transition-all duration-300`}
-                          >
-                            {translate("Детайли", "Details")}
-                            <ArrowRight className="ml-1 w-3 h-3" />
-                          </Button>
-                        </Link>
+                        <Button 
+                          onClick={() => handleOpenServiceDialog({
+                            id: option.id,
+                            title: option.name,
+                            description: option.description,
+                            coverImage: `/images/services/${option.id}.jpg`,
+                            price: parseFloat(option.price),
+                            duration: option.duration,
+                            category: "service",
+                            badges: [translate("Сесия", "Session"), translate("Професионална", "Professional")],
+                            benefits: [
+                              translate("Персонализиран подход", "Personalized approach"),
+                              translate("Професионална подкрепа", "Professional support"),
+                              translate("Проследяване на прогреса", "Progress tracking")
+                            ]
+                          })}
+                          className={`w-full rounded-lg px-4 py-2 h-8 text-xs cursor-pointer
+                                    ${option.color === 'indigo'
+                                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700'
+                                    : option.color === 'fuchsia' 
+                                      ? 'bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700' 
+                                      : `bg-gradient-to-r from-${option.color}-600 to-${option.color}-500 hover:from-${option.color}-700 hover:to-${option.color}-600`}
+                                    text-white border-0 shadow-md hover:shadow-lg 
+                                    transition-all duration-300`}
+                        >
+                          {translate("Детайли", "Details")}
+                          <ArrowRight className="ml-1 w-3 h-3" />
+                        </Button>
                       </div>
                     </motion.div>
                   ))}
@@ -480,6 +543,14 @@ export default function ServicesSection() {
           </div>
         </div>
       </div>
+      
+      {/* Add dialog to the component */}
+      <ServiceDetailsDialog
+        service={selectedService}
+        translate={translate}
+        isOpen={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+      />
     </div>
   );
 } 
