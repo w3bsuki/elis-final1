@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, BookOpen, Star, Bookmark, Quote, BookMarked, Library, Book, Clock, FileText, DollarSign, ShoppingCart, Play, Pause, Gift } from "lucide-react";
+import { ArrowRight, BookOpen, Star, Bookmark, Quote, BookMarked, Library, Book, Clock, FileText, DollarSign, ShoppingCart, Play, Pause, Gift, X, Tag } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ import {
   CarouselPrevious 
 } from "@/components/ui/carousel";
 import { FlipCard } from "@/components/ui/flip-card";
-import { useState, useEffect, useRef, memo, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef, memo, useCallback, useMemo, useContext, createContext } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { motion, useMotionValue, useTransform, useSpring, useScroll, useVelocity, useAnimationFrame, AnimatePresence } from "framer-motion";
@@ -30,6 +30,42 @@ import {
   DialogClose
 } from "@/components/ui/dialog";
 import React from "react";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+
+// Create a context for BooksSection
+export const BooksSectionContext = createContext<{
+  handleBookDetails: (book: any) => void;
+  translate: (bg: string, en: string) => string;
+  language: string;
+}>({
+  handleBookDetails: () => {},
+  translate: (bg, en) => en,
+  language: 'en'
+});
+
+// Define Book type for better type safety
+type Book = {
+  id: string;
+  title: string;
+  description: string;
+  coverImage: string;
+  price: string | number;
+  pages?: number;
+  publishDate?: string;
+  category?: string;
+  featured?: boolean;
+  topics?: string[];
+  author?: string;
+  quote?: string;
+  badge?: {
+    text: { en: string; bg: string };
+    icon?: React.ReactNode;
+    bgClass?: string;
+    textClass?: string;
+    borderClass?: string;
+  };
+  shortDescription?: string;
+};
 
 // Custom hook for monitoring performance
 const usePerformanceMonitor = (componentName: string) => {
@@ -300,8 +336,8 @@ const EnhancedFlipCardBack = ({
       
       {/* Buttons with enhanced styling */}
       <div className="flex gap-2 mt-auto">
-        <button
-          onClick={onCtaClick}
+        <Link
+          href={`/shop/${book.id}`}
           className="flex-1 py-2 px-3 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 
             hover:from-green-600 hover:to-emerald-600 text-white text-sm font-medium 
             transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 transform hover:translate-y-[-1px]
@@ -309,10 +345,13 @@ const EnhancedFlipCardBack = ({
         >
           <span>{translate("Детайли", "Details")}</span>
           <ChevronRight className="w-3.5 h-3.5" />
-        </button>
+        </Link>
         
-        <Link 
-          href={`/shop/book/${book.id}`}
+        <button 
+          onClick={() => {
+            // Show an alert for adding to cart instead of navigating to a non-existent page
+            alert(translate("Книгата е добавена в кошницата!", "Book added to cart!"));
+          }}
           className="flex-1 py-2 px-3 rounded-lg bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm
             text-gray-900 dark:text-white text-sm font-medium border border-white/70 dark:border-gray-700/70
             shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 hover:bg-white dark:hover:bg-gray-800
@@ -320,7 +359,7 @@ const EnhancedFlipCardBack = ({
         >
           <ShoppingCart className="w-3.5 h-3.5" />
           <span>{translate("Купи", "Buy")}</span>
-        </Link>
+        </button>
       </div>
     </div>
   );
@@ -350,7 +389,7 @@ const BookDetailsDialog = memo(({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl w-full sm:rounded-xl overflow-hidden p-0 bg-white dark:bg-gray-900 border-none">
-        <DialogHeader className="relative h-52 sm:h-64 md:h-72 overflow-hidden flex items-end bg-green-900 dark:bg-green-950">
+        <DialogHeader className="relative h-52 sm:h-64 overflow-hidden flex items-end bg-green-900 dark:bg-green-950">
           {/* Cover image */}
           <div className="absolute inset-0 z-0 overflow-hidden bg-gradient-to-br from-green-800 to-green-950 dark:from-green-900 dark:to-gray-950">
             <Image
@@ -461,7 +500,7 @@ const BookDetailsDialog = memo(({
         {/* Footer with actions */}
         <DialogFooter className="flex border-t border-gray-100 dark:border-gray-800 p-2 bg-gray-50 dark:bg-gray-800/50">
           <DialogClose asChild>
-            <Button variant="outline" size="sm" className="mr-auto h-8 text-xs">
+            <Button variant="outline" size="sm" className="mr-auto h-7 text-xs">
               {translate("Затвори", "Close")}
             </Button>
           </DialogClose>
@@ -473,7 +512,7 @@ const BookDetailsDialog = memo(({
             </Button>
             
             <Link
-              href={`/shop/book/${book.id}`}
+              href={`/shop/${book.id}`}
               className="inline-flex items-center justify-center rounded-md px-3 py-1 text-xs font-medium h-8
                 bg-gradient-to-r from-green-500 to-teal-500 
                 text-white
@@ -494,192 +533,134 @@ const BookDetailsDialog = memo(({
 BookDetailsDialog.displayName = "BookDetailsDialog";
 
 // BookCard component completely reworked with direct inline CSS styles
-const BookCard = memo(({ book }: { book: Book }) => {
-  // Get the translate function from the parent component
-  const { language } = useLanguage();
-  const translate = useCallback((bg: string, en: string) => language === 'en' ? en : bg, [language]);
+const BookCard = memo(({ book, onClick }: { book: Book; onClick?: (book: Book) => void }) => {
+  // Get the translate function from context
+  const { language, translate } = useContext(BooksSectionContext);
   
-  // Manage book details dialog
-  const handleBookDetails = () => {
-    setSelectedBook(book);
-    setBookDetailsOpen(true);
-  };
+  // Function to handle book details
+  const handleClick = useCallback(() => {
+    if (onClick) {
+      onClick(book);
+    }
+  }, [book, onClick]);
 
   // Render badge based on book status
   const renderBadge = useMemo(() => {
     if (book.featured) {
       return (
-        <div className={cn(
-          "flex items-center gap-1.5 px-2.5 py-1",
-          "rounded-full",
-          "bg-gradient-to-r from-amber-500/90 to-yellow-500/90",
-          "text-white",
-          "border border-amber-300/80",
-          "shadow-md text-xs font-semibold backdrop-blur-sm"
-        )}>
-          <Star className="h-3 w-3" />
-          <span>{translate("Топ", "Featured")}</span>
-        </div>
+        <Badge className="absolute top-2 right-2 z-10 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+          {translate("Топ", "Featured")}
+        </Badge>
       );
     }
-
-    if (book.price === "0.00") {
+    if (book.price && book.originalPrice && book.price < book.originalPrice) {
+      const discount = Math.round(((book.originalPrice - book.price) / book.originalPrice) * 100);
       return (
-        <div className={cn(
-          "flex items-center gap-1.5 px-2.5 py-1",
-          "rounded-full",
-          "bg-gradient-to-r from-green-500/90 to-emerald-500/90",
-          "text-white",
-          "border border-green-300/80",
-          "shadow-md text-xs font-semibold backdrop-blur-sm"
-        )}>
-          <Gift className="h-3 w-3" />
-          <span>{translate("Безплатно", "Free")}</span>
-        </div>
+        <Badge className="absolute top-2 right-2 z-10 bg-gradient-to-r from-green-500 to-emerald-500 text-white">
+          {discount}% {translate("Отстъпка", "OFF")}
+        </Badge>
       );
     }
-
     return null;
-  }, [book.featured, book.price, translate]);
+  }, [book.featured, book.price, book.originalPrice, translate]);
 
-  const renderQuoteSection = () => (
-    <div className="pl-3 border-l-2 border-green-500 mb-3 z-10">
-      <p className="text-xs text-gray-600 dark:text-gray-300 italic">"{book.quote}"</p>
-      <p className="text-right text-xs text-gray-700 dark:text-gray-200 mt-1">— {book.author}</p>
-    </div>
-  );
+  // Function to render book quote section
+  const renderQuoteSection = useMemo(() => {
+    if (!book.quote) return null;
+    return (
+      <div className="flex flex-col space-y-2 p-4">
+        <p className="text-sm font-medium text-gray-600 dark:text-gray-400 italic">"{book.quote}"</p>
+        {book.author && <p className="text-xs text-gray-500 dark:text-gray-500">— {book.author}</p>}
+      </div>
+    );
+  }, [book.quote, book.author]);
 
-  // Track performance using the custom hook instead of direct perf call
-  usePerformanceMonitor(`BookCard:${book.id}`);
-  
   return (
-    <div 
-      className="rounded-lg overflow-hidden h-[320px] group
-        bg-white/50 dark:bg-gray-800/50
-        backdrop-blur-md
-        border border-white/40 dark:border-gray-700/60
-        shadow-[0_10px_20px_rgba(0,0,0,0.1)]
-        dark:shadow-[0_10px_20px_rgba(0,0,0,0.3)]
-        group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.15)] 
-        dark:group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.4)]
-        transition-all duration-500 ease-out relative"
-    >
-      {/* Badge positioned absolutely on top right */}
-      {renderBadge && (
-        <div className="absolute top-3 right-3 z-20">
-          {renderBadge}
-        </div>
-      )}
-      
-      {/* Direct flip card implementation with inline styles */}
-      <div className="relative w-full h-full" style={{ perspective: '1000px' }}>
-        <div 
-          className="group-hover:[transform:rotateY(180deg)] transition-all duration-500 relative w-full h-full"
-          style={{
-            transformStyle: 'preserve-3d',
-            transition: 'transform 0.8s ease',
-            willChange: 'transform',
-          }}
-        >
-          {/* Front side */}
-          <div 
-            className="absolute w-full h-full"
-            style={{ 
-              backfaceVisibility: 'hidden', 
-              WebkitBackfaceVisibility: 'hidden'
-            }}
-          >
-            <div className="relative h-full w-full overflow-hidden rounded-lg">
-              <Image
-                src={book.coverImage || "/images/books/placeholder-book.jpg"}
-                alt={book.title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
-                priority={book.featured}
-              />
-              
-              {/* Overlay gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-              
-              {/* Book details overlay */}
-              <div className="absolute bottom-0 w-full p-4 space-y-2 bg-gradient-to-t from-white/90 via-white/60 to-transparent dark:from-gray-800/90 dark:via-gray-800/60">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-2">{book.title}</h3>
-                
-                <div className="flex justify-between items-center">
-                  <div className="text-sm font-medium text-emerald-600 dark:text-emerald-400">{book.price === "0.00" ? translate("Безплатно", "Free") : book.price + " лв."}</div>
-                  <div className="text-xs text-gray-600 dark:text-gray-400">{book.pages} {translate("стр.", "pages")}</div>
-                </div>
-                
-                <div className="flex items-center text-xs mt-1">
-                  <div className="inline-flex items-center gap-1 text-xs text-gray-600 dark:text-gray-300">
-                    <span className="px-2 py-0.5 rounded-full bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400">Flip</span>
-                    {translate("за детайли", "for details")}
+    <div className="h-full w-full">
+      <div className="flip-card-container hover-trigger h-full">
+        <div className="flip-card h-full w-full">
+          <div className="flip-card-inner">
+            {/* Front of card */}
+            <div className="flip-card-front rounded-xl overflow-hidden shadow-lg dark:shadow-gray-800/20 bg-white dark:bg-gray-800 flex flex-col">
+              <div className="relative h-48 w-full flex-shrink-0">
+                <Image
+                  src={book.coverImage || '/images/books/placeholder-book.jpg'}
+                  alt={book.title}
+                  fill
+                  className="object-cover"
+                />
+                {renderBadge}
+              </div>
+              <div className="flex flex-col flex-grow p-4">
+                <h3 className="text-lg font-semibold line-clamp-1 text-gray-900 dark:text-white">{book.title}</h3>
+                <div className="flex items-center mt-1 mb-2">
+                  <div className="flex items-center">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className={cn(
+                          "h-4 w-4",
+                          star <= (book.rating || 0) ? "text-yellow-500 fill-yellow-500" : "text-gray-300 dark:text-gray-600"
+                        )}
+                      />
+                    ))}
                   </div>
+                  <span className="ml-1 text-xs text-gray-500 dark:text-gray-400">({book.reviews || 0})</span>
+                </div>
+                <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2 mb-2 flex-grow">{book.description}</p>
+                <div className="flex justify-between items-center mt-auto">
+                  <p className="font-semibold text-gray-900 dark:text-white">
+                    {book.price === "0.00" ? translate("Безплатно", "Free") : book.price + " лв."}
+                  </p>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">{book.pages} {translate("стр.", "pages")}</span>
                 </div>
               </div>
             </div>
-          </div>
-          
-          {/* Back side */}
-          <div 
-            className="absolute w-full h-full [transform:rotateY(180deg)]"
-            style={{ 
-              backfaceVisibility: 'hidden', 
-              WebkitBackfaceVisibility: 'hidden',
-              transform: 'rotateY(180deg)'
-            }}
-          >
-            <div className="h-full w-full flex flex-col bg-white dark:bg-gray-800 rounded-lg p-4 overflow-hidden">
-              {/* Decorative gradients */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-green-300/40 via-emerald-200/30 to-transparent dark:from-green-700/40 dark:via-emerald-800/30 rounded-bl-3xl" />
-              <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-green-300/40 via-emerald-200/30 to-transparent dark:from-green-700/40 dark:via-emerald-800/30 rounded-tr-3xl" />
-              
-              {/* Title */}
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 z-10">{book.title}</h3>
-              
-              {/* Book quote */}
-              {renderQuoteSection()}
-              
-              {/* Description */}
-              <div className="flex-grow overflow-y-auto pr-1" style={{ overflowY: 'auto' }}>
-                <p className="text-xs text-gray-600 dark:text-gray-300 mb-2 z-10">
-                  {book.description.substring(0, 150)}...
-                </p>
-                
-                {/* Topics */}
-                {book.topics && book.topics.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-2 mb-2 z-10">
-                    {book.topics.map((topic, idx) => (
-                      <span key={idx} className="inline-block px-2 py-0.5 text-[9px] bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded-full">
-                        {topic}
-                      </span>
-                    ))}
+            
+            {/* Back of card */}
+            <div className="flip-card-back rounded-xl overflow-hidden shadow-lg dark:shadow-gray-800/20 bg-white dark:bg-gray-800 flex flex-col">
+              <div className="relative h-full w-full flex flex-col">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-900/70 to-gray-900/90 z-10"></div>
+                <Image
+                  src={book.coverImage || '/images/books/placeholder-book.jpg'}
+                  alt={book.title}
+                  fill
+                  className="object-cover z-0 opacity-60"
+                />
+                <div className="relative z-20 flex flex-col justify-between h-full p-4">
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-2">{book.title}</h3>
+                    {book.author && <p className="text-sm text-gray-300 mb-4">by {book.author}</p>}
+                    {renderQuoteSection}
+                    <div className="space-y-2 mb-4">
+                      {book.topics && book.topics.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {book.topics.slice(0, 3).map((topic, idx) => (
+                            <Badge key={idx} variant="outline" className="bg-gray-800/50 text-gray-200 border-gray-700 text-xs">
+                              {topic}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                )}
-              </div>
-              
-              {/* Action button */}
-              <div className="mt-auto pt-2 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center z-10">
-                <span className="text-sm font-bold text-gray-900 dark:text-white">
-                  {book.price === "0.00" ? translate("Безплатно", "Free") : book.price + " лв."}
-                </span>
-                
-                <button
-                  onClick={handleBookDetails}
-                  className="py-1.5 px-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 
-                    hover:from-green-600 hover:to-emerald-600 text-white text-xs font-medium 
-                    transition-all duration-300 shadow-md hover:shadow-lg"
-                >
-                  {translate("Детайли", "Details")}
-                </button>
+                  <div className="space-y-2 mt-auto">
+                    <Button 
+                      onClick={handleClick} 
+                      className="w-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm border-white/20"
+                      variant="outline"
+                    >
+                      {translate("Детайли", "View Details")}
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 });
 
 BookCard.displayName = 'BookCard';
@@ -700,26 +681,559 @@ const BackgroundDecorations = () => (
   </>
 );
 
+// Book carousel specifically for horizontal scrolling with infinite books
+const BookCarousel = ({ books, translate, language, onBookClick }: { 
+  books: Book[], 
+  translate: (text: string) => string, 
+  language: string,
+  onBookClick: (book: Book) => void 
+}) => {
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  
+  // Use basic interval for scrolling - simpler is better
+  useEffect(() => {
+    if (!carouselRef.current || !isPlaying) return;
+    
+    const scrollAmount = 1; // 1px per interval - smooth and performant
+    const interval = setInterval(() => {
+      if (!carouselRef.current) return;
+      
+      carouselRef.current.scrollLeft += scrollAmount;
+      
+      // Reset to start when reaching the end
+      if (carouselRef.current.scrollLeft >= (carouselRef.current.scrollWidth - carouselRef.current.clientWidth - 10)) {
+        carouselRef.current.scrollLeft = 0;
+      }
+    }, 20);
+    
+    return () => clearInterval(interval);
+  }, [isPlaying]);
+  
+  return (
+    <div className="relative w-full">
+      {/* Simple play/pause button */}
+      <button 
+        onClick={() => setIsPlaying(prev => !prev)}
+        className="absolute top-1/2 right-4 z-20 -translate-y-1/2 
+          bg-green-500 hover:bg-green-600 text-white rounded-full p-2 shadow-md"
+      >
+        {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+      </button>
+      
+      {/* Left fade */}
+      <div className="absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-white to-transparent dark:from-gray-900 dark:to-transparent z-10"></div>
+      
+      {/* Right fade */}
+      <div className="absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-white to-transparent dark:from-gray-900 dark:to-transparent z-10"></div>
+      
+      {/* Simple scrolling container - plain HTML is fastest */}
+      <div
+        ref={carouselRef}
+        className="flex gap-4 overflow-x-auto pb-4 pt-2 px-4 scrollbar-hide"
+        onMouseEnter={() => setIsPlaying(false)}
+        onMouseLeave={() => setIsPlaying(true)}
+      >
+        {/* Triple the books for infinite scrolling effect */}
+        {[...books, ...books, ...books].map((book, index) => (
+          <div 
+            key={`${book.id}-${index}`} 
+            className="flex-shrink-0 w-[250px] h-[360px] rounded-lg shadow-md border border-gray-100 dark:border-gray-800 
+              overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-lg
+              bg-white dark:bg-gray-800 cursor-pointer group"
+            style={{ contain: 'paint layout' }} // Performance optimization
+            onClick={() => onBookClick(book)}
+          >
+            <div className="relative h-full">
+              {/* Image with overlay gradient */}
+              <div className="absolute inset-0 z-0">
+                <Image 
+                  src={book.coverImage} 
+                  alt={book.title}
+                  fill
+                  sizes="250px"
+                  className="object-cover"
+                  loading={index < 10 ? "eager" : "lazy"}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+              </div>
+              
+              {/* Badge */}
+              {book.badge && (
+                <div className="absolute top-2 right-2 z-20 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+                  {translate(book.badge)}
+                </div>
+              )}
+              
+              {/* Content at bottom */}
+              <div className="absolute bottom-0 left-0 w-full p-4 text-white z-10">
+                <h3 className="text-lg font-bold line-clamp-1">{book.title}</h3>
+                <p className="text-sm opacity-90">{book.author}</p>
+                <div className="flex items-center mt-2 justify-between">
+                  <span className="font-medium">${typeof book.price === 'number' ? book.price.toFixed(2) : book.price}</span>
+                  <div className="flex">
+                    {[1,2,3,4,5].map(star => (
+                      <Star key={star} 
+                        className={`h-4 w-4 ${star <= 4 ? "text-yellow-400 fill-yellow-400" : "text-gray-400"}`} 
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              {/* Quick View button - fixed position, always visible */}
+              <div className="absolute top-0 right-0 z-20 p-2">
+                <button 
+                  className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium px-2.5 py-1 rounded shadow"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onBookClick(book);
+                  }}
+                >
+                  {language === 'en' ? 'Quick View' : 'Преглед'}
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+interface BookPreviewDialogProps {
+  book: typeof shopBooks[0] | null;
+  isOpen: boolean;
+  onClose: () => void;
+  language: string;
+}
+
+export function BookPreviewDialog({ book, isOpen, onClose, language }: BookPreviewDialogProps) {
+  if (!book) return null;
+
+  // Translate function to handle both languages
+  const getTranslation = (bg: string, en: string) => language === 'en' ? en : bg;
+
+  // Format price properly
+  const formattedPrice = typeof book.price === 'number'
+    ? (language === 'bg' ? `${book.price.toFixed(2)} лв.` : `$${book.price.toFixed(2)}`)
+    : book.price === "0.00" 
+      ? getTranslation("Безплатно", "Free") 
+      : book.price;
+      
+  // Handle redirection to book details page
+  const handleBookDetails = () => {
+    // Close the dialog
+    onClose();
+    
+    // Redirect to correct product page
+    if (book && book.id) {
+      window.location.href = `/shop/${book.id}`;
+    }
+  };
+
+  // Handle add to cart
+  const handleAddToCart = () => {
+    // Close the dialog
+    onClose();
+    
+    // In a real app, this would add the book to a cart
+    // For now, show a toast message
+    alert(getTranslation("Книгата е добавена в кошницата!", "Book added to cart!"));
+    // Alternatively, redirect to the cart page
+    // window.location.href = '/cart';
+  };
+      
+  // Demo content - to be replaced with actual content later
+  const demoContent = {
+    synopsis: getTranslation(
+      "Тази книга предлага дълбок поглед върху темата за личностното развитие и трансформацията. Авторът споделя своя опит и изследвания, за да помогне на читателите да разкрият своя потенциал.",
+      "This book offers a deep dive into personal development and transformation. The author shares experience and research to help readers unlock their potential."
+    ),
+    keyPoints: [
+      getTranslation("Практически съвети за ежедневието", "Practical daily advice"),
+      getTranslation("Техники за справяне със стреса", "Stress management techniques"),
+      getTranslation("Методи за подобряване на комуникацията", "Methods to improve communication"),
+    ],
+    readersComment: getTranslation(
+      "Тази книга промени начина, по който гледам на живота си. Методите са практични и лесни за прилагане!",
+      "This book changed the way I look at my life. The methods are practical and easy to apply!"
+    ),
+    commentAuthor: "Maria S.",
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-lg w-full sm:rounded-xl overflow-hidden p-0 bg-white dark:bg-gray-900 border-none">
+        <DialogHeader className="relative h-40 sm:h-52 overflow-hidden flex items-end bg-green-900 dark:bg-green-950">
+          {/* Cover image */}
+          <div className="absolute inset-0 z-0 overflow-hidden bg-gradient-to-br from-green-800 to-green-950 dark:from-green-900 dark:to-gray-950">
+            <Image
+              src={book.coverImage || "/images/books/default-book.jpg"}
+              alt={book.title}
+              fill
+              className="opacity-50 dark:opacity-30 object-cover object-center blur-[2px]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
+          </div>
+          
+          {/* Book info overlay */}
+          <div className="relative z-10 flex w-full p-4 text-white">
+            <div className="mr-3 w-20 h-28 sm:w-24 sm:h-36 flex-shrink-0 rounded-md overflow-hidden shadow-lg border border-white/30">
+              <Image
+                src={book.coverImage || "/images/books/default-book.jpg"}
+                alt={book.title}
+                width={96}
+                height={144}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            
+            <div className="flex-1 overflow-hidden">
+              <h2 className="text-lg sm:text-xl font-bold text-white mb-1 leading-tight line-clamp-2">
+                {book.title}
+              </h2>
+              
+              <div className="flex flex-wrap gap-1 text-xs text-white/90 mb-2">
+                <div className="flex items-center gap-1 bg-white/10 backdrop-blur-sm px-2 py-0.5 rounded-full">
+                  <BookOpen className="h-3 w-3" />
+                  <span>{book.pages} {getTranslation("стр.", "p")}</span>
+                </div>
+                
+                <div className="flex items-center gap-1 bg-white/10 backdrop-blur-sm px-2 py-0.5 rounded-full">
+                  <Clock className="h-3 w-3" />
+                  <span>{book.publishDate || getTranslation("Нова", "New")}</span>
+                </div>
+                
+                <div className="flex items-center gap-1 bg-white/10 backdrop-blur-sm px-2 py-0.5 rounded-full">
+                  <DollarSign className="h-3 w-3" />
+                  <span>{formattedPrice}</span>
+                </div>
+              </div>
+              
+              <p className="text-xs text-white/80 mb-2 line-clamp-2">
+                {book.description}
+              </p>
+              
+              {book.topics && book.topics.length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {book.topics.slice(0, 2).map((topic, index) => (
+                    <span key={index} className="inline-block px-1.5 py-0.5 bg-green-800/50 border border-green-600/30 backdrop-blur-sm text-green-50 rounded-full text-[10px]">
+                      {topic}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </DialogHeader>
+        
+        {/* Book content preview - more compact */}
+        <div className="p-3 overflow-y-auto max-h-[40vh]" style={{ overscrollBehavior: 'contain' }}>
+          {/* Combined synopsis and key points */}
+          <div className="mb-3">
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200">
+                {getTranslation("За книгата", "About the Book")}
+              </h3>
+              {book.author && (
+                <span className="text-xs text-gray-500 dark:text-gray-400 italic">
+                  {getTranslation("Автор", "By")}: {book.author}
+                </span>
+              )}
+            </div>
+            <p className="text-gray-700 dark:text-gray-300 text-xs leading-relaxed mb-2">
+              {demoContent.synopsis}
+            </p>
+            
+            {/* Key points - inline */}
+            <div className="flex flex-wrap gap-1 mb-2">
+              {demoContent.keyPoints.map((point, index) => (
+                <span key={index} className="px-2 py-0.5 bg-green-50 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs rounded-full border border-green-100 dark:border-green-800/50">
+                  {point}
+                </span>
+              ))}
+            </div>
+          </div>
+          
+          {/* Split content into 2 columns for better space usage */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            {/* Quote section */}
+            {book.quote && (
+              <div className="bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-950/30 dark:to-gray-900 rounded-lg p-3 relative">
+                {/* Quote mark */}
+                <div className="absolute top-2 left-2 text-green-300/20 dark:text-green-700/20">
+                  <Quote className="h-8 w-8" />
+                </div>
+                
+                <div className="pl-3">
+                  {/* Book quote */}
+                  <div className="pl-2 border-l-2 border-green-500 dark:border-green-600">
+                    <p className="italic text-gray-700 dark:text-gray-300 text-sm">
+                      "{book.quote}"
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Reader's comment section */}
+            <div className="bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg border border-gray-100 dark:border-gray-700">
+              <div className="flex items-center gap-2 mb-1.5">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-green-400 to-teal-500 flex items-center justify-center text-white font-bold text-xs">
+                  {demoContent.commentAuthor.charAt(0)}
+                </div>
+                <div>
+                  <p className="font-medium text-gray-800 dark:text-gray-200 text-xs">{demoContent.commentAuthor}</p>
+                  <div className="flex text-yellow-400">
+                    {[1,2,3,4,5].map(star => (
+                      <Star key={star} className="h-2 w-2 fill-current" />
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              <p className="text-gray-700 dark:text-gray-300 text-xs italic line-clamp-3">
+                "{demoContent.readersComment}"
+              </p>
+            </div>
+          </div>
+          
+          {/* Preview section */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200">
+                {getTranslation("Прочетете откъс", "Preview")}
+              </h3>
+              <span className="text-[10px] text-gray-500 dark:text-gray-400">
+                {getTranslation("Глава 1", "Chapter 1")}
+              </span>
+            </div>
+            
+            <div className="relative rounded-lg border border-gray-200 dark:border-gray-700 p-2 bg-white dark:bg-gray-800 shadow-inner">
+              {/* Reading progress indicator */}
+              <div className="absolute top-0 left-0 w-full h-1 bg-gray-100 dark:bg-gray-700">
+                <div className="h-full w-[15%] bg-green-500 dark:bg-green-600 rounded-r-full"></div>
+              </div>
+              
+              <div className="prose dark:prose-invert prose-green max-w-none prose-sm mt-2">
+                <p className="whitespace-pre-line leading-relaxed text-gray-800 dark:text-gray-200 text-xs line-clamp-3">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean facilisis euismod nisi, at vestibulum est dictum vel. Phasellus bibendum consectetur libero, a finibus justo...
+                </p>
+                <p className="text-gray-500 dark:text-gray-400 mt-1 text-center text-[10px]">
+                  {getTranslation("Продължава в книгата...", "Continues in the book...")}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Footer with actions */}
+        <DialogFooter className="flex border-t border-gray-100 dark:border-gray-800 p-2 bg-gray-50 dark:bg-gray-800/50">
+          <DialogClose asChild>
+            <Button variant="outline" size="sm" className="mr-auto h-7 text-xs px-2">
+              {getTranslation("Затвори", "Close")}
+            </Button>
+          </DialogClose>
+          
+          <div className="flex gap-1.5">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="gap-1 h-7 text-xs px-2"
+              onClick={handleAddToCart}
+            >
+              <ShoppingCart className="h-3 w-3" />
+              {getTranslation("В кошницата", "Add to Cart")}
+            </Button>
+            
+            <Link
+              href={`/shop/${book.id}`}
+              className="inline-flex items-center justify-center rounded-md px-3 py-1 text-xs font-medium h-8
+                bg-gradient-to-r from-green-500 to-teal-500 
+                text-white
+                border border-green-400/50 dark:border-green-600/30 
+                shadow-md hover:shadow-lg transition-all duration-300
+                hover:from-green-600 hover:to-teal-600"
+            >
+              <span>{getTranslation("Купи", "Buy")}</span>
+              <ArrowRight className="ml-1 h-3 w-3" />
+            </Link>
+          </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// Super simple CSS-only flip card that performs well on all devices
+const SimpleFlipCard = ({ book, onClick, language }: { 
+  book: typeof featuredBooks[0], 
+  onClick: () => void,
+  language: string 
+}) => {
+  return (
+    <div className="flip-card">
+      <div className="flip-card-inner">
+        {/* Front */}
+        <div className="flip-card-front">
+          {/* Cover image */}
+          <div className="relative h-3/5 w-full">
+            <Image 
+              src={book.coverImage} 
+              alt={book.title}
+              fill
+              className="object-cover"
+              priority
+            />
+            
+            {/* Badge */}
+            <div className="absolute top-2 right-2 z-10 bg-gradient-to-r from-amber-500 to-amber-600 
+              text-white text-xs px-2 py-1 rounded-full shadow-sm">
+              {book.badge.text[language === 'en' ? 'en' : 'bg']}
+            </div>
+          </div>
+          
+          {/* Content */}
+          <div className="p-4">
+            <h3 className="text-lg font-bold line-clamp-1 text-gray-900 dark:text-white">{book.title}</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300">{book.author}</p>
+            <div className="flex justify-between items-center mt-2">
+              <span className="text-green-600 dark:text-green-400 font-medium">
+                {book.price === "0.00" ? "Free" : book.price + " лв."}
+              </span>
+              <span className="text-sm text-gray-500">
+                {book.pages} pages
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        {/* Back */}
+        <div className="flip-card-back">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{book.title}</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">{book.author}</p>
+          
+          <p className="text-sm text-gray-800 dark:text-gray-200 mb-2 line-clamp-3">
+            {book.description}
+          </p>
+          
+          {/* Topics */}
+          <div className="flex flex-wrap gap-1 mb-3">
+            {book.topics.slice(0, 3).map((topic, i) => (
+              <span key={i} className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 
+                text-green-800 dark:text-green-300 text-xs rounded-full">
+                {topic}
+              </span>
+            ))}
+          </div>
+          
+          {/* Quote */}
+          {book.quote && (
+            <div className="text-sm italic text-gray-700 dark:text-gray-300 mb-3 border-l-2 border-green-500 pl-2">
+              "{book.quote}"
+            </div>
+          )}
+          
+          <button 
+            onClick={onClick}
+            className="w-full py-2 bg-green-500 hover:bg-green-600 text-white 
+              rounded-md transition-colors text-sm mt-auto"
+          >
+            {language === 'bg' ? 'Детайли' : 'Details'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Add this to your global CSS or directly in your app
+const flipCardCss = `
+/* Flip card container - relative to enable absolute positioning inside */
+.flip-card {
+  width: 100%;
+  height: 100%;
+  perspective: 1000px; /* Creates 3D perspective */
+}
+
+/* Flip card inner container - this is what rotates */
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+/* Add the flip effect on hover */
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Position the front and back side */
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(229, 231, 235, 1);
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .flip-card-front, .flip-card-back {
+    border-color: rgba(55, 65, 81, 1);
+  }
+}
+
+/* Style the front side */
+.flip-card-front {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Style the back side */
+.flip-card-back {
+  background-color: white;
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+/* Dark mode for front/back */
+@media (prefers-color-scheme: dark) {
+  .flip-card-front, .flip-card-back {
+    background-color: rgb(31, 41, 55);
+    color: white;
+  }
+}
+`;
+
 export default function BooksSection() {
   // Monitor performance
   usePerformanceMonitor('BooksSection');
   
   const { language } = useLanguage();
-  const [isPaused, setIsPaused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
   
-  // Visibility tracking for lazy loading
-  const isVisible = useIsVisible(containerRef);
-  
-  // Add state for carousel and container widths - using useRef instead of state to avoid re-renders
-  const containerWidth = useRef(0);
-  const carouselWidth = useRef(0);
+  // Add translate function
+  const translate = useCallback((bg: string, en: string) => language === 'en' ? en : bg, [language]);
   
   // State for selected book and dialog
   const [selectedBook, setSelectedBook] = useState<typeof shopBooks[0] | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  
+  // Book preview dialog state
+  const [previewBook, setPreviewBook] = useState<typeof shopBooks[0] | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
   
   // Handle opening book details - memoized
   const handleBookDetails = useCallback((book: typeof shopBooks[0]) => {
@@ -727,511 +1241,167 @@ export default function BooksSection() {
     setDialogOpen(true);
   }, []);
   
-  // Translate function - memoized
-  const translate = useCallback((bg: string, en: string) => language === 'en' ? en : bg, [language]);
-  
-  // Create a more optimized set of duplicated books - 3 copies for smoother looping
-  const duplicatedBooks = useMemo(() => {
-    // Create 3 copies for a truly smooth infinite loop
-    return [...shopBooks, ...shopBooks, ...shopBooks];
+  // Handle quick view - ensure it's properly setting state
+  const handleQuickView = useCallback((book: typeof shopBooks[0]) => {
+    console.log('Quick view clicked for book:', book.title);
+    setPreviewBook(book);
+    setPreviewOpen(true);
   }, []);
   
-  // Preload critical book images
-  useEffect(() => {
-    // Priority image preloading only for visible section
-    if (!isVisible) return;
-    
-    // Preload only the first set of book images to improve performance
-    const imagesToPreload = shopBooks.map(book => book.coverImage);
-    
-    // Use Promise.all to wait for all images to load
-    const preloadPromises = imagesToPreload.map(src => {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.src = src;
-        img.onload = resolve;
-        img.onerror = reject;
-      });
-    });
-    
-    // Catch any errors with image loading
-    Promise.all(preloadPromises).catch(() => {
-      // Silent error handling - just continue if some images fail to preload
-    });
-  }, [isVisible, shopBooks]);
+  // Create context value
+  const contextValue = useMemo(() => ({
+    handleBookDetails,
+    translate,
+    language
+  }), [handleBookDetails, translate, language]);
   
-  // Measure carousel dimensions - optimized to avoid frequent re-renders
+  // Add the necessary CSS to the document
   useEffect(() => {
-    if (!isVisible) return;
-    
-    const updateWidths = () => {
-      if (containerRef.current && carouselRef.current) {
-        containerWidth.current = containerRef.current.offsetWidth;
-        carouselWidth.current = carouselRef.current.scrollWidth;
-      }
-    };
-    
-    // Use ResizeObserver instead of resize event for better performance
-    const resizeObserver = new ResizeObserver(updateWidths);
-    
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
+    // Only add the styles if they don't already exist
+    if (!document.getElementById('flip-card-styles')) {
+      const styleElement = document.createElement('style');
+      styleElement.id = 'flip-card-styles';
+      styleElement.textContent = flipCardCss;
+      document.head.appendChild(styleElement);
+      
+      return () => {
+        // Clean up by removing the style element when the component unmounts
+        const element = document.getElementById('flip-card-styles');
+        if (element) document.head.removeChild(element);
+      };
     }
-    
-    // Initial measurement
-    updateWidths();
-    
-    // Cleanup
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [isVisible]);
-  
-  // Use spring for smoother animation
-  const springX = useSpring(x, {
-    stiffness: 100,
-    damping: 30,
-    mass: 0.5
-  });
-  
-  // Optimized animation loop for carousel with spring physics
-  useEffect(() => {
-    if (!isVisible || !carouselRef.current) return;
-    
-    let animationId: number;
-    let previousTimestamp = 0;
-    const bookItemWidth = 280;
-    const singleSetWidth = shopBooks.length * bookItemWidth;
-    
-    // Super smooth animation function with spring physics
-    const animate = (timestamp: number) => {
-      if (!previousTimestamp) previousTimestamp = timestamp;
-      const deltaTime = timestamp - previousTimestamp;
-      previousTimestamp = timestamp;
-      
-      if (isPaused) {
-        animationId = requestAnimationFrame(animate);
-        return;
-      }
-      
-      // Calculate current position
-      const currentX = x.get();
-      
-      // Smooth speed calculation with consistent speed regardless of frame rate
-      const pixelsPerSecond = 40; // Adjust speed as needed
-      const pixelsToMove = (pixelsPerSecond * deltaTime) / 1000;
-      
-      // Seamless infinite loop logic
-      if (currentX <= -singleSetWidth) {
-        // Instant reset to equivalent position in next set
-        x.set(currentX + singleSetWidth);
-      } else {
-        // Normal smooth movement with hardware acceleration
-        x.set(currentX - pixelsToMove);
-      }
-      
-      // Continue animation
-      animationId = requestAnimationFrame(animate);
-    };
-    
-    // Start animation only when component is visible in viewport
-    if (isVisible) {
-      animationId = requestAnimationFrame(animate);
-    }
-    
-    return () => {
-      if (animationId) cancelAnimationFrame(animationId);
-    };
-  }, [isPaused, x, isVisible, shopBooks.length]);
-  
-  // Create a function to render featured books that doesn't change on render
-  const renderFeaturedBooks = useCallback(() => {
-    return featuredBooks.map((book, index) => (
-      <motion.div 
-        key={book.id}
-        variants={{
-          hidden: { opacity: 0, y: 30 },
-          visible: {
-            opacity: 1,
-            y: 0,
-            transition: { 
-              type: "spring", 
-              stiffness: 80, 
-              damping: 12,
-              mass: 0.5 
-            }
-          }
-        }}
-        className="h-full group"
-      >
-        {/* Card with glass morphism styling - improved height and aspect ratio */}
-        <div className="rounded-lg overflow-hidden h-[380px]
-          bg-white/50 dark:bg-gray-800/50
-          backdrop-blur-md
-          border border-white/40 dark:border-gray-700/60
-          shadow-[0_10px_20px_rgba(0,0,0,0.1)]
-          dark:shadow-[0_10px_20px_rgba(0,0,0,0.3)]
-          group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.15)] 
-          dark:group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.4)]
-          transition-all duration-500 ease-out relative">
-          
-          {/* Badge positioned correctly inside the card */}
-          <div className="absolute top-3 right-3 z-20">
-            <div className={cn(
-              "flex items-center gap-1.5 px-2.5 py-1",
-              "rounded-full",
-              `bg-gradient-to-r ${book.badge.bgClass}`,
-              book.badge.textClass,
-              "border",
-              book.badge.borderClass,
-              "shadow-md text-xs font-semibold backdrop-blur-sm"
-            )}>
-              {book.badge.icon}
-              <span className="whitespace-nowrap">{translate(book.badge.text.bg, book.badge.text.en)}</span>
-            </div>
-          </div>
-          
-          {/* Using the direct flip card implementation with inline styles for consistency with carousel */}
-          <div className="relative w-full h-full" style={{ perspective: '1000px' }}>
-            <div 
-              className="group-hover:[transform:rotateY(180deg)] transition-all duration-500 relative w-full h-full"
-              style={{
-                transformStyle: 'preserve-3d',
-                transition: 'transform 0.8s ease',
-                willChange: 'transform',
-              }}
-            >
-              {/* Front side */}
-              <div 
-                className="absolute w-full h-full"
-                style={{ 
-                  backfaceVisibility: 'hidden', 
-                  WebkitBackfaceVisibility: 'hidden'
-                }}
-              >
-                <div className="relative h-full w-full overflow-hidden rounded-lg">
-                  <Image
-                    src={book.coverImage || "/images/books/placeholder-book.jpg"}
-                    alt={book.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
-                    priority={book.featured}
-                  />
-                  
-                  {/* Overlay gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                  
-                  {/* Book details overlay */}
-                  <div className="absolute bottom-0 w-full p-4 space-y-2 bg-gradient-to-t from-white/90 via-white/60 to-transparent dark:from-gray-800/90 dark:via-gray-800/60">
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-2">{book.title}</h3>
-                    
-                    <div className="flex justify-between items-center">
-                      <div className="text-sm font-medium text-emerald-600 dark:text-emerald-400">{book.price === "0.00" ? translate("Безплатно", "Free") : book.price + " лв."}</div>
-                      <div className="text-xs text-gray-600 dark:text-gray-400">{book.pages} {translate("стр.", "pages")}</div>
-                    </div>
-                    
-                    <div className="flex items-center text-xs mt-1">
-                      <div className="inline-flex items-center gap-1 text-xs text-gray-600 dark:text-gray-300">
-                        <span className="px-2 py-0.5 rounded-full bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400">Flip</span>
-                        {translate("за детайли", "for details")}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Back side */}
-              <div 
-                className="absolute w-full h-full [transform:rotateY(180deg)]"
-                style={{ 
-                  backfaceVisibility: 'hidden', 
-                  WebkitBackfaceVisibility: 'hidden',
-                  transform: 'rotateY(180deg)'
-                }}
-              >
-                <div className="h-full w-full flex flex-col bg-white dark:bg-gray-800 rounded-lg p-4 overflow-hidden">
-                  {/* Decorative gradients */}
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-green-300/40 via-emerald-200/30 to-transparent dark:from-green-700/40 dark:via-emerald-800/30 rounded-bl-3xl" />
-                  <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-green-300/40 via-emerald-200/30 to-transparent dark:from-green-700/40 dark:via-emerald-800/30 rounded-tr-3xl" />
-                  
-                  {/* Title */}
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 z-10">{book.title}</h3>
-                  
-                  {/* Book quote */}
-                  <div className="pl-3 border-l-2 border-green-500 mb-3 z-10">
-                    <p className="text-xs text-gray-600 dark:text-gray-300 italic">"{book.quote}"</p>
-                    <p className="text-right text-xs text-gray-700 dark:text-gray-200 mt-1">— {book.author}</p>
-                  </div>
-                  
-                  {/* Description */}
-                  <div className="flex-grow overflow-y-auto pr-1" style={{ overflowY: 'auto' }}>
-                    <p className="text-xs text-gray-600 dark:text-gray-300 mb-2 z-10">
-                      {book.description.substring(0, 150)}...
-                    </p>
-                    
-                    {/* Topics */}
-                    {book.topics && book.topics.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mt-2 mb-2 z-10">
-                        {book.topics.map((topic, idx) => (
-                          <span key={idx} className="inline-block px-2 py-0.5 text-[9px] bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded-full">
-                            {topic}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Action button */}
-                  <div className="mt-auto pt-2 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center z-10">
-                    <span className="text-sm font-bold text-gray-900 dark:text-white">
-                      {book.price === "0.00" ? translate("Безплатно", "Free") : book.price + " лв."}
-                    </span>
-                    
-                    <button
-                      onClick={() => handleBookDetails(book)}
-                      className="py-1.5 px-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 
-                        hover:from-green-600 hover:to-emerald-600 text-white text-xs font-medium 
-                        transition-all duration-300 shadow-md hover:shadow-lg"
-                    >
-                      {translate("Детайли", "Details")}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    ));
-  }, [featuredBooks, handleBookDetails, translate]);
-  
-  return (
-    <div className="relative z-0 py-4 md:py-6">
-      <AnimatePresence mode="wait">
-        <BookDetailsDialog 
-          book={selectedBook} 
-          translate={translate} 
-          isOpen={dialogOpen} 
-          onClose={() => setDialogOpen(false)} 
-        />
-      </AnimatePresence>
-      
-      <BackgroundDecorations />
+  }, []);
 
-      {/* Main container */}
-      <div className="w-full h-full flex flex-col rounded-xl sm:rounded-2xl
-          bg-gradient-to-br from-white/80 via-white/90 to-white/80 
-          dark:from-gray-900/80 dark:via-gray-900/85 dark:to-gray-900/80
-          border border-white/40 dark:border-white/10
-          shadow-[0_15px_40px_-10px_rgba(0,0,0,0.25)]
-          dark:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.5)]
-          overflow-hidden
-          max-w-[1600px] mx-auto">
+  // Close preview on ESC key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && previewOpen) {
+        setPreviewOpen(false);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [previewOpen]);
+
+  console.log('Preview dialog state:', { isOpen: previewOpen, bookTitle: previewBook?.title });
+
+  return (
+    <BooksSectionContext.Provider value={contextValue}>
+      <div className="relative z-0 py-4 md:py-6">
+        <AnimatePresence mode="wait">
+          <BookDetailsDialog 
+            book={selectedBook} 
+            translate={translate} 
+            isOpen={dialogOpen} 
+            onClose={() => setDialogOpen(false)} 
+          />
+        </AnimatePresence>
         
-        {/* Inner container with enhanced gradients - optimized for better performance */}
-        <div className="bg-gradient-to-br from-green-50/40 via-transparent to-emerald-50/40 
-            dark:from-green-900/20 dark:via-transparent dark:to-emerald-900/20 
-            px-3 sm:px-4 md:px-5 lg:px-6 py-4 md:py-5 lg:py-6 relative flex-grow flex flex-col">
+        {/* Book Preview Dialog */}
+        <BookPreviewDialog
+          book={previewBook}
+          isOpen={previewOpen}
+          onClose={() => setPreviewOpen(false)}
+          language={language}
+        />
+        
+        <BackgroundDecorations />
+
+        {/* Main container */}
+        <div className="w-full h-full flex flex-col rounded-xl sm:rounded-2xl
+            bg-white dark:bg-gray-900
+            border border-gray-200 dark:border-gray-800
+            shadow-xl
+            overflow-hidden
+            max-w-[1600px] mx-auto">
           
-          {/* Replace radial gradients with simpler accent boxes for better performance */}
-          <div className="absolute top-[20%] left-[30%] w-[300px] h-[300px] rounded-full bg-green-300/10 dark:bg-green-900/10 blur-[80px] pointer-events-none"></div>
-          <div className="absolute bottom-[30%] right-[20%] w-[250px] h-[250px] rounded-full bg-emerald-300/10 dark:bg-emerald-900/10 blur-[60px] pointer-events-none"></div>
-          
-          {/* Section header optimized for performance */}
-          <div className="text-center mb-4 md:mb-5 relative z-10">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex flex-col items-center justify-center"
-              style={{ willChange: 'transform, opacity' }}
-            >
-              {/* Section badge with improved styling */}
-              <div className="flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-amber-100 to-amber-50 dark:from-amber-900/50 dark:to-amber-900/30 rounded-full mb-3 border border-amber-200/60 dark:border-amber-800/40 shadow-md backdrop-blur-sm transform hover:scale-105 transition-all duration-300">
-                <BookMarked className="h-4.5 w-4.5 text-amber-700 dark:text-amber-300" />
-                <span className="text-sm font-medium text-amber-800 dark:text-amber-200">
+          {/* Inner container */}
+          <div className="px-4 py-6 relative">
+            
+            {/* Section header */}
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full 
+                bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 
+                border border-amber-200 dark:border-amber-700/50 shadow-sm mb-3">
+                <BookMarked className="h-4 w-4" />
+                <span className="text-sm font-medium">
                   {language === 'en' ? "Books" : "Книги"}
                 </span>
               </div>
               
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 
-                bg-gradient-to-r from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400
-                bg-clip-text text-transparent drop-shadow-sm">
+              <h2 className="text-3xl font-bold mb-3 text-gray-900 dark:text-white">
                 {language === 'en' ? "Featured Books" : "Препоръчани Книги"}
               </h2>
               
-              <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-base text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
                 {language === 'en' 
                   ? "Explore our curated collection of transformative books that will elevate your personal growth journey." 
                   : "Разгледайте нашата селекция от трансформиращи книги, които ще издигнат вашето лично пътуване за развитие."}
               </p>
-            </motion.div>
-          </div>
+            </div>
 
-          {/* Featured books section - optimized with reduced motion and better rendering */}
-          <motion.div 
-            variants={{
-              hidden: { opacity: 0 },
-              visible: {
-                opacity: 1,
-                transition: { 
-                  staggerChildren: 0.08, 
-                  delayChildren: 0.1
-                }
-              }
-            }}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 relative z-10 mb-5 md:mb-6"
-          >
-            {renderFeaturedBooks()}
-          </motion.div>
-          
-          {/* Book Carousel Section - optimized for performance */}
-          <div ref={containerRef} className="relative overflow-hidden py-4 mb-4">
-            <div className="rounded-lg overflow-hidden 
-              bg-white/40 dark:bg-gray-800/40
-              backdrop-blur-md
-              border border-white/40 dark:border-gray-700/60
-              shadow-[0_10px_25px_rgba(0,0,0,0.1)]
-              dark:shadow-[0_10px_25px_rgba(0,0,0,0.3)]
-              relative">
-              
-              {/* Carousel header - more compact */}
-              <div className="flex justify-between items-center mb-4 p-3 relative z-10 border-b border-white/40 dark:border-gray-700/60 bg-gradient-to-r from-white/70 to-white/20 dark:from-gray-800/70 dark:to-gray-800/20">
-                <div className="flex items-center gap-2">
-                  <div className="rounded-full p-1.5 bg-gradient-to-br from-green-400 to-emerald-500 text-white shadow-md">
-                    <Library className="w-4 h-4" />
-                  </div>
-                  <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">
-                    {translate("Всички книги", "All Books")}
-                  </h3>
+            {/* Featured books section */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+              {featuredBooks.map((book) => (
+                <div key={book.id} className="h-[380px]">
+                  <SimpleFlipCard
+                    book={book}
+                    onClick={() => handleQuickView(book)}
+                    language={language}
+                  />
                 </div>
+              ))}
+            </div>
+            
+            {/* Books carousel section */}
+            <div ref={containerRef} className="mb-8">
+              <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
                 
-                <div className="flex items-center gap-3">
-                  <div className="hidden md:flex items-center gap-1.5 text-gray-600 dark:text-gray-300">
-                    <BookOpen className="w-3.5 h-3.5 text-green-500" />
-                    <span className="text-xs">
-                      {translate(
-                        "Задръжте или натиснете върху книга за повече информация",
-                        "Hover or tap on a book for more information"
-                      )}
-                    </span>
+                {/* Header */}
+                <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-800">
+                  <div className="flex items-center gap-2">
+                    <div className="rounded-full p-1.5 bg-green-500 text-white">
+                      <Library className="w-4 h-4" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                      {translate("Всички книги", "All Books")}
+                    </h3>
                   </div>
                   
-                  {/* Pause/Play button - smaller */}
-                  <button
-                    onClick={() => setIsPaused(!isPaused)}
-                    className="relative overflow-hidden rounded-full w-8 h-8 
-                      flex items-center justify-center 
-                      bg-gradient-to-br from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700
-                      text-white 
-                      focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:ring-offset-2
-                      transform hover:scale-105 transition-all duration-300 shadow-md hover:shadow-lg
-                      after:content-[''] after:absolute after:top-0 after:left-0 after:right-0 after:bottom-0 
-                      after:bg-gradient-to-br after:from-white/20 after:to-transparent after:rounded-full"
-                    aria-label={isPaused ? translate("Възобнови въртенето", "Resume rotation") : translate("Паузирай въртенето", "Pause rotation")}
-                  >
-                    {isPaused ? (
-                      <Play className="h-3.5 w-3.5 relative z-10" />
-                    ) : (
-                      <Pause className="h-3.5 w-3.5 relative z-10" />
-                    )}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <BookOpen className="w-4 h-4 text-green-500" />
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      {translate("Разгледайте нашите книги", "Browse our books")}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              
-              {/* Carousel with optimized drag functionality */}
-              <div className="px-4 pb-4 relative overflow-hidden">
-                <motion.div
-                  ref={carouselRef}
-                  className="flex gap-4 cursor-grab active:cursor-grabbing"
-                  drag="x"
-                  style={{ 
-                    x,
-                    willChange: 'transform',
-                    transform: 'translate3d(0,0,0)', 
-                  }}
-                  dragConstraints={{ 
-                    left: -Math.max(0, carouselWidth.current - containerWidth.current + 40), 
-                    right: 0 
-                  }}
-                  dragTransition={{ 
-                    bounceStiffness: 400, 
-                    bounceDamping: 25,
-                    power: 0.2,
-                    timeConstant: 200
-                  }}
-                  dragElastic={0.1}
-                  dragMomentum={true}
-                  onDragStart={() => setIsPaused(true)}
-                  onDragEnd={(e, info) => {
-                    // Keep the velocity after dragging for natural feeling
-                    const currentPosition = x.get();
-                    const velocity = info.velocity.x;
-                    
-                    if (Math.abs(velocity) > 500) {
-                      // If user flicked with high velocity, add momentum
-                      const momentum = Math.sign(velocity) * Math.min(Math.abs(velocity) * 0.2, 500);
-                      x.set(currentPosition + momentum);
-                    }
-                    
-                    // Resume animation after a short delay (feels more natural)
-                    setTimeout(() => setIsPaused(false), 1000);
-                  }}
-                  onHoverStart={() => setIsPaused(true)}
-                  onHoverEnd={() => setIsPaused(false)}
-                  // Remove layout for even better performance
-                  layout={false}
-                >
-                  {duplicatedBooks.map((book, index) => (
-                    <div 
-                      key={`${book.id}-${index}`}
-                      className="flex-shrink-0 w-[260px] transform-gpu"
-                      style={{
-                        willChange: 'transform', 
-                        transform: 'translate3d(0,0,0)',
-                        contain: 'paint layout style'
-                      }}
-                    >
-                      <BookCard 
-                        book={book}
-                      />
-                    </div>
-                  ))}
-                </motion.div>
+                
+                {/* Carousel */}
+                <BookCarousel 
+                  books={shopBooks} 
+                  translate={(text) => translate(text, text)} 
+                  language={language}
+                  onBookClick={handleQuickView}
+                />
               </div>
             </div>
             
-            {/* Gradient fade on the left - optimized */}
-            <div className="absolute left-0 top-4 bottom-4 w-20 bg-gradient-to-r from-white to-transparent dark:from-gray-950 dark:to-transparent z-20 pointer-events-none opacity-90"></div>
-            
-            {/* Gradient fade on the right - optimized */}
-            <div className="absolute right-0 top-4 bottom-4 w-20 bg-gradient-to-l from-white to-transparent dark:from-gray-950 dark:to-transparent z-20 pointer-events-none opacity-90"></div>
+            {/* CTA Button */}
+            <div className="flex justify-center">
+              <Link 
+                href="/shop/books"
+                className="px-5 py-2.5 rounded-full bg-green-500 hover:bg-green-600 
+                  text-white font-medium text-sm shadow-md transition-colors
+                  flex items-center gap-2"
+              >
+                <span>{translate("Вижте всички книги", "View all books")}</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
-          
-          {/* View All CTA button */}
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.4 }}
-            className="flex justify-center mt-4"
-          >
-            <Link 
-              href="/shop/books"
-              className="group relative px-5 py-2.5 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium text-sm shadow-md 
-                hover:shadow-lg transition-all duration-300 overflow-hidden flex items-center gap-2"
-            >
-              <span className="relative z-10">{translate("Вижте всички книги", "View all books")}</span>
-              <ArrowRight className="w-4 h-4 relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
-              <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-600 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
-            </Link>
-          </motion.div>
         </div>
       </div>
-    </div>
+    </BooksSectionContext.Provider>
   );
 } 
