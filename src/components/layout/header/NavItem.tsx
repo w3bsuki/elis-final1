@@ -57,7 +57,11 @@ export function NavItem({
   'aria-current': ariaCurrent,
 }: NavItemProps) {
   const pathname = usePathname();
-  const isActive = isActiveProp ?? (href ? pathname === href || (href !== '/' && pathname.startsWith(href)) : false);
+  const isActive = isActiveProp ?? (
+    href 
+      ? pathname === href || (href !== '/' && pathname && pathname.startsWith(href)) 
+      : false
+  );
 
   const combinedClassName = cn(
     baseClassName,
